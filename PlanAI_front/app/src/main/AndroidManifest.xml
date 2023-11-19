@@ -23,6 +23,8 @@
         </activity>
         <activity android:name=".CalendarActivity"></activity>
         <activity android:name=".MaterialCalendarActivity"></activity>
+        <activity android:name=".EventActivity"></activity>
+
     </application>
 
 </manifest>
