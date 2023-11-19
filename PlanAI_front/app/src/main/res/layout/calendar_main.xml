@@ -5,12 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView3"
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="410dp"
+        android:layout_height="410dp"
+        android:theme="@style/Base.Theme.PlanAI_front"
+        android:touchscreenBlocksFocus="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Calendar Page"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/calendarView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
