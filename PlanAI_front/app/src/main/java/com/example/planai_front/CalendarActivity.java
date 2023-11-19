@@ -8,6 +8,6 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.calendar_main);
+        setContentView(R.layout.materialcalendar_main);
     }
 }
