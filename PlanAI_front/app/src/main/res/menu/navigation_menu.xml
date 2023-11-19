@@ -1,0 +1,30 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_calendar"
+        android:background="@android:color/transparent"
+        android:icon="@drawable/ic_calendar"
+        android:title="  "
+
+
+        android:visible="true" />
+    <item
+        android:id="@+id/navigation_post"
+        android:icon="@drawable/ic_post"
+        android:title="  " />
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="  " />
+    <item
+        android:id="@+id/navigation_friend"
+        android:icon="@drawable/ic_friends"
+        android:title="  " />
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/ic_setting"
+        android:title="  " />
+    <!-- 여기에 더 많은 메뉴 아이템을 추가하세요 -->
+</menu>

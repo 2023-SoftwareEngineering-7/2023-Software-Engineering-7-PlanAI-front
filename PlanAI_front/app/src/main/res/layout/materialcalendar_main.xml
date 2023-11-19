@@ -40,12 +40,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="PlanA.I"
             android:fontFamily="@font/nanumbarungothic"
+            android:text="PlanA.I"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@color/black"
             tools:layout_editor_absoluteX="168dp"
             tools:layout_editor_absoluteY="35dp" />
     </androidx.appcompat.widget.Toolbar>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="870dp"
+        android:background="@color/white"
+        android:backgroundTintMode="src_in"
+        android:contextClickable="false"
+        android:foregroundTint="@color/white"
+        android:foregroundTintMode="src_in"
+        android:visibility="visible"
+        app:backgroundTint="#C6C8C9"
+
+        app:compatShadowEnabled="false"
+        app:elevation="0dp"
+
+        app:itemBackground="@drawable/nav_item_background"
+        app:itemHorizontalTranslationEnabled="true"
+        app:itemIconSize="32dp"
+        app:itemIconTint="@color/black"
+        app:itemPaddingBottom="10dp"
+        app:itemPaddingTop="25dp"
+        app:itemRippleColor="@color/white"
+        app:itemTextAppearanceInactive="@style/Base.Theme.PlanAI_front"
+        app:itemTextColor="@color/nav_item_color_state"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:menu="@menu/navigation_menu" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

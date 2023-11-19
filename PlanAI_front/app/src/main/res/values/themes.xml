@@ -3,6 +3,8 @@
     <style name="Base.Theme.PlanAI_front" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#E5EAF1</item>
+        <item name="colorPrimaryDark">#00023D</item>
     </style>
 
     <style name="Theme.PlanAI_front" parent="Base.Theme.PlanAI_front" />

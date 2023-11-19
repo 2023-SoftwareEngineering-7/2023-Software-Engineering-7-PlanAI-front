@@ -12,7 +12,7 @@ public class MaterialCalendarActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MaterialCalendarView materialCalendarView = findViewById(R.id.calendarView);
+        MaterialCalendarView materialCalendarView = findViewById(R.id.calendarview);
         materialCalendarView.setSelectedDate(CalendarDay.today());
     }
 }
