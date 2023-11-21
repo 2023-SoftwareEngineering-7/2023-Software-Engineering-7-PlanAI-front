@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="#E5EAF1"
         android:gravity="center"
-        android:paddingTop="20dp"
+        android:paddingTop="35dp"
         android:paddingBottom="20dp"
         android:text="PlanA.I"
         android:textSize="40sp"
@@ -45,41 +45,10 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:gravity="center"
-        android:paddingBottom="230dp"
-        android:textSize="40sp" />
+        android:paddingBottom="140dp"
+        android:textSize="8sp" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom|center_vertical|end"
-        android:background="@color/white"
-        android:backgroundTintMode="src_in"
-        android:foregroundTint="@color/white"
-        android:foregroundTintMode="src_in"
-        android:hapticFeedbackEnabled="false"
-
-        android:saveEnabled="false"
-
-        android:visibility="visible"
-        app:backgroundTint="#C6C8C9"
-        app:elevation="0dp"
-        app:itemBackground="@android:color/transparent"
-        app:itemHorizontalTranslationEnabled="true"
-        app:itemIconSize="30dp"
-        app:itemIconTint="@color/black"
-        app:itemRippleColor="@color/white"
-        app:itemTextAppearanceActiveBoldEnabled="true"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/navigation_menu"
-        tools:visibility="visible">
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+    <include layout="@layout/navigationbar_bottom" />
 
 
 </LinearLayout>

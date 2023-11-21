@@ -2,9 +2,11 @@ package com.example.planai_front;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.planai_front.create.ShowDayActivity;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -19,7 +21,12 @@ public class MaterialCalendarActivity extends AppCompatActivity{
         materialCalendarView.setOnDateChangedListener((new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                Toast.makeText(MaterialCalendarActivity.this, ""+date,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MaterialCalendarActivity.this, ""+date,Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(MaterialCalendarActivity.this, ShowDayActivity.class);
+                intent.putExtra("date",date.getDate().toString());
+                startActivity(intent);
+
             }
         }));
 
