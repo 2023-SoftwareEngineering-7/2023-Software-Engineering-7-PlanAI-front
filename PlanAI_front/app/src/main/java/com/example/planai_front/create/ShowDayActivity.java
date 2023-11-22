@@ -12,10 +12,16 @@ import com.example.planai_front.MaterialCalendarActivity;
 import com.example.planai_front.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/*
+Intented from MaterialCalendarActivity - materialCalendarView.setOnDateChangedListener
+1) Show daily schedule
+2) Create schedule & task through button
+3) bottom navigation bar available
+ */
 public class ShowDayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        //show day_main.xml
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_main);
 
@@ -27,6 +33,16 @@ public class ShowDayActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
+        //schedule&task creating button
+        // begin HERE
+        //https://ghj1001020.tistory.com/9
+        // I think this will be helpful
+        // If you are working on this page, please let me know!
 
         //하단 메뉴 바
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnavigation);
