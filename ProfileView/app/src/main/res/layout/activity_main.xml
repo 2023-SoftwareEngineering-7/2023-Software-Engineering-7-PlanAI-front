@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/white">
+
+    <!-- "설정" 타이틀 -->
+
+    <!-- 프로필 이미지와 사용자 이름 -->
+
+    <!-- 프로필 설정 영역 -->
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="31dp"
+        android:layout_marginLeft="31dp"
+        android:layout_marginTop="16dp"
+        android:text="설정"
+        android:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/imageViewProfile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/textViewTitle"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="45dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="17dp" />
+
+    <TextView
+        android:id="@+id/textViewUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewProfile"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="11dp"
+        android:text="사용자 이름" />
+
+    <View
+        android:id="@+id/viewProfile"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/textViewUsername"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="-4dp"
+        android:layout_marginLeft="-4dp"
+        android:layout_marginTop="20dp"
+        android:background="#000000" />
+
+    <!-- "프로필 변경" 버튼 -->
+
+    <!-- "계정 변경" 버튼 -->
+
+    <TextView
+        android:id="@+id/textViewProfileSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewProfile"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="31dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="프로필 설정"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- "연동" 버튼 -->
+
+    <Button
+        android:id="@+id/buttonProfileChange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewProfileSettings"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:text="프로필 변경"
+        android:textAlignment="viewStart"
+        android:textColor="#000000" />
+
+    <Button
+        android:id="@+id/buttonAccountChange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonProfileChange"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="16dp"
+        android:background="#00FFFFFF"
+        android:text="계정 변경"
+        android:textAlignment="viewStart"
+        android:textColor="#000000"
+        android:textIsSelectable="false" />
+
+    <!-- 앱 설정 영역 -->
+
+    <Button
+        android:id="@+id/buttonLink"
+        android:layout_width="458dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonAccountChange"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="-3dp"
+        android:layout_marginLeft="-3dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:text="연동"
+        android:textAlignment="viewStart"
+        android:textColor="#000000" />
+
+    <!-- "다크모드" 버튼 -->
+
+    <!-- "알림 설정" 버튼 -->
+
+    <!-- 기타 영역 -->
+
+    <View
+        android:id="@+id/viewAppSettings"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/textViewProfileSettings"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="-12dp"
+        android:layout_marginLeft="-12dp"
+        android:layout_marginTop="207dp"
+        android:background="#000000" />
+
+    <TextView
+        android:id="@+id/textViewAppSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewAppSettings"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="31dp"
+        android:layout_marginTop="16dp"
+        android:text="앱 설정"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/buttonDarkMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewAppSettings"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:text="다크모드"
+        android:textAlignment="viewStart"
+        android:textColor="#000000" />
+
+    <Button
+        android:id="@+id/buttonNotificationSettings"
+        android:layout_width="458dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonDarkMode"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="-3dp"
+        android:layout_marginLeft="-3dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:text="알림 설정"
+        android:textAlignment="viewStart"
+        android:textColor="#000000" />
+
+    <!-- "회원 탈퇴" 버튼 -->
+    <View
+        android:id="@+id/viewOther"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/textViewAppSettings"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="-2dp"
+        android:layout_marginLeft="-2dp"
+        android:layout_marginTop="143dp"
+        android:background="#000000" />
+
+    <TextView
+        android:id="@+id/textViewOther"
+        android:layout_width="39dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewOther"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="58dp"
+        android:layout_marginLeft="31dp"
+        android:layout_marginTop="16dp"
+        android:text="기타"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/buttonWithdrawal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewOther"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:text="회원 탈퇴"
+        android:textAlignment="viewStart"
+        android:textColor="#000000" />
+
+    <!-- "로그 아웃" 버튼 -->
+    <Button
+        android:id="@+id/buttonLogout"
+        android:layout_width="455dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonWithdrawal"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:text="로그 아웃"
+        android:textAlignment="viewStart"
+        android:textColor="#000000" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/buttonProfileChange"
+        android:layout_alignBottom="@+id/buttonProfileChange"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="405dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="7dp"
+        android:backgroundTint="#00FFFFFF"
+        android:rotation="-90"
+        app:srcCompat="@android:drawable/arrow_down_float" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/buttonAccountChange"
+        android:layout_alignBottom="@+id/buttonAccountChange"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="403dp"
+        android:layout_marginTop="-1dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="#00FFFFFF"
+        android:rotation="-90"
+        app:srcCompat="@android:drawable/arrow_down_float" />
+
+</RelativeLayout>
