@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_task"
+        android:title="Task" />
+    <item
+        android:id="@+id/menu_schedule"
+        android:title="Schedule" />
+    <item
+        android:id="@+id/menu_other"
+        android:title="Other" />
+</menu>
+
