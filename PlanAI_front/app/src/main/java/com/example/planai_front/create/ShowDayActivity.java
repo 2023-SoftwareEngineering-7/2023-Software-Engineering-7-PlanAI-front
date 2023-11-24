@@ -31,7 +31,7 @@ public class ShowDayActivity extends AppCompatActivity {
         showDate.setText(todayDate);
 
 
-//testshowdayactivity with MySQL
+//testshowdayactivity with MySQL..mergetest
 
 
 
