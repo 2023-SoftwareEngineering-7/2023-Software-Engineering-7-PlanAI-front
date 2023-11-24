@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="PopupMenuStyle" parent="@android:style/Widget.PopupMenu">
         <item name="android:popupBackground">@drawable/rounded_menu</item>
     </style>
 </resources>
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PopupMenuStyle" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@drawable/rounded_menu</item>
+    </style>
+</resources>
+>>>>>>> e3c63c9 (taskbutton)
