@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <translate
         android:duration="500"
@@ -5,3 +6,12 @@
         android:toYDelta="0%" />
 </set>
 
+=======
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate
+        android:duration="500"
+        android:fromYDelta="100%"
+        android:toYDelta="0%" />
+</set>
+
+>>>>>>> 9538607 (new test commit)
