@@ -16,6 +16,8 @@
         android:id="@+id/close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/plus_icon"
         android:text="Close"/>
+
 </LinearLayout>
+
+
