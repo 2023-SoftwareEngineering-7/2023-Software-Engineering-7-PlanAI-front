@@ -10,11 +10,14 @@
         <item name="android:background">#faf9f7</item> <!-- Change background color -->
     </style>
 
+<<<<<<< HEAD
     <style name="PopupActivity" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+=======
+>>>>>>> 36e6ab9 (Add files via upload)
     <!-- Style for sliding popup animation -->
     <style name="SlideUpDownAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
