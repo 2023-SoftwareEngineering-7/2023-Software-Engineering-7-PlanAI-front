@@ -13,6 +13,24 @@
         android:theme="@style/Theme.PlanAI_front"
         tools:targetApi="31">
         <activity
+            android:name=".WriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MywriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GetfriendActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FriendListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddfriendActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BoardActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -21,10 +39,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CalendarActivity"></activity>
-        <activity android:name=".MaterialCalendarActivity"></activity>
-        <activity android:name=".EventActivity"></activity>
-
+        <activity android:name=".CalendarActivity" />
+        <activity android:name=".MaterialCalendarActivity" />
+        <activity android:name=".EventActivity" />
     </application>
 
 </manifest>
