@@ -1,4 +1,4 @@
-package com.example.planai_front;
+package com.example.planai_front.create;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.planai_front.R;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class EventActivity extends RecyclerView.Adapter<EventActivity.EventViewH
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.day_main, parent, false);
         return new EventViewHolder(view);
     }
 
@@ -42,8 +44,11 @@ public class EventActivity extends RecyclerView.Adapter<EventActivity.EventViewH
 
         EventViewHolder(View itemView) {
             super(itemView);
+            /*
             nameTextView = itemView.findViewById(R.id.text_view_event_name);
             descriptionTextView = itemView.findViewById(R.id.text_view_event_description);
+            */
+
         }
     }
 }

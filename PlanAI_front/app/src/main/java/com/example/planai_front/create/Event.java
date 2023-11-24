@@ -1,4 +1,4 @@
-package com.example.planai_front;
+package com.example.planai_front.create;
 
 public class Event {
     private String name;

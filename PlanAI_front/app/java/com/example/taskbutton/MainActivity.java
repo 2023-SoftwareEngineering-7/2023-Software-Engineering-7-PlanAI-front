@@ -373,15 +373,12 @@
 //}
 
 package com.example.taskbutton;
+
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import com.example.taskbutton.R;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -399,12 +396,7 @@ public class MainActivity extends AppCompatActivity {
         mainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
- feature/mergetest1
-                Intent intent = new Intent(MainActivity.this, MaterialCalendarActivity.class);
-                startActivity(intent);
-
                 showPopup(mainButton);
- main
             }
         });
     }
@@ -440,12 +432,9 @@ public class MainActivity extends AppCompatActivity {
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
 
         // Calculate the x offset to center the popup horizontally
-        int xOffset = (anchorView.getWidth() - width) / 1;
+        int xOffset = (anchorView.getWidth() - width) / 2;
 
         // Show the popup centered below the anchor view
         popupWindow.showAsDropDown(anchorView, xOffset, -anchorView.getHeight());
     }
-
-
 }
-
