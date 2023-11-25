@@ -70,12 +70,13 @@
 
 
 
+
+
 package com.example.planai_front.create;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -84,40 +85,36 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.planai_front.MaterialCalendarActivity;
 import com.example.planai_front.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ShowDayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_layout); // Change this to your new layout file
+        setContentView(R.layout.new_layout); // This is your ShowDayActivity layout file
 
         Intent dateIntent = getIntent();
         String todayDate = dateIntent.getStringExtra("date");
-        TextView showDate = (TextView) findViewById(R.id.date_banner);
+        TextView showDate = findViewById(R.id.date_banner);
         showDate.setText(todayDate);
-
-        // ranas edit
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Perform action on click
-                // You can add your action here
-            }
-        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnavigation);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.navigation_calendar) {
-                    Intent intent = new Intent(ShowDayActivity.this, MaterialCalendarActivity.class);
-                    startActivity(intent);
+                switch (item.getItemId()) {
+                    case R.id.navigation_calendar:
+                        Intent intentCalendar = new Intent(ShowDayActivity.this, MaterialCalendarActivity.class);
+                        startActivity(intentCalendar);
+                        break;
+                    case R.id.navigation_test:
+                        Intent intentTest = new Intent(ShowDayActivity.this, TestActivity.class);
+                        startActivity(intentTest);
+                        break;
                 }
                 return true;
             }
         });
     }
 }
+
 
