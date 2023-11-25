@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+ feature/mergetest1
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_task"
@@ -11,7 +11,7 @@
         android:title="Other" />
 </menu>
 
-=======
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_task"
@@ -24,4 +24,4 @@
         android:title="Other" />
 </menu>
 
->>>>>>> e3c63c9 (taskbutton)
+ main

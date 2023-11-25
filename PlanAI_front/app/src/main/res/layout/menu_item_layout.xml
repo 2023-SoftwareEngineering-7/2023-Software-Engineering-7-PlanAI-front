@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+ feature/mergetest1
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:textColor="#000000"
         android:textSize="16sp" />
 </LinearLayout>
-=======
+
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -28,4 +28,4 @@
         android:textColor="#000000"
         android:textSize="16sp" />
 </LinearLayout>
->>>>>>> e3c63c9 (taskbutton)
+ main

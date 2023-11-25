@@ -399,7 +399,12 @@ public class MainActivity extends AppCompatActivity {
         mainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+ feature/mergetest1
+                Intent intent = new Intent(MainActivity.this, MaterialCalendarActivity.class);
+                startActivity(intent);
+
                 showPopup(mainButton);
+ main
             }
         });
     }

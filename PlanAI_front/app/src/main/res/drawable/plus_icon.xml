@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+ feature/mergetest1
 <!-- res/drawable/plus_icon.xml -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
@@ -10,7 +10,7 @@
         android:fillColor="#000000"
         android:pathData="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
 </vector>
-=======
+
 <!-- res/drawable/plus_icon.xml -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
@@ -22,4 +22,4 @@
         android:fillColor="#000000"
         android:pathData="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
 </vector>
->>>>>>> 9538607 (new test commit)
+ main
