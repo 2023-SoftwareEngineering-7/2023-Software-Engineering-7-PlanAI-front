@@ -29,13 +29,12 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     @Override
     public void onBindViewHolder(@NonNull ScheduleViewHolder holder, int position) {
         Schedule schedule = scheduleList.get(position);
-        holder.scheduleRecySummary.setText(schedule.getSummary());
-        holder.scheduleRecyStartDate.setText(schedule.getStartDate());
-        holder.scheduleRecyStartTime.setText(schedule.getStartTime());
-        holder.scheduleRecyEndDate.setText(schedule.getEndDate());
-        holder.scheduleRedyEndTime.setText(schedule.getEndTime());
-        holder.scheduleRecyTag.setText(schedule.getTag());
-        holder.scheduleRecyDescription.setText(schedule.getDescription());
+        //holder.idTextView.setText(schedule.getId());
+        holder.summaryTextView.setText(schedule.getSummary());
+        holder.descriptionTextView.setText(schedule.getDescription());
+        holder.collaboratorsTextView.setText(schedule.getCollaborators());
+        holder.startTextView.setText(schedule.getStart());
+        holder.endTextView.setText(schedule.getEnd());
     }
 
     @Override
@@ -44,17 +43,18 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     }
 
     public static class ScheduleViewHolder extends RecyclerView.ViewHolder {
-        public TextView scheduleRecySummary, scheduleRecyStartDate, scheduleRecyStartTime, scheduleRecyEndDate, scheduleRedyEndTime, scheduleRecyTag, scheduleRecyDescription;
+        public TextView summaryTextView,descriptionTextView,
+                        collaboratorsTextView,startTextView,endTextView;
 
         public ScheduleViewHolder(View view) {
             super(view);
-            scheduleRecySummary = view.findViewById(R.id.scheduleSummaryItemView);
-            scheduleRecyStartDate = view.findViewById(R.id.scheduleStartDateItemView);
-            scheduleRecyStartTime = view.findViewById(R.id.scheduleStartTimeItemView);
-            scheduleRecyEndDate = view.findViewById(R.id.scheduleEndDateItemView);
-            scheduleRedyEndTime = view.findViewById(R.id.scheduleEndTimeItemView);
-            scheduleRecyTag = view.findViewById(R.id.scheduleTagItemView);
-            scheduleRecyDescription = view.findViewById(R.id.scheduleDescriptionItemView);
+            summaryTextView = view.findViewById(R.id.summaryTextView);
+            startTextView = view.findViewById(R.id.startTextView);
+            endTextView = view.findViewById(R.id.endTextView);
+            descriptionTextView = view.findViewById(R.id.descriptionTextView);
+            collaboratorsTextView = view.findViewById(R.id.collaboratorsTextView);
+
+
         }
     }
 }
