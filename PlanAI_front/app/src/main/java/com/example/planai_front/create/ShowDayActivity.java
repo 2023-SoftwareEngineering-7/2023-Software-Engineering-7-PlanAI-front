@@ -968,7 +968,7 @@ public class ShowDayActivity extends AppCompatActivity {
         showDate.setText(todayDate);
 
 
-//testshowdayactivity with MySQL..mergetest
+//branch for Calendal - calendar2: 23.11.25 created
 
 
 
