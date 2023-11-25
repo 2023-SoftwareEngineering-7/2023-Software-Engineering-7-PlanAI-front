@@ -11,5 +11,11 @@
     <!-- 선택되지 않은 항목의 배경색 -->
     <color name="selected_item_background">#FFFFFF</color> <!-- 예를 들어 연한 회색 -->
 
+<!--ranas edit-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="blue_grey">#607D8B</color>
+
+
+
 
 </resources>
