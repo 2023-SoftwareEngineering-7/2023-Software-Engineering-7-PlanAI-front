@@ -206,7 +206,7 @@ public class ShowDayActivity extends AppCompatActivity {
 
     private void loadSchedules(String todayDate) {
 // 예시 데이터 추가
-//        //public Schedule(String summary, String start, String end, String description, boolean open_schedule, String collaborators) {
+//        //todayDate로 서버에서 todayDate에 등록된 schedule을 불러와 schedulelist에 저장, 띄우기
         if(todayDate.equals("2023-11-26")) {
             scheduleList.add(new Schedule("Meeting with Team"+todayDate+"yyy", "1Pm", "3pm", "hello world", "colll"));
             scheduleList.add(new Schedule("Call with Client", "5pm", "6pm", "hello world", "coll coll cool"));
