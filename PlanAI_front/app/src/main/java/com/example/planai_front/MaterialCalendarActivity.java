@@ -31,6 +31,7 @@ public class MaterialCalendarActivity extends AppCompatActivity{
 
                 Intent intent = new Intent(MaterialCalendarActivity.this, ShowDayActivity.class);
                 intent.putExtra("date",date.getDate().toString());
+                intent.putExtra("fullDateInfo",date.getDate().getDayOfWeek().toString());
                 startActivity(intent);
 
             }
