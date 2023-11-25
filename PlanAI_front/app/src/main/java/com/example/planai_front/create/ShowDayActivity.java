@@ -3,6 +3,7 @@ package com.example.planai_front.create;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.planai_front.MaterialCalendarActivity;
 import com.example.planai_front.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import org.w3c.dom.Text;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,9 @@ public class ShowDayActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ScheduleAdapter adapter;
     private List<Schedule> scheduleList;
+
+    private FloatingActionButton addEventFabButton, addScheduleButton, addTaskButton, etcButton;
+    private boolean isFABOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +131,49 @@ public class ShowDayActivity extends AppCompatActivity {
         // If you are working on this page, please let me know!
 
 
+        addEventFabButton = findViewById(R.id.fabMain);
+        addScheduleButton = findViewById(R.id.schedulebutton);
+        addTaskButton = findViewById(R.id.taskbutton);
+        etcButton = findViewById(R.id.fabOption1);
+
+        addEventFabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isFABOpen) {
+                    showFABMenu();
+                    addScheduleButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(ShowDayActivity.this, createSchedule.class);
+                            intent.putExtra("date",todayDate);
+                            startActivity(intent);
+                        }
+                    });
+
+                    // 두 번째 FAB 리스너
+                    addTaskButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(ShowDayActivity.this, createTask.class);
+                            intent.putExtra("date",todayDate);
+                            startActivity(intent);
+                        }
+                    });
+
+                    // 세 번째 FAB 리스너
+                    etcButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(ShowDayActivity.this, Event.class); //Evnet.class is just example not to make error!!!
+                            intent.putExtra("date",todayDate);
+                            startActivity(intent);
+                        }
+                    });
+                } else {
+                    closeFABMenu();
+                }
+            }
+        });
 
 
 
@@ -170,6 +216,24 @@ public class ShowDayActivity extends AppCompatActivity {
 //        // 어댑터에 데이터가 변경됨을 알림
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void showFABMenu(){
+        isFABOpen=true;
+        addTaskButton.setVisibility(View.VISIBLE);
+        addScheduleButton.setVisibility(View.VISIBLE);
+        etcButton.setVisibility(View.VISIBLE);
+
+        // 여기에 각 FAB에 대한 애니메이션 추가 가능
+    }
+
+    private void closeFABMenu(){
+        isFABOpen=false;
+        addTaskButton.setVisibility(View.INVISIBLE);
+        addScheduleButton.setVisibility(View.INVISIBLE);
+        etcButton.setVisibility(View.INVISIBLE);
+
+        // 여기에 각 FAB에 대한 애니메이션 추가 가능
     }
 
 
