@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+Server Test Branch(23.11.27)
+ */
+
 public class ShowDayActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;

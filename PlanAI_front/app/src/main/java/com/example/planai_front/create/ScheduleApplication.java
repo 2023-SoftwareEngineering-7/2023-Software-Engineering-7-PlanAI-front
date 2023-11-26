@@ -4,7 +4,9 @@ import android.app.Application;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+/*
+Server Test Branch(23.11.27)
+ */
 public class ScheduleApplication extends Application {
     private static ScheduleApplication instance;
     private HashMap<String, ArrayList<Schedule>> scheduleMap;
