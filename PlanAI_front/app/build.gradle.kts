@@ -44,6 +44,12 @@ dependencies {
 //Material Calendar
     implementation ("com.github.prolificinteractive:material-calendarview:2.0.1")
     implementation ("com.jakewharton.threetenabp:threetenabp:1.1.1")
+    //retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.6.4")
+    implementation ("com.squareup.retrofit2:converter-gson:2.6.4")
+    implementation ("com.squareup.retrofit2:converter-scalars:2.6.4")
+
+
 
 }
 
