@@ -9,6 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.planai_front.BoardActivity;
+import com.example.planai_front.FriendlistActivity;
 import com.example.planai_front.MaterialCalendarActivity;
 import com.example.planai_front.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -151,6 +154,30 @@ public class ShowDayActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.navigation_calendar) {
                 startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
+
+            }else if (item.getItemId() == R.id.navigation_friend) {
+                startActivity(new Intent(ShowDayActivity.this, FriendlistActivity.class));
+                // 추가 버튼에 대한 처리를 여기에 작성합니다.
+                // 예: case R.id.navigation_new_button:
+                // 버튼에 대한 액션 구현
+
+            } else if (item.getItemId() == R.id.navigation_home){
+                startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
+                // 추가 버튼에 대한 처리를 여기에 작성합니다.
+                // 예: case R.id.navigation_new_button:
+                // 버튼에 대한 액션 구현
+
+            }else if (item.getItemId() == R.id.navigation_post){
+                startActivity(new Intent(ShowDayActivity.this, BoardActivity.class));
+                // 추가 버튼에 대한 처리를 여기에 작성합니다.
+                // 예: case R.id.navigation_new_button:
+                // 버튼에 대한 액션 구현
+
+            }else if (item.getItemId() == R.id.navigation_setting) {
+                startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
+                // 추가 버튼에 대한 처리를 여기에 작성합니다.
+                // 예: case R.id.navigation_new_button:
+                // 버튼에 대한 액션 구현
             }
             return true;
         });
