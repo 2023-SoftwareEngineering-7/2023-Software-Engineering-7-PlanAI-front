@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+Task도 마저 구현할것
+ */
 public class ShowDayActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
