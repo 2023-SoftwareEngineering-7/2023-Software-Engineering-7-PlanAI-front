@@ -4,16 +4,13 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +18,6 @@ import com.example.planai_front.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 //전달받은 todayDate(2023-11-22 형식을 가짐)을 id로 해서 서버에 Task 등록
@@ -36,6 +32,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
     private ImageView startCalendarButton, startTimeButton, endCalendarButton, endTimeButton;
     private TextView tagTextView;
     private String todayTag;
+    private String todaySummary;
     private Calendar startCalendar, startTimeCal, endCalendar, endTimeCal;
     private Button finishButton;
 
@@ -45,18 +42,20 @@ public class CreateScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.createschedule_popuplayout);
 
         initializeViews();
+        getSummaryText();
         setupDateAndTimePickers();
         setupTagDropDown();
+        setFinishButton();
     }
 
     private void initializeViews() {
         Intent dateIntent = getIntent();
         todayDate = dateIntent.getStringExtra("date");
 
-        startDateText = findViewById(R.id.startDate);
-        startCalendarButton = findViewById(R.id.startCalendarButton);
-        startTimeText = findViewById(R.id.startTime);
-        startTimeButton = findViewById(R.id.startTimeButton);
+        startDateText = findViewById(R.id.deadLineDate);
+        startCalendarButton = findViewById(R.id.deadLineCalendarButton);
+        startTimeText = findViewById(R.id.deadLineTime);
+        startTimeButton = findViewById(R.id.deadLineTimeButton);
         endDateText = findViewById(R.id.endDate);
         endCalendarButton = findViewById(R.id.endCalendarButton);
         endTimeText = findViewById(R.id.endTime);
@@ -69,6 +68,11 @@ public class CreateScheduleActivity extends AppCompatActivity {
         finishButton = findViewById(R.id.finishButton);
     }
 
+    private void getSummaryText() {
+        summaryText = findViewById(R.id.scheduleSummary);
+        todaySummary = summaryText.getText().toString();
+
+    }
     private void setupDateAndTimePickers() {
         setupDatePicker(startCalendarButton, startDateText, startCalendar);
         setupTimePicker(startTimeButton, startTimeText, startTimeCal);
@@ -119,8 +123,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
         Button finishButton = findViewById(R.id.finishButton);
         finishButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ArrayList<String> scheduleData = collectScheduleData();
-                sendDataToServer(scheduleData);
+//                ArrayList<String> scheduleData = collectScheduleData();
+//                sendDataToServer(scheduleData);
                 finish();
             }
         });
@@ -128,6 +132,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
     private ArrayList<String> collectScheduleData() {
         ArrayList<String> scheduleData = new ArrayList<>();
+        scheduleData.add(todayDate);
+        scheduleData.add(todaySummary);
         scheduleData.add(startDateText.getText().toString());
         scheduleData.add(startTimeText.getText().toString());
         scheduleData.add(endDateText.getText().toString());

@@ -123,6 +123,7 @@ public class ShowDayActivity extends AppCompatActivity {
             Intent intent = new Intent(ShowDayActivity.this, CreateTaskActivity.class);
             intent.putExtra("date", getIntent().getStringExtra("date"));
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_up, R.anim.stay); // 아래에서 올라오는 애니메이션 적용
         });
 
 
