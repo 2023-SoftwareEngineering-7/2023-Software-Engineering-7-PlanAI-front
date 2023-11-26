@@ -5,27 +5,17 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.planai_front.MaterialCalendarActivity;
 import com.example.planai_front.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.List;
 
-//****need to copy THIS to Rana's file**///
-/*
-Intented from MaterialCalendarActivity - materialCalendarView.setOnDateChangedListener
-1) Show daily schedule
-2) Create schedule & task through button
-3) bottom navigation bar available
- */
 public class ShowDayActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -37,208 +27,131 @@ public class ShowDayActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //show day_main.xml
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_main_v2);
 
+        setupDateBanner();
+        setupRecyclerView();
+        setupFloatingActionButtons();
+        setupBottomNavigationBar();
+    }
+
+    private void setupDateBanner() {
         Intent dateIntent = getIntent();
         String todayDate = dateIntent.getStringExtra("date");
-//        TextView showDate = (TextView) findViewById(R.id.date_banner);
-//        showDate.setText(todayDate);    //remove.....
-
-        //setting banner: month, date, date of week
 
         String[] parts = todayDate.split("-");
+        String todayYear = parts[0];
+        String todayMonth = parts[1];
+        String todayDay = parts[2];
 
-        String todayYear = parts[0]; // 년
-        String todayMonth = parts[1]; // 월
-        String todayDay = parts[2]; // 일
+        String monthName = getMonthName(todayMonth);
 
-        String monthName = "";
-        switch (todayMonth) {
-            case "01":
-                monthName = "January";
-                break;
-            case "02":
-                monthName = "February";
-                break;
-            case "03":
-                monthName = "March";
-                break;
-            case "04":
-                monthName = "April";
-                break;
-            case "05":
-                monthName = "May";
-                break;
-            case "06":
-                monthName = "June";
-                break;
-            case "07":
-                monthName = "July";
-                break;
-            case "08":
-                monthName = "August";
-                break;
-            case "09":
-                monthName = "September";
-                break;
-            case "10":
-                monthName = "October";
-                break;
-            case "11":
-                monthName = "November";
-                break;
-            case "12":
-                monthName = "December";
-                break;
-            default:
-                monthName = "Invalid month";
-                break;
-        }
-
-        TextView show = (TextView) findViewById(R.id.todayMonthView);
+        TextView show = findViewById(R.id.todayMonthView);
         show.setText(monthName);
 
-        TextView show2 = (TextView) findViewById(R.id.todayDateNumView);
+        TextView show2 = findViewById(R.id.todayDateNumView);
         show2.setText(todayDay);
 
         String todayDayText = dateIntent.getStringExtra("fullDateInfo");
-        TextView show3 = (TextView) findViewById(R.id.todayDateTextView);
+        TextView show3 = findViewById(R.id.todayDateTextView);
         show3.setText(todayDayText.substring(0, 3));
+    }
 
-        //recyclerview
+    private String getMonthName(String monthNumber) {
+        switch (monthNumber) {
+            case "01": return "January";
+            case "02": return "February";
+            case "03": return "March";
+            case "04": return "April";
+            case "05": return "May";
+            case "06": return "June";
+            case "07": return "July";
+            case "08": return "August";
+            case "09": return "September";
+            case "10": return "October";
+            case "11": return "November";
+            case "12": return "December";
+            default: return "Invalid month";
+        }
+    }
+
+    private void setupRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // 데이터 목록 초기화 및 어댑터 설정
         scheduleList = new ArrayList<>();
         adapter = new ScheduleAdapter(scheduleList);
         recyclerView.setAdapter(adapter);
 
-        // 데이터 로딩
-        loadSchedules(todayDate);
+        loadSchedules(getIntent().getStringExtra("date"));
+    }
 
+    private void loadSchedules(String todayDate) {
+        if (todayDate.equals("2023-11-26")) {
+            // 예시 데이터 추가
+            // 서버에서 todayDate에 해당하는 스케줄을 불러와 scheduleList에 저장
+            scheduleList.add(new Schedule("Meeting with Team", "1Pm", "3pm", "Meeting details", "Location"));
+            // ... 추가 데이터 로딩
+            adapter.notifyDataSetChanged();
+        }
+    }
 
-//branch for Calendal - calendar2: 23.11.25 created
-
-
-        //schedule&task creating button
-        // begin HERE
-        //https://ghj1001020.tistory.com/9
-        // I think this will be helpful
-        // If you are working on this page, please let me know!
-
-
+    private void setupFloatingActionButtons() {
         addEventFabButton = findViewById(R.id.fabMain);
         addScheduleButton = findViewById(R.id.schedulebutton);
         addTaskButton = findViewById(R.id.taskbutton);
         etcButton = findViewById(R.id.fabOption1);
 
-        addEventFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isFABOpen) {
-                    showFABMenu();
-                    addScheduleButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(ShowDayActivity.this, createSchedule.class);
-                            intent.putExtra("date",todayDate);
-                            startActivity(intent);
-                        }
-                    });
-
-                    // 두 번째 FAB 리스너
-                    addTaskButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(ShowDayActivity.this, createTask.class);
-                            intent.putExtra("date",todayDate);
-                            startActivity(intent);
-                        }
-                    });
-
-                    // 세 번째 FAB 리스너
-                    etcButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(ShowDayActivity.this, Event.class); //Evnet.class is just example not to make error!!!
-                            intent.putExtra("date",todayDate);
-                            startActivity(intent);
-                        }
-                    });
-                } else {
-                    closeFABMenu();
-                }
+        addEventFabButton.setOnClickListener(view -> {
+            if (!isFABOpen) {
+                showFABMenu();
+            } else {
+                closeFABMenu();
             }
         });
 
-
-
-
-
-
-
-
-        //하단 메뉴 바
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnavigation);
-        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.navigation_calendar) {
-                    Intent intent = new Intent(ShowDayActivity.this, MaterialCalendarActivity.class);
-                    startActivity(intent);
-
-                    /*case R.id.menu_item2:
-                        selectedFragment = new Fragment2();
-                        break;
-                    // 다른 메뉴 아이템에 대한 처리
-                    */
-
-                }
-                return true;
-            }
+        addScheduleButton.setOnClickListener(view -> {
+            Intent intent = new Intent(ShowDayActivity.this, CreateScheduleActivity.class);
+            intent.putExtra("date", getIntent().getStringExtra("date"));
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up, R.anim.stay); // 아래에서 올라오는 애니메이션 적용
         });
 
+        addTaskButton.setOnClickListener(view -> {
+            Intent intent = new Intent(ShowDayActivity.this, CreateTaskActivity.class);
+            intent.putExtra("date", getIntent().getStringExtra("date"));
+            startActivity(intent);
+        });
+
+
+        // 추가 FAB 리스너 설정
     }
 
-    private void loadSchedules(String todayDate) {
-// 예시 데이터 추가
-//        //todayDate로 서버에서 todayDate에 등록된 schedule을 불러와 schedulelist에 저장, 띄우기
-        if(todayDate.equals("2023-11-26")) {
-            scheduleList.add(new Schedule("Meeting with Team"+todayDate+"yyy", "1Pm", "3pm", "hello world", "colll"));
-            scheduleList.add(new Schedule("Call with Client", "5pm", "6pm", "hello world", "coll coll cool"));
-            scheduleList.add(new Schedule("Date with friends", "7pm", "10pm", "hello world", "coll coll cool"));
-            scheduleList.add(new Schedule("Date with friends", "7pm", "10pm", "hello world", "coll coll cool"));
-            scheduleList.add(new Schedule("Date with friends", "7pm", "10pm", "hello world", "coll coll cool"));
-//        // 어댑터에 데이터가 변경됨을 알림
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    private void showFABMenu(){
-        isFABOpen=true;
+    private void showFABMenu() {
+        isFABOpen = true;
         addTaskButton.setVisibility(View.VISIBLE);
         addScheduleButton.setVisibility(View.VISIBLE);
         etcButton.setVisibility(View.VISIBLE);
-
-        // 여기에 각 FAB에 대한 애니메이션 추가 가능
+        // FAB 애니메이션 추가 가능
     }
 
-    private void closeFABMenu(){
-        isFABOpen=false;
+    private void closeFABMenu() {
+        isFABOpen = false;
         addTaskButton.setVisibility(View.INVISIBLE);
         addScheduleButton.setVisibility(View.INVISIBLE);
         etcButton.setVisibility(View.INVISIBLE);
-
-        // 여기에 각 FAB에 대한 애니메이션 추가 가능
+        // FAB 애니메이션 추가 가능
     }
 
-
-
+    private void setupBottomNavigationBar() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnavigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.navigation_calendar) {
+                startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
+            }
+            return true;
+        });
+    }
 }
-
-
-
