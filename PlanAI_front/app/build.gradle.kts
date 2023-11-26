@@ -41,6 +41,7 @@ dependencies {
 //    implementation("androidx.annotation:annotation-jvm:1.7.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 //Material Calendar
     implementation ("com.github.prolificinteractive:material-calendarview:2.0.1")
     implementation ("com.jakewharton.threetenabp:threetenabp:1.1.1")
@@ -50,6 +51,12 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-scalars:2.6.4")
 
 
+
+    //리사이클러뷰
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    // For control over item selection of both touch and mouse driven selection
+    implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+    //implementation("com.android.support:design:28.0.0")
 
 }
 
