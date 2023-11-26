@@ -25,13 +25,12 @@ import java.util.Locale;
 //뒤로가기 버튼을 통해 ShowDayActivity로 돌아감
 public class CreateScheduleActivity extends AppCompatActivity {
 
-    private String todayDate;
-    private EditText summaryText;
+    private String todayDate, todayTag, todayDescription;
+    private EditText summaryText, descriptionText;
     private Switch repeatSchedule;
     private TextView startDateText, startTimeText, endDateText, endTimeText;
     private ImageView startCalendarButton, startTimeButton, endCalendarButton, endTimeButton;
     private TextView tagTextView;
-    private String todayTag;
     private String todaySummary;
     private Calendar startCalendar, startTimeCal, endCalendar, endTimeCal;
     private Button finishButton;
@@ -41,11 +40,18 @@ public class CreateScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.createschedule_popuplayout);
 
+        // UI 컴포넌트 초기화
         initializeViews();
-        getSummaryText();
         setupDateAndTimePickers();
         setupTagDropDown();
-        setFinishButton();
+
+        // 데이터 수집
+        getSummaryText();
+        getDescriptionText();
+
+        // 완료 버튼 리스너 설정
+        finishButton.setOnClickListener(view -> finishScheduleCreation());
+
     }
 
     private void initializeViews() {
@@ -66,6 +72,9 @@ public class CreateScheduleActivity extends AppCompatActivity {
         endCalendar = Calendar.getInstance();
         endTimeCal = Calendar.getInstance();
         finishButton = findViewById(R.id.finishButton);
+
+        // 완료 버튼에 대한 리스너 설정
+        finishButton.setOnClickListener(view -> finishScheduleCreation());
     }
 
     private void getSummaryText() {
@@ -119,28 +128,46 @@ public class CreateScheduleActivity extends AppCompatActivity {
         });
     }
 
-    private void setFinishButton() {
-        Button finishButton = findViewById(R.id.finishButton);
-        finishButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-//                ArrayList<String> scheduleData = collectScheduleData();
-//                sendDataToServer(scheduleData);
-                finish();
-            }
-        });
+    private void getDescriptionText() {
+        descriptionText = findViewById(R.id.descriptionTextView);
+        todayDescription = descriptionText.getText().toString();
+
+    }
+    //    private void setFinishButton() {
+//        Button finishButton = findViewById(R.id.finishButton);
+//        finishButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+////                ArrayList<String> scheduleData = collectScheduleData();
+////                sendDataToServer(scheduleData);
+//                finish();
+//            }
+//        });
+//    }
+
+    private void finishScheduleCreation() {
+        // 사용자 입력 데이터 수집
+        String summary = summaryText.getText().toString();
+        String startDate = startDateText.getText().toString();
+        String startTime = startTimeText.getText().toString();
+        String endDate = endDateText.getText().toString();
+        String endTime = endTimeText.getText().toString();
+        String tag = tagTextView.getText().toString();
+        String description = descriptionText.getText().toString();
+
+        // 결과를 Intent에 담기
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("summary", summary);
+        resultIntent.putExtra("startDate", startDate);
+        resultIntent.putExtra("startTime", startTime);
+        resultIntent.putExtra("endDate", endDate);
+        resultIntent.putExtra("endTime", endTime);
+        resultIntent.putExtra("tag", tag);
+        resultIntent.putExtra("description", description);
+
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
-    private ArrayList<String> collectScheduleData() {
-        ArrayList<String> scheduleData = new ArrayList<>();
-        scheduleData.add(todayDate);
-        scheduleData.add(todaySummary);
-        scheduleData.add(startDateText.getText().toString());
-        scheduleData.add(startTimeText.getText().toString());
-        scheduleData.add(endDateText.getText().toString());
-        scheduleData.add(endTimeText.getText().toString());
-        scheduleData.add(tagTextView.getText().toString());
-        return scheduleData;
-    }
 
     // 서버에 데이터 전송하는 메서드 (더미 예시)
     private void sendDataToServer(ArrayList<String> data) {

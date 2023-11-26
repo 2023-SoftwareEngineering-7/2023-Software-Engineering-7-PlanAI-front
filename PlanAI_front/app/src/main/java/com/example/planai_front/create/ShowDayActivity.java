@@ -1,10 +1,14 @@
 package com.example.planai_front.create;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,9 +28,36 @@ public class ShowDayActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ScheduleAdapter adapter;
     private List<Schedule> scheduleList;
+    private String scheduleSummary, scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, scheduleTag, scheduleDescription;
 
     private FloatingActionButton addEventFabButton, addScheduleButton, addTaskButton, etcButton;
     private boolean isFABOpen = false;
+
+    // ActivityResultLauncher 초기화
+    private final ActivityResultLauncher<Intent> createScheduleLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            // 결과 처리
+                            Intent data = result.getData();
+                            if (data != null) {
+
+                                scheduleSummary = data.getStringExtra("summary");
+                                scheduleStartDate = data.getStringExtra("startDate");
+                                scheduleStartTime = data.getStringExtra("startTime");
+                                scheduleEndDate= data.getStringExtra("endDate");
+                                scheduleEndTime = data.getStringExtra("endTime");
+                                scheduleTag = data.getStringExtra("tag");
+                                scheduleDescription = data.getStringExtra("description");
+
+                                Schedule newSchedule = new Schedule(scheduleSummary, scheduleStartDate, scheduleEndDate, scheduleDescription, "");
+                                scheduleList.add(newSchedule);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+            );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +149,10 @@ public class ShowDayActivity extends AppCompatActivity {
         addScheduleButton.setOnClickListener(view -> {
             Intent intent = new Intent(ShowDayActivity.this, CreateScheduleActivity.class);
             intent.putExtra("date", getIntent().getStringExtra("date"));
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_up, R.anim.stay); // 아래에서 올라오는 애니메이션 적용
+            createScheduleLauncher.launch(intent); // ActivityResultLauncher 사용
+            overridePendingTransition(R.anim.slide_up, R.anim.stay); // 애니메이션 적용
+
+
         });
 
         addTaskButton.setOnClickListener(view -> {

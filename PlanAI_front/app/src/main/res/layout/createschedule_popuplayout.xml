@@ -318,6 +318,32 @@
             app:layout_constraintEnd_toEndOf="@+id/tagTextView"
             android:layout_marginTop="10dp" />
 
+    <!-- 설명추가란-->
+    <TextView
+            android:text="설명: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:id="@+id/descriptionText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/tagText"
+            android:layout_marginTop="30dp"
+            android:textColorLink="@color/black"
+            android:textColor="#959595"
+            android:fontFamily="@font/nanumbarungothic" />
+
+    <EditText
+            android:id="@+id/descriptionTextView"
+            android:layout_width="300sp"
+            android:layout_height="40sp"
+            android:minHeight="24dp"
+            app:layout_constraintTop_toTopOf="@+id/tagTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:layout_marginTop="56dp"
+            android:layout_marginEnd="12dp" />
+
     <Button
             android:id="@+id/finishButton"
             android:layout_width="wrap_content"
