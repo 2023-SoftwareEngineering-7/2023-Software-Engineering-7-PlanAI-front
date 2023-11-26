@@ -21,6 +21,7 @@ import com.example.planai_front.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ShowDayActivity extends AppCompatActivity {
@@ -32,6 +33,9 @@ public class ShowDayActivity extends AppCompatActivity {
 
     private FloatingActionButton addEventFabButton, addScheduleButton, addTaskButton, etcButton;
     private boolean isFABOpen = false;
+
+    // 전역 변수로 scheduleMap 선언
+    private HashMap<String, ArrayList<Schedule>> scheduleMap = new HashMap<>();
 
     // ActivityResultLauncher 초기화
     private final ActivityResultLauncher<Intent> createScheduleLauncher =
@@ -52,8 +56,13 @@ public class ShowDayActivity extends AppCompatActivity {
                                 scheduleDescription = data.getStringExtra("description");
 
                                 Schedule newSchedule = new Schedule(scheduleSummary, scheduleStartDate, scheduleEndDate, scheduleDescription, "");
-                                scheduleList.add(newSchedule);
-                                adapter.notifyDataSetChanged();
+                                ArrayList<Schedule> schedules = scheduleMap.computeIfAbsent(scheduleStartDate, k -> new ArrayList<>());
+                                schedules.add(newSchedule);
+
+                                if (scheduleStartDate.equals(getIntent().getStringExtra("date"))) {
+                                    scheduleList.add(newSchedule);
+                                    adapter.notifyDataSetChanged();
+                                }
                             }
                         }
                     }
@@ -64,10 +73,22 @@ public class ShowDayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_main_v2);
 
+        // ScheduleApplication 인스턴스를 사용하여 scheduleMap 가져오기
+        scheduleMap = ScheduleApplication.getInstance().getScheduleMap();
+        scheduleList = new ArrayList<>(); // scheduleList 초기화
+
+        setupRecyclerView();
         setupDateBanner();
         setupRecyclerView();
         setupFloatingActionButtons();
         setupBottomNavigationBar();
+
+        // 현재 날짜에 해당하는 스케줄 로드
+        String todayDate = getIntent().getStringExtra("date");
+        if (todayDate != null) {
+            loadSchedules(todayDate);
+        }
+
     }
 
     private void setupDateBanner() {
@@ -115,21 +136,17 @@ public class ShowDayActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        scheduleList = new ArrayList<>();
         adapter = new ScheduleAdapter(scheduleList);
         recyclerView.setAdapter(adapter);
 
-        loadSchedules(getIntent().getStringExtra("date"));
     }
 
     private void loadSchedules(String todayDate) {
-        if (todayDate.equals("2023-11-26")) {
-            // 예시 데이터 추가
-            // 서버에서 todayDate에 해당하는 스케줄을 불러와 scheduleList에 저장
-            scheduleList.add(new Schedule("Meeting with Team", "1Pm", "3pm", "Meeting details", "Location"));
-            // ... 추가 데이터 로딩
-            adapter.notifyDataSetChanged();
-        }
+        ArrayList<Schedule> schedulesForToday = scheduleMap.getOrDefault(todayDate, new ArrayList<>());
+        scheduleList.clear();
+        scheduleList.addAll(schedulesForToday);
+        adapter.notifyDataSetChanged();
+
     }
 
     private void setupFloatingActionButtons() {
