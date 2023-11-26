@@ -1,18 +1,25 @@
 package com.example.planai_front.create;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.planai_front.R;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -22,50 +29,116 @@ import java.util.Locale;
 //뒤로가기 버튼을 통해 ShowDayActivity로 돌아감
 public class CreateScheduleActivity extends AppCompatActivity {
 
+    private String todayDate;
     private EditText summaryText;
     private Switch repeatSchedule;
-    private EditText startDateText;
-    private Calendar startCalendar;
-    private ImageView startCalendarButton;
-    private EditText startTime;
-    private ImageView startTimeButton;
-    private EditText endDateText;
-    private Calendar endCalendar;
-    private  EditText endTime;
+    private TextView startDateText, startTimeText, endDateText, endTimeText;
+    private ImageView startCalendarButton, startTimeButton, endCalendarButton, endTimeButton;
+    private TextView tagTextView;
+    private String todayTag;
+    private Calendar startCalendar, startTimeCal, endCalendar, endTimeCal;
+    private Button finishButton;
 
-
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //show day_main.xml
         super.onCreate(savedInstanceState);
         setContentView(R.layout.createschedule_popuplayout);
 
-        Intent dateIntent = getIntent();
-        String todayDate = dateIntent.getStringExtra("date");
+        initializeViews();
+        setupDateAndTimePickers();
+        setupTagDropDown();
+    }
 
-        //날짜 선택기
+    private void initializeViews() {
+        Intent dateIntent = getIntent();
+        todayDate = dateIntent.getStringExtra("date");
+
         startDateText = findViewById(R.id.startDate);
         startCalendarButton = findViewById(R.id.startCalendarButton);
+        startTimeText = findViewById(R.id.startTime);
+        startTimeButton = findViewById(R.id.startTimeButton);
+        endDateText = findViewById(R.id.endDate);
+        endCalendarButton = findViewById(R.id.endCalendarButton);
+        endTimeText = findViewById(R.id.endTime);
+        endTimeButton = findViewById(R.id.endTimeButton);
+        tagTextView = findViewById(R.id.tagTextView);
         startCalendar = Calendar.getInstance();
+        startTimeCal = Calendar.getInstance();
+        endCalendar = Calendar.getInstance();
+        endTimeCal = Calendar.getInstance();
+        finishButton = findViewById(R.id.finishButton);
+    }
 
-        startCalendarButton.setOnClickListener(new View.OnClickListener() {
+    private void setupDateAndTimePickers() {
+        setupDatePicker(startCalendarButton, startDateText, startCalendar);
+        setupTimePicker(startTimeButton, startTimeText, startTimeCal);
+        setupDatePicker(endCalendarButton, endDateText, endCalendar);
+        setupTimePicker(endTimeButton, endTimeText, endTimeCal);
+    }
+
+    private void setupDatePicker(ImageView button, final TextView textView, final Calendar calendar) {
+        button.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(CreateScheduleActivity.this,
+                    (view, year, month, dayOfMonth) -> {
+                        month++;
+                        String selectedDate = String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, dayOfMonth);
+                        textView.setText(selectedDate);
+                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.show();
+        });
+    }
+
+    private void setupTimePicker(ImageView button, final TextView textView, final Calendar calendar) {
+        button.setOnClickListener(v -> {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(CreateScheduleActivity.this,
+                    (view, hourOfDay, minute) -> {
+                        String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
+                        textView.setText(selectedTime);
+                    }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+            timePickerDialog.show();
+        });
+    }
+
+    private void setupTagDropDown() {
+        Button tagShowDropDown = findViewById(R.id.tagShowDropDown);
+        tagShowDropDown.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(CreateScheduleActivity.this, v);
+            popupMenu.getMenu().add("text1");
+            popupMenu.getMenu().add("text2");
+            popupMenu.getMenu().add("text3");
+            popupMenu.setOnMenuItemClickListener(item -> {
+                todayTag = item.getTitle().toString();
+                tagTextView.setText(todayTag);
+                return true;
+            });
+            popupMenu.show();
+        });
+    }
+
+    private void setFinishButton() {
+        Button finishButton = findViewById(R.id.finishButton);
+        finishButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        CreateScheduleActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                // Calendar month is zero-based
-                                month++;
-                                String selectedDate = String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, dayOfMonth);
-                                startDateText.setText(selectedDate);
-                            }
-                        },
-                        startCalendar.get(Calendar.YEAR),
-                        startCalendar.get(Calendar.MONTH),
-                        startCalendar.get(Calendar.DAY_OF_MONTH)
-                );
-                datePickerDialog.show();
+                ArrayList<String> scheduleData = collectScheduleData();
+                sendDataToServer(scheduleData);
+                finish();
             }
         });
+    }
+
+    private ArrayList<String> collectScheduleData() {
+        ArrayList<String> scheduleData = new ArrayList<>();
+        scheduleData.add(startDateText.getText().toString());
+        scheduleData.add(startTimeText.getText().toString());
+        scheduleData.add(endDateText.getText().toString());
+        scheduleData.add(endTimeText.getText().toString());
+        scheduleData.add(tagTextView.getText().toString());
+        return scheduleData;
+    }
+
+    // 서버에 데이터 전송하는 메서드 (더미 예시)
+    private void sendDataToServer(ArrayList<String> data) {
+
+
     }
 }

@@ -40,7 +40,7 @@
     <!-- 중간의 다른 입력 필드들 (시작일, 종료일, 반복 여부 등) -->
 
     <Button
-            android:id="@+id/confirmButton"
+            android:id="@+id/finishButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="확인"
