@@ -15,6 +15,24 @@
         android:theme="@style/Theme.PlanAI_front"
         tools:targetApi="31">
         <activity
+            android:name=".WriteActivity"
+            android:exported="false" ></activity>
+        <activity
+            android:name=".MywriteActivity"
+            android:exported="false" ></activity>
+        <activity
+            android:name=".GetfriendActivity"
+            android:exported="false" ></activity>
+        <activity
+            android:name=".FriendlistActivity"
+            android:exported="false" ></activity>
+        <activity
+            android:name=".AddfriendActivity"
+            android:exported="false" ></activity>
+        <activity
+            android:name=".BoardActivity"
+            android:exported="false" ></activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
