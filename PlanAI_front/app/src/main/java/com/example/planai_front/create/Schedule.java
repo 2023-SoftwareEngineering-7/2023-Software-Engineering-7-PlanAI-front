@@ -6,48 +6,56 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 public class Schedule {
+    /*
+                                    scheduleSummary = data.getStringExtra("summary");
+                                scheduleStartDate = data.getStringExtra("startDate");
+                                scheduleStartTime = data.getStringExtra("startTime");
+                                scheduleEndDate = data.getStringExtra("endDate");
+                                scheduleEndTime = data.getStringExtra("endTime");
+                                scheduleTag = data.getStringExtra("tag");
+                                scheduleDescription = data.getStringExtra("description");
+     */
     private String id;
     private String summary;
-    private String datetime;
-    private String creator;
+    private String startDate;
+    private String startTime;
+    private String endDate;
+    private String endTime;
+    private String tag;
     private String description;
-    private  String start;
-    private  String end;
-    private  boolean open_schedule;
-    private enum tag{}
-    private  boolean saveState;
-
     private String collaborators;
 
-    public Schedule(String id, String summary, String datetime, String creator, String description, String start, String end, boolean open_schedule, String collaborators, boolean saveState) {
-        this.id = id;
-        this.summary = summary;
-        this.datetime = datetime;
-        this.creator = creator;
-        this.description = description;
-        this.start = start;
-        this.end = end;
-        this.open_schedule = open_schedule;
-        this.collaborators = "hello owordl";
-        this.saveState = saveState;
+    // 기본 생성자
+    public Schedule() {
     }
 
-    public Schedule(String summary, String start, String end, String description, String collaborators) {
+    public Schedule(String id, String summary, String startDate, String endDate, String description, String tag){
         this.summary = summary;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.description = description;
-        this.start = start;
-        this.end = end;
+        this.tag = tag;
+
+    }
+
+
+    // 모든 필드를 포함하는 생성자
+    public  Schedule(String id, String summary, String startDate, String startTime, String endDate, String endTime, String tag, String description, String collaborators){
+        this.id = id;
+        this.summary = summary;
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endDate = endDate;
+        this.endTime = endTime;
+        this.tag = tag;
+        this.description = description;
         this.collaborators = collaborators;
+
     }
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
+    // Getter 및 Setter 메서드
     public String getSummary() {
         return summary;
     }
@@ -56,20 +64,44 @@ public class Schedule {
         this.summary = summary;
     }
 
-    public String getDatetime() {
-        return datetime;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setDatetime(String datetime) {
-        this.datetime = datetime;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
-    public String getCreator() {
-        return creator;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public String getDescription() {
@@ -80,28 +112,12 @@ public class Schedule {
         this.description = description;
     }
 
-    public String getStart() {
-        return start;
+    public String getId() {
+        return id;
     }
 
-    public void setStart(String start) {
-        this.start = start;
-    }
-
-    public String getEnd() {
-        return end;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
-    }
-
-    public boolean isOpen_schedule() {
-        return open_schedule;
-    }
-
-    public void setOpen_schedule(boolean open_schedule) {
-        this.open_schedule = open_schedule;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCollaborators() {
@@ -112,27 +128,18 @@ public class Schedule {
         this.collaborators = collaborators;
     }
 
-    public boolean isSaveState() {
-        return saveState;
-    }
-
-    public void setSaveState(boolean saveState) {
-        this.saveState = saveState;
-    }
-
+    // toString 메서드
     @Override
     public String toString() {
-        return "Schedule{" +
-                "id='" + id + '\'' +
-                ", summary='" + summary + '\'' +
-                ", datetime=" + datetime +
-                ", creator='" + creator + '\'' +
+        return "ScheduleDetails{" +
+                "summary='" + summary + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", tag='" + tag + '\'' +
                 ", description='" + description + '\'' +
-                ", start=" + start +
-                ", end=" + end +
-                ", open_schedule=" + open_schedule +
-                ", collaborators=" + collaborators +
-                ", saveState=" + saveState +
                 '}';
     }
+
 }
