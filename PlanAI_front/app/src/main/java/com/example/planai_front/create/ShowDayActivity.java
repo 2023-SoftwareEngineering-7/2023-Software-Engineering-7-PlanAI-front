@@ -37,11 +37,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-/*
-Server Test Branch(23.11.27)
- */
-
 public class ShowDayActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
