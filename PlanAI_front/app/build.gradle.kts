@@ -52,6 +52,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-scalars:2.6.4")
     implementation ("com.squareup.okhttp3:logging-interceptor:3.12.1")
 
+    implementation ("com.google.android.gms:play-services-auth:20.0.0")
 
 
     //리사이클러뷰
