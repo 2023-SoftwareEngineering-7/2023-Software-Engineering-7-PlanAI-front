@@ -48,7 +48,7 @@ public class ShowDayActivity extends AppCompatActivity {
     private ScheduleAdapter adapter;
     private List<Schedule> scheduleList;
     private String scheduleId, scheduleSummary, scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, scheduleTag, scheduleDescription;
-
+    private List<String> Server_tagList = new ArrayList<>();
     private FloatingActionButton addEventFabButton, addScheduleButton, addTaskButton, etcButton;
     private boolean isFABOpen = false;
 
@@ -59,8 +59,8 @@ public class ShowDayActivity extends AppCompatActivity {
 
     // 전역 변수로 scheduleMap 선언
     private HashMap<String, ArrayList<Schedule>> scheduleMap = new HashMap<>();
-    private LocalDateTime Server_scheduleStartDate;
-    private LocalDateTime Server_scheduleEndDate;
+    private String Server_scheduleStartDate;
+    private String Server_scheduleEndDate;
 
     // ActivityResultLauncher 객체 선언. 다른 액티비티에서 결과 받아오는데 사용.
     private final ActivityResultLauncher<Intent> createScheduleLauncher =
@@ -100,12 +100,23 @@ public class ShowDayActivity extends AppCompatActivity {
 
                                 //서버 전송 준비
                                 //TODO: 서버 전송용 Schedule클래스와 저장하는 Schedule클래스 일치시키기
-                                List<String> tagList = new ArrayList<>();
-                                tagList.add(scheduleTag);
-                                Server_scheduleStartDate = LocalDateTime.parse(scheduleStartDate+"T11:11:11");
-                                Server_scheduleEndDate = LocalDateTime.parse(scheduleEndDate+"T11:11:11");
+                                Log.e("Server!!", scheduleTag);
+                                if (Server_tagList == null) {
+                                    Server_tagList = new ArrayList<>();
 
-                                Server_ScheduleDTO serverScheduleDTO = new Server_ScheduleDTO(scheduleSummary, Server_scheduleStartDate, Server_scheduleEndDate, scheduleDescription, userId, tagList );
+                                }
+                                Server_tagList.add(scheduleTag);
+
+                                if(Server_tagList.isEmpty()){
+                                    Log.e("Server!!", "empty tagList");
+                                }else{
+                                    Log.e("Server!!", Server_tagList.get(0));
+                                }
+
+                                Server_scheduleStartDate = scheduleStartDate+"T"+scheduleStartTime;
+                                Server_scheduleEndDate = scheduleEndDate+"T"+scheduleEndTime;
+
+                                Server_ScheduleDTO serverScheduleDTO = new Server_ScheduleDTO(scheduleSummary, Server_scheduleStartDate, Server_scheduleEndDate, scheduleDescription, userId, Server_tagList );
                                 Log.d("Server!!", "Response 1");
                                 ApiService apiService = RetrofitClient.getClient(PlanAI_URL).create(ApiService.class);
                                 Log.d("Server!!", "Response 2");

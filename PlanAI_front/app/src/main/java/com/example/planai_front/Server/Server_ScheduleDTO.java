@@ -1,23 +1,28 @@
 package com.example.planai_front.Server;
 
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 public class Server_ScheduleDTO {
+    public Server_ScheduleDTO() {
+    }
 
     @SerializedName("title")
     @Expose
     private String title;
     @SerializedName("startDate")
     @Expose
-    private LocalDateTime startDate; // LocalDateTime 대신 String 사용
+    private String startDate; // LocalDateTime 대신 String 사용
     @SerializedName("endDate")
     @Expose
-    private LocalDateTime endDate;   // LocalDateTime 대신 String 사용
+    private String endDate;   // LocalDateTime 대신 String 사용
     @SerializedName("description")
     @Expose
     private String description;
@@ -28,16 +33,19 @@ public class Server_ScheduleDTO {
     @Expose
     private List<String> tagList;
 
-    public Server_ScheduleDTO() {
-        this.tagList = new ArrayList<>();
-    }
-
-    public Server_ScheduleDTO(String title, LocalDateTime startDate, LocalDateTime endDate, String description, Long ownerId, List<String> tagList) {
+    public Server_ScheduleDTO(String title, String startDate, String endDate, String description, Long ownerId, List<String> tagList) {
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
         this.ownerId = ownerId;
+
+        this.tagList = (tagList != null) ? tagList : new ArrayList<>();
+        if(this.tagList.isEmpty()){
+            Log.e("Server!!", "empty tagList1");
+        }else{
+            Log.e("Server!!", tagList.get(0)+"asdf");
+        }
         this.tagList = tagList;
     }
 // 여기에 getter와 setter 메서드들을 추가합니다.
@@ -50,19 +58,19 @@ public class Server_ScheduleDTO {
         this.title = title;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
