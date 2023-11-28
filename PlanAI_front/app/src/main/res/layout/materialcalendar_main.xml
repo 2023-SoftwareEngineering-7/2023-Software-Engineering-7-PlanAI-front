@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
-        android:paddingTop="50dp"
+        android:paddingTop="80sp"
         android:paddingRight="10dp"
         app:mcv_dateTextAppearance="@style/TextAppearance.AppCompat.Medium"
         app:mcv_headerTextAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:gravity="center"
-        android:paddingBottom="140dp"
+        android:paddingBottom="70sp"
         android:textSize="8sp" />
 
     <include layout="@layout/navigationbar_bottom" />

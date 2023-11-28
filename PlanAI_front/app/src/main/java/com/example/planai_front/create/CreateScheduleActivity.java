@@ -46,6 +46,10 @@ public class CreateScheduleActivity extends AppCompatActivity {
         // 데이터 수집
         getSummaryText();
         getDescriptionText();
+        finishButton = findViewById(R.id.finishButton);
+
+        //완료 버튼 리스너 설정
+        finishButton.setOnClickListener(view->finishScheduleCreation());
     }
 
     // UI 컴포넌트 초기화 및 설정
