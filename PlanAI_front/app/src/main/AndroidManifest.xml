@@ -4,6 +4,8 @@
           xmlns:dist="http://schemas.android.com/apk/distribution">
 
     <dist:module dist:instant="true"/>
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -46,6 +48,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.planai_front.GoogleSignInActivity"></activity>
         <activity android:name=".MaterialCalendarActivity"></activity>
         <activity android:name=".create.EventActivity"></activity>
         <activity android:name=".create.ShowDayActivity"></activity>
