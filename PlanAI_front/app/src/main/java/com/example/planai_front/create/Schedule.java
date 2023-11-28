@@ -5,16 +5,8 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import java.util.Arrays;
 import java.util.Calendar;
 
-public class Schedule {
-    /*
-                                    scheduleSummary = data.getStringExtra("summary");
-                                scheduleStartDate = data.getStringExtra("startDate");
-                                scheduleStartTime = data.getStringExtra("startTime");
-                                scheduleEndDate = data.getStringExtra("endDate");
-                                scheduleEndTime = data.getStringExtra("endTime");
-                                scheduleTag = data.getStringExtra("tag");
-                                scheduleDescription = data.getStringExtra("description");
-     */
+public class Schedule implements CalendarItem{
+
     private String id;
     private String summary;
     private String startDate;

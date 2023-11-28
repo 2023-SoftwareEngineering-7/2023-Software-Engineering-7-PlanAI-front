@@ -4,16 +4,13 @@ import static com.example.planai_front.Server.RetrofitClient.PlanAI_URL;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,11 +22,10 @@ import com.example.planai_front.R;
 import com.example.planai_front.Server.ApiService;
 import com.example.planai_front.Server.RetrofitClient;
 import com.example.planai_front.Server.Server_ScheduleDTO;
+import com.example.planai_front.Server.Server_TaskDTO;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,13 +33,24 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+
+
 public class ShowDayActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private ScheduleAdapter adapter;
+//    private ScheduleAdapter adapter;
+    private MainCalendarApplication mainCalendarApplication;
     private List<Schedule> scheduleList;
     private String scheduleId, scheduleSummary, scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, scheduleTag, scheduleDescription;
     private List<String> Server_tagList = new ArrayList<>();
+
+    private String taskId, taskSummary, taskDescription,taskDeadLineDate, taskDeadLineTime,taskTag, taskPriority;
+    private Priority Server_taskPriority;
+    private List<Task> taskList;
+    private List<String> tagList;
+
+
     private FloatingActionButton addEventFabButton, addScheduleButton, addTaskButton, etcButton;
     private boolean isFABOpen = false;
 
@@ -56,6 +63,13 @@ public class ShowDayActivity extends AppCompatActivity {
     private HashMap<String, ArrayList<Schedule>> scheduleMap = new HashMap<>();
     private String Server_scheduleStartDate;
     private String Server_scheduleEndDate;
+
+    private HashMap<String, ArrayList<Task>> TaskMap = new HashMap<>();
+    private String Server_taskDeadLineDate;
+
+    private CombinedAdapter combinedAdapter;
+    private List<CalendarItem> calendarItems = new ArrayList<>(); // 초기화 추가
+
 
     // ActivityResultLauncher 객체 선언. 다른 액티비티에서 결과 받아오는데 사용.
     private final ActivityResultLauncher<Intent> createScheduleLauncher =
@@ -89,7 +103,8 @@ public class ShowDayActivity extends AppCompatActivity {
                                 // 해당 스케줄 현재 액티비티 스케줄 리스트에 추가하고 어댑터로 리스트뷰 갱신.
                                 if (scheduleStartDate.equals(getIntent().getStringExtra("date"))) {
                                     scheduleList.add(newSchedule);
-                                    adapter.notifyDataSetChanged();
+                                    //adapter.notifyDataSetChanged();
+                                    combinedAdapter.notifyDataSetChanged();
                                 }
                                 Log.d("Calendar", "Calendar updated");
 
@@ -145,28 +160,125 @@ public class ShowDayActivity extends AppCompatActivity {
                     }
             );
 
+
+    // ActivityResultLauncher 객체 선언. 다른 액티비티에서 결과 받아오는데 사용.
+    private final ActivityResultLauncher<Intent> createTaskLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        // 결과 코드 OK이고, 반환된 데이터 null 아닐 경우에만 처리.
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            // 결과 데이터 Intent 객체로 받아옴.
+                            Intent data = result.getData();
+                            if (data != null) {
+                                //스케줄 id 생성
+                                taskId = userId+data.getStringExtra(("startDate"));
+                                // 인텐트에서 스케줄 관련 데이터 추출.
+                                taskSummary = data.getStringExtra("summary");
+                                taskDescription = data.getStringExtra("description");
+                                taskDeadLineDate = data.getStringExtra("deadLineDate");
+                                taskDeadLineTime = data.getStringExtra("deadLineTime");
+                                taskTag = data.getStringExtra("tag");
+                                taskPriority = data.getStringExtra("priority");
+
+                                // 추출한 데이터로 새 task 객체 생성.
+                                Task newTask = new Task(taskSummary, taskDescription, taskDeadLineDate, taskDeadLineTime, taskTag, taskPriority);
+                                // TaskMap에서 해당 날짜에 해당하는 Task 리스트 가져오거나 새로 생성.
+                                ArrayList<Task> tasks = TaskMap.computeIfAbsent(taskDeadLineDate, k -> new ArrayList<>());
+                                // 새 Task 리스트에 추가.
+                                tasks.add(newTask);
+
+                                // 현재 액티비티 인텐트에 있는 'date'와 Task 시작 날짜 같으면,
+                                // 해당 Task 현재 액티비티 스케줄 리스트에 추가하고 어댑터로 리스트뷰 갱신.
+                                if (taskDeadLineDate.equals(getIntent().getStringExtra("date"))) {
+                                    taskList.add(newTask);
+                                    //adapter.notifyDataSetChanged();
+                                    combinedAdapter.notifyDataSetChanged();
+                                }
+                                Log.d("Calendar", "Calendar updated");
+
+                                //서버 전송 준비
+                                //TODO: 서버 전송용 Schedule클래스와 저장하는 Schedule클래스 일치시키기
+                                Log.e("Server!!", taskTag);
+
+                                //null 여부에 관계없이 tagList 초기화
+                                Server_tagList = new ArrayList<>();
+
+                                Server_tagList.add(taskTag);
+
+                                if(Server_tagList.isEmpty()){
+                                    Log.e("Server!!", "empty tagList");
+                                }else{
+                                    Log.e("Server!!", Server_tagList.get(0));
+                                }
+
+                                Server_taskDeadLineDate = taskDeadLineDate+"T"+taskDeadLineTime;
+                                Server_taskPriority = Priority.valueOf(taskPriority);
+                                Server_TaskDTO serverTaskDTO = new Server_TaskDTO(taskSummary, taskDescription, Server_taskDeadLineDate, Server_taskPriority, userId, Server_tagList );
+                                Log.d("Server!!", "Response 11");
+                                ApiService apiService = RetrofitClient.getClient(PlanAI_URL).create(ApiService.class);
+                                Log.d("Server!!", "Response 22");
+                                Call<Server_TaskDTO> call = apiService.createTask(serverTaskDTO);
+                                Log.d("Server!!", "Response 33");
+                                call.enqueue(new Callback<Server_TaskDTO>() {
+                                    @Override
+                                    public void onResponse(Call<Server_TaskDTO> call, Response<Server_TaskDTO> response) {
+                                        Log.d("Server!!", "Response 44");
+                                        if (response.isSuccessful()) {
+                                            //성공적인 응답 처리
+                                            Log.d("Server!!", "Response oOK");
+
+                                        } else {
+                                            // 서버 에러 처리
+                                            Log.d("Server!!", "Server Error11");
+                                            int statusCode = response.code();
+                                            Log.d("Server!!", "Response Code1: " + statusCode);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Server_TaskDTO> call, Throwable t) {
+                                        // 네트워크 에러 처리
+                                        Log.d("Server!!", "Server Error22");
+                                        Log.e("Server!!", "Network Error22", t);
+                                    }
+                                });
+                            }
+                        }
+                    }
+            );
+
+    ////////////////////
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_main_v2);
+        mainCalendarApplication = MainCalendarApplication.getInstance();
 
-        // ScheduleApplication 인스턴스를 사용하여 scheduleMap 가져오기
-        scheduleMap = ScheduleApplication.getInstance().getScheduleMap();
-        scheduleList = new ArrayList<>(); // scheduleList 초기화
+        // ScheduleApplication 및 TaskApplication 인스턴스에서 데이터 맵 가져오기
+//        scheduleMap = ScheduleApplication.getInstance().getScheduleMap();
+//        TaskMap = TaskApplication.getInstance().getTaskMap();
+//        scheduleMap = MainCalendarApplication.getInstance().getScheduleMap();
+//        TaskMap = MainCalendarApplication.getInstance().getTaskMap();
 
+        // 리스트 초기화
+        scheduleList = new ArrayList<>();
+        taskList = new ArrayList<>();
+
+        // 나머지 UI 설정
         setupRecyclerView();
         setupDateBanner();
-        setupRecyclerView();
         setupFloatingActionButtons();
         setupBottomNavigationBar();
 
-        // 현재 날짜에 해당하는 스케줄 로드
-        String todayDate = getIntent().getStringExtra("date");
+        // 현재 날짜에 해당하는 스케줄 및 태스크 로드
+        todayDate = getIntent().getStringExtra("date");
         if (todayDate != null) {
             loadSchedules(todayDate);
         }
-
     }
+
 
     private void setupDateBanner() {
         Intent dateIntent = getIntent();
@@ -209,25 +321,48 @@ public class ShowDayActivity extends AppCompatActivity {
             default: return "Invalid month";
         }
     }
-
+///////////////////////////////////
     private void setupRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new ScheduleAdapter(scheduleList);
-        recyclerView.setAdapter(adapter);
-
+        calendarItems = new ArrayList<>();
+        combinedAdapter = new CombinedAdapter(calendarItems);
+        recyclerView.setAdapter(combinedAdapter);
     }
 
     private void loadSchedules(String todayDate) {
-        ArrayList<Schedule> schedulesForToday = scheduleMap.getOrDefault(todayDate, new ArrayList<>());
-        scheduleList.clear();
-        scheduleList.addAll(schedulesForToday);
-        adapter.notifyDataSetChanged();
-
+//        List<Schedule> schedulesForToday = scheduleMap.getOrDefault(todayDate, new ArrayList<>());
+//        List<Task> tasksForToday = TaskMap.getOrDefault(todayDate, new ArrayList<>());
+        List<Schedule> schedulesForToday = mainCalendarApplication.getScheduleMap().getOrDefault(todayDate, new ArrayList<>());
+        List<Task> tasksForToday = mainCalendarApplication.getTaskMap().getOrDefault(todayDate, new ArrayList<>());
+        calendarItems.clear();
+        calendarItems.addAll(schedulesForToday);
+        calendarItems.addAll(tasksForToday);
+        combinedAdapter.notifyDataSetChanged();
     }
 
+
+
+//    private void setupRecyclerView() {
+//        recyclerView = findViewById(R.id.recyclerView);
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//
+//        adapter = new ScheduleAdapter(scheduleList);
+//        recyclerView.setAdapter(adapter);
+//
+//    }
+//
+//    private void loadSchedules(String todayDate) {
+//        ArrayList<Schedule> schedulesForToday = scheduleMap.getOrDefault(todayDate, new ArrayList<>());
+//        scheduleList.clear();
+//        scheduleList.addAll(schedulesForToday);
+//        adapter.notifyDataSetChanged();
+//
+//    }
+/////////////////////////////////////////////////////
     private void setupFloatingActionButtons() {
         addEventFabButton = findViewById(R.id.fabMain);
         addScheduleButton = findViewById(R.id.schedulebutton);
@@ -254,7 +389,7 @@ public class ShowDayActivity extends AppCompatActivity {
         addTaskButton.setOnClickListener(view -> {
             Intent intent = new Intent(ShowDayActivity.this, CreateTaskActivity.class);
             intent.putExtra("date", getIntent().getStringExtra("date"));
-            startActivity(intent);
+            createTaskLauncher.launch(intent); // ActivityResultLauncher 사용
             overridePendingTransition(R.anim.slide_up, R.anim.stay); // 아래에서 올라오는 애니메이션 적용
         });
 

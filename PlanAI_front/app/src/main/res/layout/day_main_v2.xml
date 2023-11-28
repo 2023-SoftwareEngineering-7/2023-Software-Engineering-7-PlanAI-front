@@ -7,7 +7,7 @@
 
     <!-- 상단 날짜 및 시간 표시 -->
     <TextView
-        android:id="@+id/background"
+        android:id="@+id/scheduleBackground"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="#E5EAF1" />

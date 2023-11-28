@@ -26,14 +26,14 @@ import java.util.Locale;
 public class CreateTaskActivity extends AppCompatActivity {
 
     private String todayDate;
-    private EditText summaryText;
+    private EditText summaryText, descriptionText;
     private Switch repeatSchedule;
-    private TextView deadLineDate, deadLineTime;
+    private TextView deadLineDateText, deadLineTimeText;
     private ImageView deadLineCalendarButton, deadLineTimeButton;
-    private TextView tagTextView;
-    private String todayTag;
-    private String todaySummary;
-    private Calendar deaLineCalendar, deadLineTimeCal;
+    private TextView tagTextView, priorityTextView;
+    private String todayTag,todayPriority;
+    private String todaySummary, todayDescription;
+    private Calendar deadLineCalendar, deadLineTimeCal;
     private Button finishButton;
 
     @Override
@@ -42,33 +42,41 @@ public class CreateTaskActivity extends AppCompatActivity {
         setContentView(R.layout.createtask_popuplayout);
 
         initializeViews();
-        getSummaryText();
         setupDateAndTimePickers();
         setupTagDropDown();
-        setFinishButton();
+        setUpPriorityDropDown();
+
+        getSummaryText();
+        getDescriptionText();
+
+        finishButton.setOnClickListener((view->finishTaskCreation()));
     }
 
     private void initializeViews() {
         Intent dateIntent = getIntent();
         todayDate = dateIntent.getStringExtra("date");
 
-        deadLineDate = findViewById(R.id.deadLineDate);
-        deadLineCalendarButton = findViewById(R.id.deadLineCalendarButton);
-        deadLineTime = findViewById(R.id.deadLineTime);
-        deadLineTimeButton = findViewById(R.id.deadLineTimeButton);
-        tagTextView = findViewById(R.id.tagTextView);
-        deaLineCalendar = Calendar.getInstance();
+        deadLineDateText = findViewById(R.id.taskDeadLineDateView);
+        deadLineCalendarButton = findViewById(R.id.taskDeadLineCalendarButtonView);
+        deadLineTimeText = findViewById(R.id.taskDeadLineTimeView);
+        deadLineTimeButton = findViewById(R.id.taskDeadLineTimeButton);
+        tagTextView = findViewById(R.id.taskTagView);
+        priorityTextView = findViewById(R.id.taskPriorityView);
+        deadLineCalendar = Calendar.getInstance();
         deadLineTimeCal = Calendar.getInstance();
-        finishButton = findViewById(R.id.finishButton);
+        finishButton = findViewById(R.id.taskFinishButton);
+
+        deadLineCalendar = Calendar.getInstance();
+        deadLineTimeCal = Calendar.getInstance();
     }
     private void getSummaryText() {
-        summaryText = findViewById(R.id.scheduleSummary);
+        summaryText = findViewById(R.id.taskSummaryView);
         todaySummary = summaryText.getText().toString();
-
     }
+
     private void setupDateAndTimePickers() {
-        setupDatePicker(deadLineCalendarButton, deadLineDate, deaLineCalendar);
-        setupTimePicker(deadLineTimeButton, deadLineTime, deadLineTimeCal);
+        setupDatePicker(deadLineCalendarButton, deadLineDateText, deadLineCalendar);
+        setupTimePicker(deadLineTimeButton, deadLineTimeText, deadLineTimeCal);
 
     }
 
@@ -96,11 +104,11 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void setupTagDropDown() {
-        Button tagShowDropDown = findViewById(R.id.tagShowDropDown);
+        Button tagShowDropDown = findViewById(R.id.taskTagShowDropDown);
         tagShowDropDown.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(CreateTaskActivity.this, v);
-            popupMenu.getMenu().add("text1");
-            popupMenu.getMenu().add("text2");
+            popupMenu.getMenu().add("Study");
+            popupMenu.getMenu().add("Work");
             popupMenu.getMenu().add("text3");
             popupMenu.setOnMenuItemClickListener(item -> {
                 todayTag = item.getTitle().toString();
@@ -111,31 +119,49 @@ public class CreateTaskActivity extends AppCompatActivity {
         });
     }
 
-    private void setFinishButton() {
-        Button finishButton = findViewById(R.id.finishButton);
-        finishButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-//                ArrayList<String> taskData = collectTaskData();
-//                sendDataToServer(taskData);
-                finish();
-            }
+    private void setUpPriorityDropDown() {
+        Button priorityShowDropDown = findViewById(R.id.taskPriorityShowDropDown);
+        priorityShowDropDown.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(CreateTaskActivity.this, v);
+            popupMenu.getMenu().add("HIGH");
+            popupMenu.getMenu().add("MEDIUM");
+            popupMenu.getMenu().add("LOW");
+            popupMenu.setOnMenuItemClickListener(item -> {
+                todayPriority = item.getTitle().toString();
+                priorityTextView.setText(todayPriority);  // 여기서 수정되어야 합니다.
+                return true;
+            });
+            popupMenu.show();
         });
     }
 
-    private ArrayList<String> collectTaskData() {
-        ArrayList<String> TaskData = new ArrayList<>();
-        TaskData.add(todayDate);
-        TaskData.add(todaySummary);
-        TaskData.add(deadLineDate.getText().toString());
-        TaskData.add(deadLineTime.getText().toString());
-
-        TaskData.add(tagTextView.getText().toString());
-        return TaskData;
+    private void getDescriptionText() {
+        descriptionText = findViewById(R.id.taskDescriptionView);
+        todayDescription = descriptionText.getText().toString();
     }
 
-    // 서버에 데이터 전송하는 메서드 (더미 예시)
-    private void sendDataToServer(ArrayList<String> data) {
+    // 일정 생성 완료 처리
+    private void finishTaskCreation() {
+        // 사용자 입력 데이터 수집
+        String summary = summaryText.getText().toString();
+        String deadLineDate= deadLineDateText.getText().toString();
+        String deadLineTime = deadLineTimeText.getText().toString();
+        String tag = tagTextView.getText().toString();
+        String priority = priorityTextView.getText().toString();
+        String description = descriptionText.getText().toString();
 
+        // 결과를 Intent에 담아 반환
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("summary", summary);
+        resultIntent.putExtra("deadLineDate", deadLineDate);
+        resultIntent.putExtra("deadLineTime", deadLineTime);
+        resultIntent.putExtra("tag", tag);
+        resultIntent.putExtra("priority",priority);
+        resultIntent.putExtra("description", description);
 
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
+
+
 }
