@@ -1,8 +1,12 @@
 package com.example.planai_front.create;
 
+import static com.example.planai_front.Server.RetrofitClient.PlanAI_URL;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -18,51 +22,129 @@ import com.example.planai_front.BoardActivity;
 import com.example.planai_front.FriendlistActivity;
 import com.example.planai_front.MaterialCalendarActivity;
 import com.example.planai_front.R;
+import com.example.planai_front.Server.ApiService;
+import com.example.planai_front.Server.RetrofitClient;
+import com.example.planai_front.Server.Server_ScheduleDTO;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/*
+Server Test Branch(23.11.27)
+ */
 
 public class ShowDayActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ScheduleAdapter adapter;
     private List<Schedule> scheduleList;
-    private String scheduleSummary, scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, scheduleTag, scheduleDescription;
-
+    private String scheduleId, scheduleSummary, scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, scheduleTag, scheduleDescription;
+    private List<String> Server_tagList = new ArrayList<>();
     private FloatingActionButton addEventFabButton, addScheduleButton, addTaskButton, etcButton;
     private boolean isFABOpen = false;
 
+    //선택 날짜, 유저 id 받아오기
+    private String todayDate;
+    //private
+    private Long userId;
+
     // 전역 변수로 scheduleMap 선언
     private HashMap<String, ArrayList<Schedule>> scheduleMap = new HashMap<>();
+    private String Server_scheduleStartDate;
+    private String Server_scheduleEndDate;
 
-    // ActivityResultLauncher 초기화
+    // ActivityResultLauncher 객체 선언. 다른 액티비티에서 결과 받아오는데 사용.
     private final ActivityResultLauncher<Intent> createScheduleLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
+                        // 결과 코드 OK이고, 반환된 데이터 null 아닐 경우에만 처리.
                         if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                            // 결과 처리
+                            // 결과 데이터 Intent 객체로 받아옴.
                             Intent data = result.getData();
                             if (data != null) {
-
+                                //스케줄 id 생성
+                                scheduleId = userId+data.getStringExtra(("startDate"));
+                                // 인텐트에서 스케줄 관련 데이터 추출.
                                 scheduleSummary = data.getStringExtra("summary");
                                 scheduleStartDate = data.getStringExtra("startDate");
                                 scheduleStartTime = data.getStringExtra("startTime");
-                                scheduleEndDate= data.getStringExtra("endDate");
+                                scheduleEndDate = data.getStringExtra("endDate");
                                 scheduleEndTime = data.getStringExtra("endTime");
                                 scheduleTag = data.getStringExtra("tag");
                                 scheduleDescription = data.getStringExtra("description");
 
-                                Schedule newSchedule = new Schedule(scheduleSummary, scheduleStartDate, scheduleEndDate, scheduleDescription, "");
+                                // 추출한 데이터로 새 Schedule 객체 생성.
+                                Schedule newSchedule = new Schedule(scheduleId, scheduleSummary, scheduleStartDate,scheduleStartTime, scheduleEndDate, scheduleEndTime,scheduleTag,scheduleDescription, "");
+                                // scheduleMap에서 해당 날짜에 해당하는 스케줄 리스트 가져오거나 새로 생성.
                                 ArrayList<Schedule> schedules = scheduleMap.computeIfAbsent(scheduleStartDate, k -> new ArrayList<>());
+                                // 새 스케줄 리스트에 추가.
                                 schedules.add(newSchedule);
 
+                                // 현재 액티비티 인텐트에 있는 'date'와 스케줄 시작 날짜 같으면,
+                                // 해당 스케줄 현재 액티비티 스케줄 리스트에 추가하고 어댑터로 리스트뷰 갱신.
                                 if (scheduleStartDate.equals(getIntent().getStringExtra("date"))) {
                                     scheduleList.add(newSchedule);
                                     adapter.notifyDataSetChanged();
                                 }
+                                Log.d("Calendar", "Calendar updated");
+
+                                //서버 전송 준비
+                                //TODO: 서버 전송용 Schedule클래스와 저장하는 Schedule클래스 일치시키기
+                                Log.e("Server!!", scheduleTag);
+                                if (Server_tagList == null) {
+                                    Server_tagList = new ArrayList<>();
+
+                                }
+                                Server_tagList.add(scheduleTag);
+
+                                if(Server_tagList.isEmpty()){
+                                    Log.e("Server!!", "empty tagList");
+                                }else{
+                                    Log.e("Server!!", Server_tagList.get(0));
+                                }
+
+                                Server_scheduleStartDate = scheduleStartDate+"T"+scheduleStartTime;
+                                Server_scheduleEndDate = scheduleEndDate+"T"+scheduleEndTime;
+
+                                Server_ScheduleDTO serverScheduleDTO = new Server_ScheduleDTO(scheduleSummary, Server_scheduleStartDate, Server_scheduleEndDate, scheduleDescription, userId, Server_tagList );
+                                Log.d("Server!!", "Response 1");
+                                ApiService apiService = RetrofitClient.getClient(PlanAI_URL).create(ApiService.class);
+                                Log.d("Server!!", "Response 2");
+                                Call<Server_ScheduleDTO> call = apiService.createSchedule(serverScheduleDTO);
+                                Log.d("Server!!", "Response 3");
+                                call.enqueue(new Callback<Server_ScheduleDTO>() {
+                                    @Override
+                                    public void onResponse(Call<Server_ScheduleDTO> call, Response<Server_ScheduleDTO> response) {
+                                        Log.d("Server!!", "Response 4");
+                                        if (response.isSuccessful()) {
+                                            //성공적인 응답 처리
+                                            Log.d("Server!!", "Response OK");
+
+                                        } else {
+                                            // 서버 에러 처리
+                                            Log.d("Server!!", "Server Error1");
+                                            int statusCode = response.code();
+                                            Log.d("Server!!", "Response Code: " + statusCode);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Server_ScheduleDTO> call, Throwable t) {
+                                        // 네트워크 에러 처리
+                                        Log.d("Server!!", "Server Error2");
+                                        Log.e("Server!!", "Network Error", t);
+                                    }
+                                });
                             }
                         }
                     }
@@ -93,7 +175,9 @@ public class ShowDayActivity extends AppCompatActivity {
 
     private void setupDateBanner() {
         Intent dateIntent = getIntent();
-        String todayDate = dateIntent.getStringExtra("date");
+        todayDate = dateIntent.getStringExtra("date");
+        //TODO: userId = dateIntent.getStringExtra("userId");
+        userId  = 1111L;
 
         String[] parts = todayDate.split("-");
         String todayYear = parts[0];
