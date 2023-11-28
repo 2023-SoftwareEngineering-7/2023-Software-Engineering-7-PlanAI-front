@@ -27,6 +27,9 @@ import com.example.planai_front.Server.RetrofitClient;
 import com.example.planai_front.Server.Server_ScheduleDTO;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +59,8 @@ public class ShowDayActivity extends AppCompatActivity {
 
     // 전역 변수로 scheduleMap 선언
     private HashMap<String, ArrayList<Schedule>> scheduleMap = new HashMap<>();
+    private LocalDateTime Server_scheduleStartDate;
+    private LocalDateTime Server_scheduleEndDate;
 
     // ActivityResultLauncher 객체 선언. 다른 액티비티에서 결과 받아오는데 사용.
     private final ActivityResultLauncher<Intent> createScheduleLauncher =
@@ -97,7 +102,10 @@ public class ShowDayActivity extends AppCompatActivity {
                                 //TODO: 서버 전송용 Schedule클래스와 저장하는 Schedule클래스 일치시키기
                                 List<String> tagList = new ArrayList<>();
                                 tagList.add(scheduleTag);
-                                Server_ScheduleDTO serverScheduleDTO = new Server_ScheduleDTO(scheduleSummary, scheduleStartDate, scheduleEndDate, scheduleDescription, userId, tagList );
+                                Server_scheduleStartDate = LocalDateTime.parse(scheduleStartDate+"T11:11:11");
+                                Server_scheduleEndDate = LocalDateTime.parse(scheduleEndDate+"T11:11:11");
+
+                                Server_ScheduleDTO serverScheduleDTO = new Server_ScheduleDTO(scheduleSummary, Server_scheduleStartDate, Server_scheduleEndDate, scheduleDescription, userId, tagList );
                                 Log.d("Server!!", "Response 1");
                                 ApiService apiService = RetrofitClient.getClient(PlanAI_URL).create(ApiService.class);
                                 Log.d("Server!!", "Response 2");

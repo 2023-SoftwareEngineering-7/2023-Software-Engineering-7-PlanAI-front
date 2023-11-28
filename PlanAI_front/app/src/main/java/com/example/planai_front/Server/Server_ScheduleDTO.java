@@ -4,6 +4,7 @@ package com.example.planai_front.Server;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 public class Server_ScheduleDTO {
@@ -13,10 +14,10 @@ public class Server_ScheduleDTO {
     private String title;
     @SerializedName("startDate")
     @Expose
-    private String startDate; // LocalDateTime 대신 String 사용
+    private LocalDateTime startDate; // LocalDateTime 대신 String 사용
     @SerializedName("endDate")
     @Expose
-    private String endDate;   // LocalDateTime 대신 String 사용
+    private LocalDateTime endDate;   // LocalDateTime 대신 String 사용
     @SerializedName("description")
     @Expose
     private String description;
@@ -31,7 +32,7 @@ public class Server_ScheduleDTO {
         this.tagList = new ArrayList<>();
     }
 
-    public Server_ScheduleDTO(String title, String startDate, String endDate, String description, Long ownerId, List<String> tagList) {
+    public Server_ScheduleDTO(String title, LocalDateTime startDate, LocalDateTime endDate, String description, Long ownerId, List<String> tagList) {
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -49,19 +50,19 @@ public class Server_ScheduleDTO {
         this.title = title;
     }
 
-    public String getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
