@@ -58,5 +58,9 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     //implementation("com.android.support:design:28.0.0")
 
+
+    implementation ("com.squareup.retrofit2:retrofit:[version]")
+    // 응답 결과가 JSON일 때 객체로 변환해줌
+    implementation ("com.squareup.retrofit2:converter-gson:[version]")
 }
 

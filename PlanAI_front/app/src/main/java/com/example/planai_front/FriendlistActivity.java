@@ -35,6 +35,12 @@ public class FriendlistActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button Button2 = (Button) findViewById(R.id.buttonftf);
+        Button2.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), GetfriendActivity.class);
+            startActivity(intent);
+        });
+
         setupBottomNavigationBar();
     }
 

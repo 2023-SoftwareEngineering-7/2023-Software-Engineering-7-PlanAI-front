@@ -47,13 +47,13 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
 
             profile = (ImageView) itemView.findViewById(R.id.profile);
             name = (TextView) itemView.findViewById(R.id.name);
-           // message = (TextView) itemView.findViewById(R.id.message);
+            //message = (TextView) itemView.findViewById(R.id.message);
         }
 
         void onBind(FriendItem item){
             profile.setImageResource(item.getResourceId());
             name.setText(item.getName());
-            message.setText(item.getMessage());
+            //message.setText(item.getMessage());
         }
     }
 }
