@@ -86,7 +86,7 @@
             app:layout_constraintVertical_bias="0.423" />
 
     <EditText
-            android:id="@+id/edit_text"
+            android:id="@+id/edit_text_content"
             android:layout_width="369dp"
             android:layout_height="264dp"
             android:ems="10"
@@ -104,7 +104,7 @@
             app:layout_constraintHorizontal_bias="0.38" />
 
     <EditText
-            android:id="@+id/edit_text2"
+            android:id="@+id/edit_text_title"
             android:layout_width="369dp"
             android:layout_height="39dp"
             android:ems="10"
@@ -121,7 +121,7 @@
             android:background="@android:drawable/editbox_dropdown_light_frame" />
 
     <Button
-            android:id="@+id/button_on"
+            android:id="@+id/button_finish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="76dp"
@@ -174,5 +174,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.045" />
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/texttest"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.464"
+            app:layout_constraintVertical_bias="0.179" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

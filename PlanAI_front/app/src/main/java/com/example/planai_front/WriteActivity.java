@@ -11,9 +11,106 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.planai_front.R;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+
 
 public class WriteActivity extends AppCompatActivity {
 
+    // 필요한 변수 선언
+    private EditText editTitle, editContent;
+    private Button finishButton;
+    private TextView textViewTitle;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_write);
+
+        // UI 컴포넌트 초기화 및 설정
+        initializeViews();
+
+        // 완료 버튼 리스너 설정
+        finishButton.setOnClickListener(view -> finishWrite());
+
+        textViewTitle = findViewById(R.id.texttest);
+
+        Button Button = findViewById(R.id.button_wc);
+        Button.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), BoardActivity.class);
+            startActivity(intent);
+        });
+
+        // Intent에서 값 가져오기
+        Intent intent = getIntent();
+        if (intent != null) {
+            String title = intent.getStringExtra("title");
+            String detail = intent.getStringExtra("detail");
+
+            // TextView에 값 설정
+            textViewTitle.setText("Title: " + title);
+        }
+    }
+
+    // UI 컴포넌트 초기화 및 설정
+    private void initializeViews() {
+        editTitle = findViewById(R.id.edit_text_title);
+        editContent = findViewById(R.id.edit_text_content);
+        finishButton = findViewById(R.id.button_finish);
+    }
+
+    private void finishWrite() {
+        // 사용자 입력 데이터 수집
+        String title = editTitle.getEditableText().toString();
+        String detail = editContent.getEditableText().toString();
+
+        // 서버로 데이터 전송
+        sendDataToServer(title, detail);
+
+        // 결과를 Intent에 담아 반환
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("title", title);
+        resultIntent.putExtra("detail", detail);
+
+        setResult(RESULT_OK, resultIntent);
+        finish();
+    }
+
+    // 서버에 데이터 전송하는 메서드
+    private void sendDataToServer(String title, String detail) {
+        // 여기에 서버 전송 로직을 구현
+    }
+
+
+
+        private ArrayList<String> collectTaskData(){
+        ArrayList<String> TaskData=new ArrayList<>();
+        TaskData.add(editTitle.getEditableText().toString());
+        TaskData.add(editContent.getEditableText().toString());
+
+        return TaskData;
+        }
+
+}
+
+
+
+/*
     Button btn;
     EditText editText;
     TextView textView;
@@ -29,11 +126,6 @@ public class WriteActivity extends AppCompatActivity {
         editText = findViewById(R.id.edit_text);
         textView = findViewById(R.id.text_view);
 
-        Button Button = (Button) findViewById(R.id.button_wc);
-        Button.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), BoardActivity.class);
-            startActivity(intent);
-        });
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,4 +183,4 @@ public class WriteActivity extends AppCompatActivity {
     }
 
 
-}
+}*/
