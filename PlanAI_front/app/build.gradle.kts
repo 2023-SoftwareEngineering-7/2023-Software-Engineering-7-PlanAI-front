@@ -61,5 +61,8 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     //implementation("com.android.support:design:28.0.0")
 
+    implementation("org.projectlombok:lombok:1.18.22")
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
+
 }
 
