@@ -2,8 +2,13 @@ package com.example.planai_front.create;
 
 import static com.example.planai_front.Server.RetrofitClient.PlanAI_URL;
 
+import android.Manifest;
+import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,10 +28,21 @@ import com.example.planai_front.Server.ApiService;
 import com.example.planai_front.Server.RetrofitClient;
 import com.example.planai_front.Server.Server_ScheduleDTO;
 import com.example.planai_front.Server.Server_TaskDTO;
+import com.fasterxml.jackson.core.JsonFactory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.DateTime;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.CalendarScopes;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,11 +50,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class ShowDayActivity extends AppCompatActivity {
 
-//    private RecyclerView recyclerView;
+    //    private RecyclerView recyclerView;
     private ScheduleAdapter scheduleAdapter;
     private RecyclerView scheduleRecyclerShowDay;
     private TaskAdapter taskAdapter;
@@ -48,11 +69,9 @@ public class ShowDayActivity extends AppCompatActivity {
     private String scheduleId, scheduleSummary, scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, scheduleTag, scheduleDescription;
     private List<String> Server_tagList = new ArrayList<>();
 
-    private String taskId, taskSummary, taskDescription,taskDeadLineDate, taskDeadLineTime,taskTag, taskPriority;
+    private String taskId, taskSummary, taskDescription, taskDeadLineDate, taskDeadLineTime, taskTag, taskPriority;
     private Priority Server_taskPriority;
     private List<Task> todayTaskList;
-//    private List<String> tagList;
-
 
     private FloatingActionButton addEventFabButton, addScheduleButton, addTaskButton, etcButton;
     private boolean isFABOpen = false;
@@ -70,9 +89,16 @@ public class ShowDayActivity extends AppCompatActivity {
     private HashMap<String, ArrayList<Task>> TaskMap = new HashMap<>();
     private String Server_taskDeadLineDate;
 
-//    private CombinedAdapter combinedAdapter;
-//    private List<CalendarItem> calendarItems = new ArrayList<>(); // 초기화 추가
 
+    private GoogleAccountCredential mCredential;
+    private static final int REQUEST_ACCOUNT_PICKER = 1000;
+    private static final int REQUEST_AUTHORIZATION = 1001;
+    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR};
+    private static final String PREF_ACCOUNT_NAME = "accountName";
+
+    //Google Calendar API에 접근하기 위해 사용되는 구글 캘린더 API 서비스 객체
+    private com.google.api.services.calendar.Calendar mService = null;
 
     // ActivityResultLauncher 객체 선언. 다른 액티비티에서 결과 받아오는데 사용.
     private final ActivityResultLauncher<Intent> createScheduleLauncher =
@@ -85,7 +111,7 @@ public class ShowDayActivity extends AppCompatActivity {
                             Intent data = result.getData();
                             if (data != null) {
                                 //스케줄 id 생성
-                                scheduleId = userId+data.getStringExtra(("startDate"));
+                                scheduleId = userId + data.getStringExtra(("startDate"));
                                 // 인텐트에서 스케줄 관련 데이터 추출.
                                 scheduleSummary = data.getStringExtra("summary");
                                 scheduleStartDate = data.getStringExtra("startDate");
@@ -96,7 +122,7 @@ public class ShowDayActivity extends AppCompatActivity {
                                 scheduleDescription = data.getStringExtra("description");
 
                                 // 추출한 데이터로 새 Schedule 객체 생성.
-                                Schedule newSchedule = new Schedule(scheduleId, scheduleSummary, scheduleStartDate,scheduleStartTime, scheduleEndDate, scheduleEndTime,scheduleTag,scheduleDescription);
+                                Schedule newSchedule = new Schedule(scheduleId, scheduleSummary, scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, scheduleTag, scheduleDescription);
                                 // scheduleMap에서 해당 날짜에 해당하는 스케줄 리스트 가져오거나 새로 생성.
                                 ArrayList<Schedule> newScheduleDateList = scheduleMap.computeIfAbsent(scheduleStartDate, k -> new ArrayList<>());
                                 // 새 스케줄 리스트에 추가.
@@ -122,16 +148,16 @@ public class ShowDayActivity extends AppCompatActivity {
                                 }
                                 Server_tagList.add(scheduleTag);
 
-                                if(Server_tagList.isEmpty()){
+                                if (Server_tagList.isEmpty()) {
                                     Log.e("Server!!", "empty tagList");
-                                }else{
+                                } else {
                                     Log.e("Server!!", Server_tagList.get(0));
                                 }
 
-                                Server_scheduleStartDate = scheduleStartDate+"T"+scheduleStartTime;
-                                Server_scheduleEndDate = scheduleEndDate+"T"+scheduleEndTime;
+                                Server_scheduleStartDate = scheduleStartDate + "T" + scheduleStartTime;
+                                Server_scheduleEndDate = scheduleEndDate + "T" + scheduleEndTime;
 
-                                Server_ScheduleDTO serverScheduleDTO = new Server_ScheduleDTO(scheduleSummary, Server_scheduleStartDate, Server_scheduleEndDate, scheduleDescription, userId, Server_tagList );
+                                Server_ScheduleDTO serverScheduleDTO = new Server_ScheduleDTO(scheduleSummary, Server_scheduleStartDate, Server_scheduleEndDate, scheduleDescription, userId, Server_tagList);
                                 Log.d("Server!!", "Response 1");
                                 ApiService apiService = RetrofitClient.getClient(PlanAI_URL).create(ApiService.class);
                                 Log.d("Server!!", "Response 2");
@@ -144,6 +170,15 @@ public class ShowDayActivity extends AppCompatActivity {
                                         if (response.isSuccessful()) {
                                             //성공적인 응답 처리
                                             Log.d("Server!!", "Response OK");
+                                            // Google 캘린더에 이벤트 추가
+                                            if (mCredential.getSelectedAccountName() != null) {
+                                                new AddEventToCalendarTask(mCredential, response.body()).execute();
+                                            } else {
+                                                // 적절한 사용자 인증이 완료되지 않았을 경우 처리
+                                                chooseGoogleAccount();
+                                                Log.e("Server!!", "GoogleCalendar: Credential is null. User authentication required.");
+                                            }
+
 
                                         } else {
                                             // 서버 에러 처리
@@ -159,7 +194,16 @@ public class ShowDayActivity extends AppCompatActivity {
                                         Log.d("Server!!", "Server Error2");
                                         Log.e("Server!!", "Network Error", t);
                                     }
+
+
                                 });
+                                //Google 캘린더 연동
+                                Log.d("Server!!", "google calendar");
+                                GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
+                                        this, Arrays.asList(SCOPES)).setBackOff(new ExponentialBackOff());
+                                // Google 캘린더에 이벤트 추가
+                                new AddEventToCalendarTask(mCredential, serverScheduleDTO).execute();
+
                             }
                         }
                     }
@@ -177,7 +221,7 @@ public class ShowDayActivity extends AppCompatActivity {
                             Intent data = result.getData();
                             if (data != null) {
                                 //스케줄 id 생성
-                                taskId = userId+data.getStringExtra(("startDate"));
+                                taskId = userId + data.getStringExtra(("startDate"));
                                 // 인텐트에서 스케줄 관련 데이터 추출.
                                 taskSummary = data.getStringExtra("summary");
                                 taskDescription = data.getStringExtra("description");
@@ -213,15 +257,15 @@ public class ShowDayActivity extends AppCompatActivity {
 
                                 Server_tagList.add(taskTag);
 
-                                if(Server_tagList.isEmpty()){
+                                if (Server_tagList.isEmpty()) {
                                     Log.e("Server!!", "empty tagList");
-                                }else{
+                                } else {
                                     Log.e("Server!!", Server_tagList.get(0));
                                 }
 
-                                Server_taskDeadLineDate = taskDeadLineDate+"T"+taskDeadLineTime;
+                                Server_taskDeadLineDate = taskDeadLineDate + "T" + taskDeadLineTime;
                                 Server_taskPriority = Priority.valueOf(taskPriority);
-                                Server_TaskDTO serverTaskDTO = new Server_TaskDTO(taskSummary, taskDescription, Server_taskDeadLineDate, Server_taskPriority, userId, Server_tagList );
+                                Server_TaskDTO serverTaskDTO = new Server_TaskDTO(taskSummary, taskDescription, Server_taskDeadLineDate, Server_taskPriority, userId, Server_tagList);
                                 Log.d("Server!!", "Response 11");
                                 ApiService apiService = RetrofitClient.getClient(PlanAI_URL).create(ApiService.class);
                                 Log.d("Server!!", "Response 22");
@@ -263,8 +307,6 @@ public class ShowDayActivity extends AppCompatActivity {
         mainCalendarApplication = MainCalendarApplication.getInstance();
 
         // ScheduleApplication 및 TaskApplication 인스턴스에서 데이터 맵 가져오기
-//        scheduleMap = ScheduleApplication.getInstance().getScheduleMap();
-//        TaskMap = TaskApplication.getInstance().getTaskMap();
         scheduleMap = MainCalendarApplication.getInstance().getScheduleMap();
         TaskMap = MainCalendarApplication.getInstance().getTaskMap();
 
@@ -283,14 +325,166 @@ public class ShowDayActivity extends AppCompatActivity {
         if (todayDate != null) {
             loadSchedules(todayDate);
         }
+
+        // Google 계정 인증을 위한 GoogleAccountCredential 초기화
+        mCredential = GoogleAccountCredential.usingOAuth2(
+                        this, Arrays.asList(CalendarScopes.CALENDAR))
+                .setBackOff(new ExponentialBackOff());
+        initializeGoogleCalendarService();
+
+        // 사용자가 이미 구글 계정을 선택했는지 확인
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        String accountName = prefs.getString(PREF_ACCOUNT_NAME, null);
+        if (accountName != null) {
+            mCredential.setSelectedAccountName(accountName);
+        } else {
+            // 계정 선택을 위한 인증 프로세스 시작
+            chooseGoogleAccount();
+        }
+
+    }
+
+    // Google Calendar API 호출을 시작합니다.
+    private void getGoogleCalendarResults() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
+            chooseGoogleAccount();
+        } else {
+            // GET_ACCOUNTS 권한 요청
+            EasyPermissions.requestPermissions(
+                    this, "구글 캘린더 접근 권한이 필요합니다.",
+                    REQUEST_PERMISSION_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
+        }
+    }
+
+    /**
+     * 사용자에게 Google 계정을 선택하도록 요청합니다.
+     * 이미 로그인된 계정이 있으면 해당 계정을 사용합니다.
+     */
+// Google 계정을 선택하도록 요청합니다.
+    @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
+    private void chooseGoogleAccount() {
+        String accountName = getPreferences(Context.MODE_PRIVATE)
+                .getString(PREF_ACCOUNT_NAME, null);
+        if (accountName != null) {
+            mCredential.setSelectedAccountName(accountName);
+            initializeGoogleCalendarService();
+        } else {
+            // 사용자가 계정을 선택할 수 있는 다이얼로그 표시
+            startActivityForResult(mCredential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
+        }
+    }
+
+    private void initializeGoogleCalendarService() {
+        HttpTransport transport = AndroidHttp.newCompatibleTransport();
+        JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+
+        mService = new com.google.api.services.calendar.Calendar.Builder(
+                transport, jsonFactory, mCredential)
+                .setApplicationName("PlanAI") // 여기에 애플리케이션 이름을 넣으세요.
+                .build();
+        if (mService == null) {
+            Log.e("Server!!", "Failed to initialize Google Calendar API service.");
+        } else {
+            Log.d("Server!!", "Google Calendar API service is initialized.");
+        }
+        // Google Calendar API 서비스 준비가 완료되었습니다.
+        Log.d("Server!!", "Google Calendar API service is initialized.");
+
+        // 추가적인 작업이 필요한 경우 여기에 코드를 추가합니다.
+        // 예를 들어, 사용자 인터페이스를 업데이트하거나, 특정 API 호출을 시작할 수 있습니다.
     }
 
 
+    // Google Calendar에 이벤트를 추가하는 AsyncTask
+    private class AddEventToCalendarTask extends AsyncTask<Void, Void, Void> {
+        private GoogleAccountCredential credential;
+        private Server_ScheduleDTO googleSendScheduleDTO;
+
+        public AddEventToCalendarTask(GoogleAccountCredential credential, Server_ScheduleDTO schedule) {
+            this.credential = credential;
+            this.googleSendScheduleDTO = schedule;
+            Log.e("Server!!", "AddEventToCalendarTask working");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                // 구글 캘린더에 추가할 이벤트 생성
+                Event event = new Event()
+                        .setSummary(googleSendScheduleDTO.getTitle())
+                        .setDescription(googleSendScheduleDTO.getDescription() + "\n#" + String.join("#", googleSendScheduleDTO.getTagList()));
+
+                // 시작 및 종료 시간 설정
+                String startDateStr = googleSendScheduleDTO.getStartDate();
+                String endDateStr = googleSendScheduleDTO.getEndDate();
+
+                // 날짜 형식 변환 (예: "2023-11-27T11:11" -> "2023-11-27T11:11:00.000Z")
+                startDateStr = convertToRFC3339Format(startDateStr);
+                endDateStr = convertToRFC3339Format(endDateStr);
+
+                DateTime startDateTime = new DateTime(startDateStr);
+                DateTime endDateTime = new DateTime(endDateStr);
+
+                EventDateTime start = new EventDateTime()
+                        .setDateTime(startDateTime)
+                        .setTimeZone("Asia/Seoul");
+                EventDateTime end = new EventDateTime()
+                        .setDateTime(endDateTime)
+                        .setTimeZone("Asia/Seoul");
+
+                event.setStart(start);
+                event.setEnd(end);
+                Log.d("Server!!", startDateStr);
+                // 캘린더 ID 설정 (기본 캘린더 사용)
+                String calendarId = "primary";
+                Log.e("Server!!", "doInBackground ok");
+
+                // 이벤트 삽입
+                mService.events().insert(calendarId, event).execute();
+                Log.e("Server!!", "execute okay");
+            } catch (UserRecoverableAuthIOException e) {
+                Intent intent = e.getIntent();
+                startActivityForResult(intent, REQUEST_AUTHORIZATION);
+            }catch (IOException e) {
+                // 다른 IOException 처리
+            }catch (Exception e) {
+                e.printStackTrace();
+
+                Log.e("Server!!", "exception: "+e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    // RFC3339 형식으로 날짜 변환하는 메소드
+    private String convertToRFC3339Format(String dateTimeStr) {
+        if (dateTimeStr.length() == "2023-11-26T19:30".length()) {
+            dateTimeStr += ":00Z";
+        }else if(dateTimeStr.length() == ("2023-11-26T19:30".length()+3)){
+            dateTimeStr+="Z";
+        }
+        return dateTimeStr;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_ACCOUNT_PICKER && resultCode == RESULT_OK && data != null) {
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            if (accountName != null) {
+                SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(PREF_ACCOUNT_NAME, accountName);
+                editor.apply();
+                mCredential.setSelectedAccountName(accountName);
+            }
+        }
+    }
     private void setupDateBanner() {
         Intent dateIntent = getIntent();
         todayDate = dateIntent.getStringExtra("date");
         //TODO: userId = dateIntent.getStringExtra("userId");
-        userId  = 1111L;
+        userId = 1111L;
 
         String[] parts = todayDate.split("-");
         String todayYear = parts[0];
@@ -312,33 +506,37 @@ public class ShowDayActivity extends AppCompatActivity {
 
     private String getMonthName(String monthNumber) {
         switch (monthNumber) {
-            case "01": return "January";
-            case "02": return "February";
-            case "03": return "March";
-            case "04": return "April";
-            case "05": return "May";
-            case "06": return "June";
-            case "07": return "July";
-            case "08": return "August";
-            case "09": return "September";
-            case "10": return "October";
-            case "11": return "November";
-            case "12": return "December";
-            default: return "Invalid month";
+            case "01":
+                return "January";
+            case "02":
+                return "February";
+            case "03":
+                return "March";
+            case "04":
+                return "April";
+            case "05":
+                return "May";
+            case "06":
+                return "June";
+            case "07":
+                return "July";
+            case "08":
+                return "August";
+            case "09":
+                return "September";
+            case "10":
+                return "October";
+            case "11":
+                return "November";
+            case "12":
+                return "December";
+            default:
+                return "Invalid month";
         }
     }
-////* combinedAdapter   *//
-//    private void setupRecyclerView() {
-//        recyclerView = findViewById(R.id.taskRecyclerView);
-//        recyclerView.setHasFixedSize(true);
- //       recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
- //       calendarItems = new ArrayList<>();
-//        combinedAdapter = new CombinedAdapter(calendarItems);
- //       recyclerView.setAdapter(combinedAdapter);
- //   }
-    /*  seperatedAdapter  */
-    private void setupRecyclerView(){
+
+    private void setupRecyclerView() {
         scheduleRecyclerShowDay = findViewById(R.id.scheduleRecyclerView);
         scheduleRecyclerShowDay.setHasFixedSize(true);
         scheduleRecyclerShowDay.setLayoutManager(new LinearLayoutManager(this));
@@ -353,21 +551,9 @@ public class ShowDayActivity extends AppCompatActivity {
         taskRecyclerShowDay.setAdapter(taskAdapter);
 
 
-}
-    ////* combinedAdapter   *//
-//    private void loadSchedules(String todayDate) {
-//        List<Schedule> schedulesForToday = scheduleMap.getOrDefault(todayDate, new ArrayList<>());
-//        List<Task> tasksForToday = TaskMap.getOrDefault(todayDate, new ArrayList<>());
-//        List<Schedule> schedulesForToday = mainCalendarApplication.getScheduleMap().getOrDefault(todayDate, new ArrayList<>());
-//        List<Task> tasksForToday = mainCalendarApplication.getTaskMap().getOrDefault(todayDate, new ArrayList<>());
-//        calendarItems.clear();
-//        calendarItems.addAll(schedulesForToday);
-//        calendarItems.addAll(tasksForToday);
-//        combinedAdapter.notifyDataSetChanged();
-//    }
+    }
 
-/*  seperatedAdapter   */
-    private void loadSchedules(String date){
+    private void loadSchedules(String date) {
 
         // 스케줄과 태스크 데이터 로드
         List<Schedule> schedulesForToday = mainCalendarApplication.getScheduleMap().getOrDefault(date, new ArrayList<>());
@@ -382,6 +568,7 @@ public class ShowDayActivity extends AppCompatActivity {
         todayTaskList.addAll(tasksForToday);
         taskAdapter.notifyDataSetChanged();
     }
+
 
     private void setupFloatingActionButtons() {
         addEventFabButton = findViewById(R.id.fabMain);
@@ -439,25 +626,25 @@ public class ShowDayActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.navigation_calendar) {
                 startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
 
-            }else if (item.getItemId() == R.id.navigation_friend) {
+            } else if (item.getItemId() == R.id.navigation_friend) {
                 startActivity(new Intent(ShowDayActivity.this, FriendlistActivity.class));
                 // 추가 버튼에 대한 처리를 여기에 작성합니다.
                 // 예: case R.id.navigation_new_button:
                 // 버튼에 대한 액션 구현
 
-            } else if (item.getItemId() == R.id.navigation_home){
+            } else if (item.getItemId() == R.id.navigation_home) {
                 startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
                 // 추가 버튼에 대한 처리를 여기에 작성합니다.
                 // 예: case R.id.navigation_new_button:
                 // 버튼에 대한 액션 구현
 
-            }else if (item.getItemId() == R.id.navigation_post){
+            } else if (item.getItemId() == R.id.navigation_post) {
                 startActivity(new Intent(ShowDayActivity.this, BoardActivity.class));
                 // 추가 버튼에 대한 처리를 여기에 작성합니다.
                 // 예: case R.id.navigation_new_button:
                 // 버튼에 대한 액션 구현
 
-            }else if (item.getItemId() == R.id.navigation_setting) {
+            } else if (item.getItemId() == R.id.navigation_setting) {
                 startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
                 // 추가 버튼에 대한 처리를 여기에 작성합니다.
                 // 예: case R.id.navigation_new_button:

@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.Packaging
+
 plugins {
     id("com.android.application")
 
@@ -29,6 +31,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        exclude ("META-INF/DEPENDENCIES")
     }
 
 }
@@ -65,6 +70,17 @@ dependencies {
     implementation ("com.google.android.gms:play-services-auth:17.0.0")
     implementation ("com.google.api-client:google-api-client-android:1.30.10")
     implementation ("com.google.apis:google-api-services-calendar:v3-rev340-1.25.0")
+    implementation ("com.google.android.gms:play-services-auth:19.0.0")
+    implementation ("org.apache.httpcomponents:httpclient:4.5.12")
+    implementation ("org.apache.httpcomponents:httpcore:4.4.13")
+    implementation ("pub.devrel:easypermissions:3.0.0")
+    implementation("com.google.api-client:google-api-client-android:1.22.0") {
+        exclude (group =  "org.apache.httpcomponents")
+    }
+    implementation("com.google.apis:google-api-services-calendar:v3-rev235-1.22.0") {
+        exclude (group = "org.apache.httpcomponents")
+    }
+    implementation ("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
 
 }
 
