@@ -61,5 +61,10 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     //implementation("com.android.support:design:28.0.0")
 
+    //Google Calendar
+    implementation ("com.google.android.gms:play-services-auth:17.0.0")
+    implementation ("com.google.api-client:google-api-client-android:1.30.10")
+    implementation ("com.google.apis:google-api-services-calendar:v3-rev340-1.25.0")
+
 }
 
