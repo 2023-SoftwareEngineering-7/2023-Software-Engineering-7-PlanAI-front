@@ -34,7 +34,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskRecyDeadLine.setText(task.getDeadLineDate());
         holder.taskRecyDeadLineTime.setText(task.getDeadLineTime());
         holder.taskRecyTag.setText(task.getTag());
-        holder.taskRecyPriority.setText(task.getTag());
+        holder.taskRecyPriority.setText(task.getPriority());
 
     }
 

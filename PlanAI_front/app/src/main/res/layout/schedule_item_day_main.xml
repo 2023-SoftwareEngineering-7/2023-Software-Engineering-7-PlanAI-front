@@ -25,6 +25,12 @@
                 android:layout_height="wrap_content"
                 android:text="start"
                 android:textSize="16sp" />
+        <TextView
+                android:id="@+id/scheduleStartTimeItemView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="end"
+                android:textSize="16sp" />
 
         <TextView
                 android:id="@+id/scheduleEndDateItemView"
@@ -32,7 +38,12 @@
                 android:layout_height="wrap_content"
                 android:text="end"
                 android:textSize="16sp" />
-
+        <TextView
+                android:id="@+id/scheduleEndTimeItemView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="end"
+                android:textSize="16sp" />
         <TextView
                 android:id="@+id/scheduleDescriptionItemView"
                 android:layout_width="match_parent"

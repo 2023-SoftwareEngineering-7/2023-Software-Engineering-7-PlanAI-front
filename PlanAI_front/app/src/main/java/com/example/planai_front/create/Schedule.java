@@ -32,7 +32,7 @@ public class Schedule implements CalendarItem{
 
 
     // 모든 필드를 포함하는 생성자
-    public  Schedule(String id, String summary, String startDate, String startTime, String endDate, String endTime, String tag, String description, String collaborators){
+    public  Schedule(String id, String summary, String startDate, String startTime, String endDate, String endTime, String tag, String description){
         this.id = id;
         this.summary = summary;
         this.startDate = startDate;
@@ -41,7 +41,6 @@ public class Schedule implements CalendarItem{
         this.endTime = endTime;
         this.tag = tag;
         this.description = description;
-        this.collaborators = collaborators;
 
     }
 
