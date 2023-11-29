@@ -13,9 +13,9 @@ public class Server_TaskDTO {
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("deadLine")
+    @SerializedName("deadline")
     @Expose
-    private String deadLine;
+    private String deadline;
     @SerializedName("priority")
     @Expose
     private Priority priority;
@@ -29,10 +29,10 @@ public class Server_TaskDTO {
     public Server_TaskDTO() {
     }
 
-    public Server_TaskDTO(String title, String description, String deadLine, Priority priority, Long ownerId, List<String> tagList) {
+    public Server_TaskDTO(String title, String description, String deadline, Priority priority, Long ownerId, List<String> tagList) {
         this.title = title;
         this.description = description;
-        this.deadLine = deadLine;
+        this.deadline = deadline;
         this.priority = priority;
         this.ownerId = ownerId;
         this.tagList = tagList;
@@ -54,12 +54,12 @@ public class Server_TaskDTO {
         this.description = description;
     }
 
-    public String getDeadLine() {
-        return deadLine;
+    public String getDeadline() {
+        return deadline;
     }
 
-    public void setDeadLine(String deadLine) {
-        this.deadLine = deadLine;
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
     }
 
     public Priority getPriority() {
