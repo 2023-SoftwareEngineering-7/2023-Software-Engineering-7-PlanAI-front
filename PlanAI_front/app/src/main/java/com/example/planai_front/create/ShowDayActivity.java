@@ -39,7 +39,10 @@ import retrofit2.Response;
 public class ShowDayActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-//    private ScheduleAdapter adapter;
+    private ScheduleAdapter scheduleAdapter;
+    private RecyclerView scheduleRecyclerShowDay;
+    private TaskAdapter taskAdapter;
+    private RecyclerView taskRecyclerShowDay;
     private MainCalendarApplication mainCalendarApplication;
     private List<Schedule> scheduleList;
     private String scheduleId, scheduleSummary, scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, scheduleTag, scheduleDescription;
@@ -47,7 +50,7 @@ public class ShowDayActivity extends AppCompatActivity {
 
     private String taskId, taskSummary, taskDescription,taskDeadLineDate, taskDeadLineTime,taskTag, taskPriority;
     private Priority Server_taskPriority;
-    private List<Task> taskList;
+    private List<Task> todatTaskList;
     private List<String> tagList;
 
 
@@ -104,7 +107,9 @@ public class ShowDayActivity extends AppCompatActivity {
                                 if (scheduleStartDate.equals(getIntent().getStringExtra("date"))) {
                                     scheduleList.add(newSchedule);
                                     //adapter.notifyDataSetChanged();
-                                    combinedAdapter.notifyDataSetChanged();
+                                    /* combined Adapter!!*/
+                                    //combinedAdapter.notifyDataSetChanged();
+                                    scheduleAdapter.notifyDataSetChanged();
                                 }
                                 Log.d("Calendar", "Calendar updated");
 
@@ -184,16 +189,18 @@ public class ShowDayActivity extends AppCompatActivity {
                                 // 추출한 데이터로 새 task 객체 생성.
                                 Task newTask = new Task(taskSummary, taskDescription, taskDeadLineDate, taskDeadLineTime, taskTag, taskPriority);
                                 // TaskMap에서 해당 날짜에 해당하는 Task 리스트 가져오거나 새로 생성.
-                                ArrayList<Task> tasks = TaskMap.computeIfAbsent(taskDeadLineDate, k -> new ArrayList<>());
+                                ArrayList<Task> newTaskDateList = TaskMap.computeIfAbsent(taskDeadLineDate, k -> new ArrayList<>());
                                 // 새 Task 리스트에 추가.
-                                tasks.add(newTask);
+                                newTaskDateList.add(newTask);
 
                                 // 현재 액티비티 인텐트에 있는 'date'와 Task 시작 날짜 같으면,
                                 // 해당 Task 현재 액티비티 스케줄 리스트에 추가하고 어댑터로 리스트뷰 갱신.
                                 if (taskDeadLineDate.equals(getIntent().getStringExtra("date"))) {
-                                    taskList.add(newTask);
-                                    //adapter.notifyDataSetChanged();
-                                    combinedAdapter.notifyDataSetChanged();
+                                    todatTaskList.add(newTask);
+                                    //adapter.notifyDataSetChanged();]
+                                    /*combinedAdapter!!!*/
+                                    //combinedAdapter.notifyDataSetChanged();
+                                    taskAdapter.notifyDataSetChanged();
                                 }
                                 Log.d("Calendar", "Calendar updated");
 
@@ -259,12 +266,12 @@ public class ShowDayActivity extends AppCompatActivity {
         // ScheduleApplication 및 TaskApplication 인스턴스에서 데이터 맵 가져오기
 //        scheduleMap = ScheduleApplication.getInstance().getScheduleMap();
 //        TaskMap = TaskApplication.getInstance().getTaskMap();
-//        scheduleMap = MainCalendarApplication.getInstance().getScheduleMap();
-//        TaskMap = MainCalendarApplication.getInstance().getTaskMap();
+        scheduleMap = MainCalendarApplication.getInstance().getScheduleMap();
+        TaskMap = MainCalendarApplication.getInstance().getTaskMap();
 
         // 리스트 초기화
         scheduleList = new ArrayList<>();
-        taskList = new ArrayList<>();
+        todatTaskList = new ArrayList<>();
 
         // 나머지 UI 설정
         setupRecyclerView();
@@ -321,28 +328,63 @@ public class ShowDayActivity extends AppCompatActivity {
             default: return "Invalid month";
         }
     }
-///////////////////////////////////
-    private void setupRecyclerView() {
-        recyclerView = findViewById(R.id.taskRecyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+////* combinedAdapter   *//
+//    private void setupRecyclerView() {
+//        recyclerView = findViewById(R.id.taskRecyclerView);
+//        recyclerView.setHasFixedSize(true);
+ //       recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        calendarItems = new ArrayList<>();
-        combinedAdapter = new CombinedAdapter(calendarItems);
-        recyclerView.setAdapter(combinedAdapter);
-    }
+ //       calendarItems = new ArrayList<>();
+//        combinedAdapter = new CombinedAdapter(calendarItems);
+ //       recyclerView.setAdapter(combinedAdapter);
+ //   }
+    /*  seperatedAdapter  */
+    private void setupRecyclerView(){
+        scheduleRecyclerShowDay = findViewById(R.id.scheduleRecyclerView);
+        scheduleRecyclerShowDay.setHasFixedSize(true);
+        scheduleRecyclerShowDay.setLayoutManager(new LinearLayoutManager(this));
+        scheduleAdapter = new ScheduleAdapter(scheduleList);
+        scheduleRecyclerShowDay.setAdapter(scheduleAdapter);
 
-    private void loadSchedules(String todayDate) {
+        // 태스크 RecyclerView 설정
+        taskRecyclerShowDay = findViewById(R.id.taskRecyclerView);
+        taskRecyclerShowDay.setHasFixedSize(true);
+        taskRecyclerShowDay.setLayoutManager(new LinearLayoutManager(this));
+        taskAdapter = new TaskAdapter(todatTaskList);
+        taskRecyclerShowDay.setAdapter(taskAdapter);
+
+
+}
+    ////* combinedAdapter   *//
+//    private void loadSchedules(String todayDate) {
 //        List<Schedule> schedulesForToday = scheduleMap.getOrDefault(todayDate, new ArrayList<>());
 //        List<Task> tasksForToday = TaskMap.getOrDefault(todayDate, new ArrayList<>());
-        List<Schedule> schedulesForToday = mainCalendarApplication.getScheduleMap().getOrDefault(todayDate, new ArrayList<>());
-        List<Task> tasksForToday = mainCalendarApplication.getTaskMap().getOrDefault(todayDate, new ArrayList<>());
-        calendarItems.clear();
-        calendarItems.addAll(schedulesForToday);
-        calendarItems.addAll(tasksForToday);
-        combinedAdapter.notifyDataSetChanged();
-    }
+//        List<Schedule> schedulesForToday = mainCalendarApplication.getScheduleMap().getOrDefault(todayDate, new ArrayList<>());
+//        List<Task> tasksForToday = mainCalendarApplication.getTaskMap().getOrDefault(todayDate, new ArrayList<>());
+//        calendarItems.clear();
+//        calendarItems.addAll(schedulesForToday);
+//        calendarItems.addAll(tasksForToday);
+//        combinedAdapter.notifyDataSetChanged();
+//    }
 
+/*  seperatedAdapter   */
+    private void loadSchedules(String date){
+
+        // 스케줄과 태스크 데이터 로드
+        List<Schedule> schedulesForToday = mainCalendarApplication.getScheduleMap().getOrDefault(date, new ArrayList<>());
+        List<Task> tasksForToday = mainCalendarApplication.getTaskMap().getOrDefault(date, new ArrayList<>());
+
+        // 어댑터 데이터 갱신
+        scheduleList.clear();
+        scheduleList.addAll(schedulesForToday);
+        scheduleAdapter.notifyDataSetChanged();
+        Log.d("loadScheduleList",schedulesForToday.toString());
+
+        todatTaskList.clear();
+        todatTaskList.addAll(tasksForToday);
+        taskAdapter.notifyDataSetChanged();
+        Log.d("loadScheduleList",tasksForToday.toString());
+    }
 
 
 //    private void setupRecyclerView() {

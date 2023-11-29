@@ -15,7 +15,7 @@ import java.util.List;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> taskList;
 
-    public TaskAdapter(List<Schedule> scheduleList) {
+    public TaskAdapter(List<Task> taskList) {
         this.taskList = taskList;
     }
 
@@ -30,10 +30,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = taskList.get(position);
         holder.taskRecySummary.setText(task.getSummary());
-        holder.taskRecyDeadLine.setText(task.getDeadLineDate());
         holder.taskRecyDescription.setText(task.getDescription());
-        holder.taskRecyPriority.setText(task.getTag());
+        holder.taskRecyDeadLine.setText(task.getDeadLineDate());
+        holder.taskRecyDeadLineTime.setText(task.getDeadLineTime());
         holder.taskRecyTag.setText(task.getTag());
+        holder.taskRecyPriority.setText(task.getTag());
+
     }
 
     @Override
@@ -42,13 +44,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        public TextView taskRecySummary, taskRecyDeadLine, taskRecyDescription, taskRecyPriority, taskRecyTag;
+        public TextView taskRecySummary, taskRecyDescription, taskRecyDeadLine, taskRecyDeadLineTime, taskRecyTag,taskRecyPriority;
 
         public TaskViewHolder(View view) {
             super(view);
             taskRecySummary = view.findViewById(R.id.taskSummaryItemView);
-            taskRecyDeadLine = view.findViewById(R.id.taskDeadLineItemView);
             taskRecyDescription = view.findViewById(R.id.taskDescriptionItemView);
+            taskRecyDeadLine = view.findViewById(R.id.taskDeadLineItemView);
+            taskRecyDeadLineTime = view.findViewById(R.id.taskDeadLineTimeItemView);
             taskRecyPriority = view.findViewById(R.id.taskPriorityItemView);
             taskRecyTag = view.findViewById(R.id.taskTagItemView);
         }
