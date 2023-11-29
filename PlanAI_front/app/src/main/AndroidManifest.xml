@@ -55,7 +55,6 @@
         <activity android:name=".create.CreateTaskActivity"
                   android:theme="@style/PopupActivity">
         </activity>
-        <activity android:name=".GoogleCalendar.AddToGoogle_ScheduleDTO_Activity"></activity>
 
     </application>
     <!--서버-->

@@ -132,9 +132,6 @@ public class ShowDayActivity extends AppCompatActivity {
                                 // 해당 스케줄 현재 액티비티 스케줄 리스트에 추가하고 어댑터로 리스트뷰 갱신.
                                 if (scheduleStartDate.equals(getIntent().getStringExtra("date"))) {
                                     todayScheduleList.add(newSchedule);
-                                    //adapter.notifyDataSetChanged();
-                                    /* combined Adapter!!*/
-                                    //combinedAdapter.notifyDataSetChanged();
                                     scheduleAdapter.notifyDataSetChanged();
                                 }
                                 Log.d("Calendar", "Calendar updated");
@@ -172,14 +169,12 @@ public class ShowDayActivity extends AppCompatActivity {
                                             Log.d("Server!!", "Response OK");
                                             // Google 캘린더에 이벤트 추가
                                             if (mCredential.getSelectedAccountName() != null) {
-                                                new AddEventToCalendarTask(mCredential, response.body()).execute();
+                                                new AddScheduleToCalendarTask(mCredential, response.body()).execute();
                                             } else {
                                                 // 적절한 사용자 인증이 완료되지 않았을 경우 처리
                                                 chooseGoogleAccount();
                                                 Log.e("Server!!", "GoogleCalendar: Credential is null. User authentication required.");
                                             }
-
-
                                         } else {
                                             // 서버 에러 처리
                                             Log.d("Server!!", "Server Error1");
@@ -202,7 +197,7 @@ public class ShowDayActivity extends AppCompatActivity {
                                 GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
                                         this, Arrays.asList(SCOPES)).setBackOff(new ExponentialBackOff());
                                 // Google 캘린더에 이벤트 추가
-                                new AddEventToCalendarTask(mCredential, serverScheduleDTO).execute();
+                                new AddScheduleToCalendarTask(mCredential, serverScheduleDTO).execute();
 
                             }
                         }
@@ -278,6 +273,14 @@ public class ShowDayActivity extends AppCompatActivity {
                                         if (response.isSuccessful()) {
                                             //성공적인 응답 처리
                                             Log.d("Server!!", "Response oOK");
+                                            // Google 캘린더에 이벤트 추가
+                                            if (mCredential.getSelectedAccountName() != null) {
+                                                new AddTaskToCalendarTask(mCredential, response.body()).execute();
+                                            } else {
+                                                // 적절한 사용자 인증이 완료되지 않았을 경우 처리
+                                                chooseGoogleAccount();
+                                                Log.e("Server!!", "GoogleCalendar: Credential is null. User authentication required.");
+                                            }
 
                                         } else {
                                             // 서버 에러 처리
@@ -294,6 +297,11 @@ public class ShowDayActivity extends AppCompatActivity {
                                         Log.e("Server!!", "Network Error22", t);
                                     }
                                 });
+                                Log.d("Server!!", "google calendar");
+                                GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
+                                        this, Arrays.asList(SCOPES)).setBackOff(new ExponentialBackOff());
+                                // Google 캘린더에 이벤트 추가
+                                new AddTaskToCalendarTask(mCredential, serverTaskDTO).execute();
                             }
                         }
                     }
@@ -395,12 +403,12 @@ public class ShowDayActivity extends AppCompatActivity {
     }
 
 
-    // Google Calendar에 이벤트를 추가하는 AsyncTask
-    private class AddEventToCalendarTask extends AsyncTask<Void, Void, Void> {
+    // Google Calendar에 Schedule 추가하는 AsyncTask
+    private class AddScheduleToCalendarTask extends AsyncTask<Void, Void, Void> {
         private GoogleAccountCredential credential;
         private Server_ScheduleDTO googleSendScheduleDTO;
 
-        public AddEventToCalendarTask(GoogleAccountCredential credential, Server_ScheduleDTO schedule) {
+        public AddScheduleToCalendarTask(GoogleAccountCredential credential, Server_ScheduleDTO schedule) {
             this.credential = credential;
             this.googleSendScheduleDTO = schedule;
             Log.e("Server!!", "AddEventToCalendarTask working");
@@ -456,12 +464,77 @@ public class ShowDayActivity extends AppCompatActivity {
         }
     }
 
+    // Google Calendar에 Schedule 추가하는 AsyncTask
+    private class AddTaskToCalendarTask extends AsyncTask<Void, Void, Void> {
+        private GoogleAccountCredential credential;
+        private Server_TaskDTO googleSendTaskDTO;
+
+        public AddTaskToCalendarTask(GoogleAccountCredential credential, Server_TaskDTO task) {
+            this.credential = credential;
+            this.googleSendTaskDTO = task;
+            Log.e("Server!!", "AddEventToCalendarTask working");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                // 구글 캘린더에 추가할 이벤트 생성
+                Event event = new Event()
+                        .setColorId("2")
+                        .setSummary(googleSendTaskDTO.getTitle())
+                        .setDescription(googleSendTaskDTO.getDescription() + "\n#" + String.join("#", googleSendTaskDTO.getTagList())+"\n#" + String.join("#"+googleSendTaskDTO.getPriority()));
+
+
+                // 시작 및 종료 시간 설정
+                String startDateStr = googleSendTaskDTO.getDeadline();
+                String endDateStr = googleSendTaskDTO.getDeadline();
+
+                // 날짜 형식 변환 (예: "2023-11-27T11:11" -> "2023-11-27T11:11:00.000Z")
+                startDateStr = convertToRFC3339Format(startDateStr);
+                endDateStr = convertToRFC3339Format(endDateStr);
+
+                DateTime startDateTime = new DateTime(startDateStr);
+                DateTime endDateTime = new DateTime(endDateStr);
+
+                EventDateTime start = new EventDateTime()
+                        .setDateTime(startDateTime)
+                        .setTimeZone("Asia/Seoul");
+                EventDateTime end = new EventDateTime()
+                        .setDateTime(endDateTime)
+                        .setTimeZone("Asia/Seoul");
+
+                event.setStart(start);
+                event.setEnd(end);
+                Log.d("Server!!", startDateStr);
+                // 캘린더 ID 설정 (기본 캘린더 사용)
+                String calendarId = "primary";
+                Log.e("Server!!", "doInBackground ok");
+
+                // 이벤트 삽입
+                mService.events().insert(calendarId, event).execute();
+                Log.e("Server!!", "execute okay");
+            } catch (UserRecoverableAuthIOException e) {
+                Intent intent = e.getIntent();
+                startActivityForResult(intent, REQUEST_AUTHORIZATION);
+            }catch (IOException e) {
+                // 다른 IOException 처리
+            }catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Server!!", "exception: "+e.getMessage());
+            }
+            return null;
+        }
+    }
+
     // RFC3339 형식으로 날짜 변환하는 메소드
     private String convertToRFC3339Format(String dateTimeStr) {
-        if (dateTimeStr.length() == "2023-11-26T19:30".length()) {
-            dateTimeStr += ":00Z";
-        }else if(dateTimeStr.length() == ("2023-11-26T19:30".length()+3)){
-            dateTimeStr+="Z";
+        if (dateTimeStr != null) {
+            if (dateTimeStr.length() == "2023-11-26T19:30".length()) {
+                dateTimeStr += ":00Z";
+            } else if (dateTimeStr.length() == ("2023-11-26T19:30".length() + 3)) {
+                dateTimeStr += "Z";
+            }
+
         }
         return dateTimeStr;
     }
