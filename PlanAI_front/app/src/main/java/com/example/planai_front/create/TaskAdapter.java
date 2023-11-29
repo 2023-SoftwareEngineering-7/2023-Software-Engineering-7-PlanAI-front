@@ -1,0 +1,56 @@
+package com.example.planai_front.create;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.planai_front.R;
+
+import java.util.List;
+
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+    private List<Task> taskList;
+
+    public TaskAdapter(List<Schedule> scheduleList) {
+        this.taskList = taskList;
+    }
+
+    @NonNull
+    @Override
+    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_item_day_main, parent, false);
+        return new TaskViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
+        Task task = taskList.get(position);
+        holder.taskRecySummary.setText(task.getSummary());
+        holder.taskRecyDeadLine.setText(task.getDeadLineDate());
+        holder.taskRecyDescription.setText(task.getDescription());
+        holder.taskRecyPriority.setText(task.getTag());
+        holder.taskRecyTag.setText(task.getTag());
+    }
+
+    @Override
+    public int getItemCount() {
+        return taskList.size();
+    }
+
+    public static class TaskViewHolder extends RecyclerView.ViewHolder {
+        public TextView taskRecySummary, taskRecyDeadLine, taskRecyDescription, taskRecyPriority, taskRecyTag;
+
+        public TaskViewHolder(View view) {
+            super(view);
+            taskRecySummary = view.findViewById(R.id.taskSummaryItemView);
+            taskRecyDeadLine = view.findViewById(R.id.taskDeadLineItemView);
+            taskRecyDescription = view.findViewById(R.id.taskDescriptionItemView);
+            taskRecyPriority = view.findViewById(R.id.taskPriorityItemView);
+            taskRecyTag = view.findViewById(R.id.taskTagItemView);
+        }
+    }
+}

@@ -323,7 +323,7 @@ public class ShowDayActivity extends AppCompatActivity {
     }
 ///////////////////////////////////
     private void setupRecyclerView() {
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.taskRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
