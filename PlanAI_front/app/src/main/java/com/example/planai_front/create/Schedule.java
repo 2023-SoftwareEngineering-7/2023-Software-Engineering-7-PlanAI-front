@@ -5,7 +5,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import java.util.Arrays;
 import java.util.Calendar;
 
-public class Schedule implements CalendarItem{
+public class Schedule {
 
     private String id;
     private String summary;
