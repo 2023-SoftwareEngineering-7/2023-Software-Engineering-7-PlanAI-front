@@ -82,5 +82,7 @@ dependencies {
     }
     implementation ("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
 
+    //openai
+    implementation ("com.theokanning.openai-gpt3-java:service:0.18.2")
 }
 
