@@ -285,8 +285,8 @@
     <!-- chatGPT-->
     <TextView
             android:id="@+id/chatGPTBootView"
-            android:layout_width="300sp"
-            android:layout_height="30sp"
+            android:layout_width="250sp"
+            android:layout_height="wrap_content"
             android:focusable="true"
             android:clickable="false"
             app:layout_constraintStart_toStartOf="@+id/taskDescriptionView"
@@ -294,10 +294,12 @@
             android:textSize="18sp"
             android:textAlignment="center"
             android:gravity="bottom"
-            android:layout_marginTop="15dp" />
+            android:layout_marginTop="15dp"
+            android:maxLines="5"
+            android:scrollHorizontally="false" />
 
     <View
-            android:layout_width="300sp"
+            android:layout_width="250sp"
             android:layout_height="1sp"
             android:background="@color/black"
             app:layout_constraintStart_toStartOf="@+id/chatGPTBootView"
@@ -322,7 +324,9 @@
             android:paddingRight="5dp"
             android:drawablePadding="10dp"
             android:layout_marginTop="30dp"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/selected_item_background"
+            android:backgroundTint="@color/black" />
 
     <TextView
             android:text="Boot!!"
@@ -349,7 +353,8 @@
             android:layout_marginBottom="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/chatGPTBootView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

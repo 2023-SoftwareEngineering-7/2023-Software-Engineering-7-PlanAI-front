@@ -52,8 +52,10 @@ public class CreateTaskActivity extends AppCompatActivity {
         getSummaryText();
         getDescriptionText();
 
-        chatGPTBootButtonView.setOnClickListener(((view->setupChatGPTBooster())));
-        finishButton.setOnClickListener((view->finishTaskCreation()));
+        chatGPTBootButtonView.setOnClickListener(v -> {
+            String newTaskInfo = gatherNewTaskInformation();
+            new ChatGPTTask(chatGPTBootText).execute(newTaskInfo);
+        });        finishButton.setOnClickListener((view->finishTaskCreation()));
     }
 
     private void initializeViews() {
@@ -85,11 +87,6 @@ public class CreateTaskActivity extends AppCompatActivity {
         setupTimePicker(deadLineTimeButton, deadLineTimeText, deadLineTimeCal);
 
     }
-
-    private void setupChatGPTBooster(){
-        getChatGTPTaskBoost(chatGPTBootButtonView, chatGPTBootText, gatherNewTaskInformation());
-    }
-
 
     private void setupDatePicker(ImageView button, final TextView textView, final Calendar calendar) {
         button.setOnClickListener(v -> {
@@ -176,14 +173,6 @@ public class CreateTaskActivity extends AppCompatActivity {
                 textView.setText(result);
             }
         }
-    }
-
-    //ChatGPT
-    private void getChatGTPTaskBoost(ImageView button, final TextView textView, String newTaskInfo) {
-        button.setOnClickListener(v -> {
-            String info = newTaskInfo;
-            new ChatGPTTask(textView).execute(info);
-        });
     }
 
     private String gatherNewTaskInformation(){
