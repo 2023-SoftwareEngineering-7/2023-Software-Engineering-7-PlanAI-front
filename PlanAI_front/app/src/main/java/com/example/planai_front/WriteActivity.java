@@ -44,8 +44,22 @@ public class WriteActivity extends AppCompatActivity {
 
                 // 또는 다른 출력 방법을 선택하여 값을 확인할 수 있습니다.
                 // 예: AlertDialog, TextView에 출력, Toast 등
+
+                // 사용자 입력 데이터 수집
+                String title = Edit_Text_Title.getText().toString(); // 제목 입력란에서 텍스트 가져오기
+                String content = Edit_Text_Content.getText().toString(); // 내용 입력란에서 텍스트 가져오기
+
+                // 결과를 Intent에 담아 반환
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("title", title); // Intent에 제목 추가
+                resultIntent.putExtra("content", content); // Intent에 내용 추가
+
+                setResult(RESULT_OK, resultIntent); // 현재 액티비티의 결과로 설정하고 Intent를 전달
+                finish(); // 현재 액티비티 종료
+
             }
         });
+
     }
 
 
@@ -62,5 +76,7 @@ public class WriteActivity extends AppCompatActivity {
         // Edit_Text_Content에 입력된 텍스트를 문자열로 가져와서 writeContent 변수에 저장합니다.
         writeContent = Edit_Text_Content.getText().toString();
     }
+
+
 
 }
