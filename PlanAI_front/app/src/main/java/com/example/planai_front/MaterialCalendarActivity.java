@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.planai_front.Profile.SettingActivity;
 import com.example.planai_front.create.ShowDayActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -68,7 +69,7 @@ public class MaterialCalendarActivity extends AppCompatActivity {
                 // 버튼에 대한 액션 구현
 
             }else if (item.getItemId() == R.id.navigation_setting) {
-                startActivity(new Intent(MaterialCalendarActivity.this, MaterialCalendarActivity.class));
+                startActivity(new Intent(MaterialCalendarActivity.this, SettingActivity.class));
                 // 추가 버튼에 대한 처리를 여기에 작성합니다.
                 // 예: case R.id.navigation_new_button:
                 // 버튼에 대한 액션 구현
