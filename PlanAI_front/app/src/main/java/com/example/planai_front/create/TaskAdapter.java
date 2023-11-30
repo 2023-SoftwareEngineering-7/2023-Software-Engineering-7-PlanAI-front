@@ -52,8 +52,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskRecyDescription = view.findViewById(R.id.taskDescriptionItemView);
             taskRecyDeadLine = view.findViewById(R.id.taskDeadLineItemView);
             taskRecyDeadLineTime = view.findViewById(R.id.taskDeadLineTimeItemView);
-            taskRecyPriority = view.findViewById(R.id.taskPriorityItemView);
             taskRecyTag = view.findViewById(R.id.taskTagItemView);
+            taskRecyPriority = view.findViewById(R.id.taskPriorityItemView);
         }
     }
 }

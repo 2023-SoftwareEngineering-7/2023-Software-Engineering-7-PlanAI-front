@@ -23,26 +23,26 @@
                 android:id="@+id/scheduleStartDateItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="start"
+                android:text="start date"
                 android:textSize="16sp" />
         <TextView
                 android:id="@+id/scheduleStartTimeItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="end"
+                android:text="start time"
                 android:textSize="16sp" />
 
         <TextView
                 android:id="@+id/scheduleEndDateItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="end"
+                android:text="end date"
                 android:textSize="16sp" />
         <TextView
                 android:id="@+id/scheduleEndTimeItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="end"
+                android:text="end time"
                 android:textSize="16sp" />
         <TextView
                 android:id="@+id/scheduleDescriptionItemView"

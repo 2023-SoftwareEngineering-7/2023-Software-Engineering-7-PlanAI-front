@@ -23,13 +23,13 @@
                 android:id="@+id/taskDeadLineItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="deadLine"
+                android:text="deadLineDate"
                 android:textSize="16sp" />
         <TextView
                 android:id="@+id/taskDeadLineTimeItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="deadLine"
+                android:text="deadLineTime"
                 android:textSize="16sp" />
 
         <TextView
