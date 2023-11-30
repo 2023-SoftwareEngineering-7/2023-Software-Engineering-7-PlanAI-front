@@ -56,24 +56,24 @@
 
     <include layout="@layout/navigationbar_bottom" />
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="60dp"
-            android:padding="16dp">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
     <!-- 일정 추가 버튼 -->
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView2"
+            android:id="@+id/taskRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_height="match_parent"
             android:layout_marginBottom="60dp"
+            android:padding="16dp"
+            android:layout_below="@id/scheduleRecyclerView">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/scheduleRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="270sp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="10sp"
             android:padding="16dp">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -90,7 +90,7 @@
             android:foreground="@drawable/plus_icon"
             app:backgroundTint="#FFD1D1D1"
             android:layout_marginBottom="10dp"
-            android:layout_alignBottom="@+id/recyclerView" />
+            android:layout_alignBottom="@+id/taskRecyclerView" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabOption1"

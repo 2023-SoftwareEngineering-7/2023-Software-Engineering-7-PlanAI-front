@@ -4,35 +4,48 @@
         android:layout_margin="8dp"
         android:elevation="4dp"
         android:radius="8dp">
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:background="#E9F3F8">
+
         <TextView
                 android:id="@+id/taskSummaryItemView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="task"
                 android:textSize="16sp" />
+
         <TextView
                 android:id="@+id/taskDeadLineItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="deadLine"
+                android:text="deadLineDate"
                 android:textSize="16sp" />
+        <TextView
+                android:id="@+id/taskDeadLineTimeItemView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="deadLineTime"
+                android:textSize="16sp" />
+
         <TextView
                 android:id="@+id/taskDescriptionItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="description"
                 android:textSize="16sp" />
+
         <TextView
                 android:id="@+id/taskPriorityItemView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="priority"
                 android:textSize="16sp" />
+
         <TextView
                 android:id="@+id/taskTagItemView"
                 android:layout_width="match_parent"

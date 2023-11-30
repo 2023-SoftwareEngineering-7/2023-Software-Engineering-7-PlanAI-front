@@ -65,6 +65,9 @@ public class Server_TaskDTO {
     public Priority getPriority() {
         return priority;
     }
+    public String getStringPriority(){
+        return priority.name();
+    }
 
     public void setPriority(Priority priority) {
         this.priority = priority;
