@@ -40,7 +40,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView profile;
         TextView name;
-        TextView message;
+        //TextView message;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,7 +53,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
         void onBind(FriendItem item){
             profile.setImageResource(item.getResourceId());
             name.setText(item.getName());
-            message.setText(item.getMessage());
+            //message.setText(item.getMessage());
         }
     }
 }

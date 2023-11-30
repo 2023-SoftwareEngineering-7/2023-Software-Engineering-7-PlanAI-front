@@ -87,5 +87,8 @@ dependencies {
 
     //Profile page
     implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    implementation("org.projectlombok:lombok:1.18.22")
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
 }
 

@@ -9,6 +9,11 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.planai_front.Server.ApiService;
+import com.example.planai_front.Server.RegisterUserDTO;
+import com.example.planai_front.Server.RetrofitClient;
+import com.example.planai_front.Server.UserRegisterResponseDTO;
+import com.example.planai_front.user.LoggedInUser;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -16,6 +21,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GoogleSignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
@@ -82,12 +91,46 @@ public class GoogleSignInActivity extends AppCompatActivity implements
 
             Toast.makeText(this, "로그인 성공: "+ "token : " + idToken + " / " + displayName + " (" + email + ")", Toast.LENGTH_SHORT).show();
 
+            registerUser();
             Intent intent = new Intent(GoogleSignInActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
             // 로그인 실패 시 사용자에게 알림
             Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void registerUser() {
+        try{
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+            ApiService apiService = RetrofitClient.getClient(RetrofitClient.PlanAI_URL).create(ApiService.class);
+            RegisterUserDTO dto = RegisterUserDTO.builder()
+                    .name(account.getDisplayName())
+                    .email(account.getEmail())
+                    .phoneNumber("temp")
+                    .build();
+            Call<UserRegisterResponseDTO> call = apiService.registerUser(dto);
+            call.enqueue(new Callback<UserRegisterResponseDTO>() {
+                @Override
+                public void onResponse(Call<UserRegisterResponseDTO> call, Response<UserRegisterResponseDTO> response) {
+                    UserRegisterResponseDTO res = response.body();
+                    LoggedInUser.getInstance(res.getId(), res.getName(), res.getEmail(), res.getPhoneNumber());
+                    Log.d("register Test", LoggedInUser.getInstance().toString());
+                }
+
+                @Override
+                public void onFailure(Call<UserRegisterResponseDTO> call, Throwable t) {
+                    Log.e("500 Internal Server Error", "register 실패");
+                }
+            });
+
+
+        }catch(NullPointerException e) {
+            Log.e("400 Bad request", "로그인되지 않음");
+
+        }
+
+
     }
 
     @Override

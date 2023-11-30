@@ -12,4 +12,10 @@ public interface ApiService {
     Call<Server_ScheduleDTO> createSchedule(@Body Server_ScheduleDTO schedule);
     @POST("user/1/task")
     Call<Server_TaskDTO> createTask(@Body Server_TaskDTO task);
+    @POST("post") // 여기서 "schedule/create"는 서버에서 정의된 엔드포인트를 나타냅니다.
+    Call<Server_PostRegisterDTO> createPost(@Body Server_PostRegisterDTO post);
+
+    @POST("user/register")
+    Call<UserRegisterResponseDTO> registerUser(@Body RegisterUserDTO dto);
+
 }
