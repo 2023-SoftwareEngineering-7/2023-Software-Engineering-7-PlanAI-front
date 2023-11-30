@@ -2,7 +2,7 @@ package com.example.planai_front.create;
 
 import java.util.List;
 
-public class Task implements CalendarItem{
+public class Task{
 
     private String summary;
     private String description;

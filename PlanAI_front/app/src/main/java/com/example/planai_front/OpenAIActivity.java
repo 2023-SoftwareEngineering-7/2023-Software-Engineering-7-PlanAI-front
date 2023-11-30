@@ -3,6 +3,9 @@ package com.example.planai_front;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,7 +17,7 @@ import java.util.List;
 public class OpenAIActivity {
     public static String chatGPT(String prompt) {
         String url = "https://api.openai.com/v1/chat/completions";
-        String apiKey = "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"; // 여기에 고유 API 키 삽입, 만약 크레딧이 없다면 작동X
+        String apiKey = "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"; // 여기에 고유 API 키 삽입, 만약 크레딧이 없다면 작동X
         String model = "gpt-3.5-turbo";
         try {
             URL obj = new URL(url);
@@ -25,29 +28,39 @@ public class OpenAIActivity {
             connection.setDoOutput(true);
 
             // The request body
-            String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
-            connection.setDoOutput(true);
-            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            writer.write(body);
-            writer.flush();
-            writer.close();
+            //String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("model", model);
+            JSONArray messages = new JSONArray();
+            JSONObject message = new JSONObject();
+            message.put("role", "user");
+            message.put("content", prompt);
+            messages.put(message);
+            jsonBody.put("messages", messages);
 
-            // Response from ChatGPT
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String body = jsonBody.toString();
 
-            String line;
-
-            StringBuffer response = new StringBuffer();
-
-            while ((line = br.readLine()) != null) {
-                response.append(line);
+            try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
+                writer.write(body);
+                writer.flush();
             }
-            br.close();
 
-            // calls the method to extract the message.
-            return extractMessageFromJSONResponse(response.toString());
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                throw new IOException("HTTP error code: " + responseCode);
+            }
 
-        } catch (IOException e) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String line;
+                StringBuilder response = new StringBuilder();
+                while ((line = br.readLine()) != null) {
+                    response.append(line);
+                }
+                return extractMessageFromJSONResponse(response.toString());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace(); // 더 상세한 예외 정보를 로그로 남김
             throw new RuntimeException(e);
         }
     }

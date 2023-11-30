@@ -3,6 +3,7 @@ package com.example.planai_front.create;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.planai_front.OpenAIActivity;
 import com.example.planai_front.R;
 
 import java.util.ArrayList;
@@ -23,14 +25,15 @@ import java.util.Locale;
 //전달받은 todayDate(2023-11-22 형식을 가짐)을 id로 해서 서버에 Task 등록
 //popup_layout을 띄움(아래에서 올라오는 pop-up 또는 popup 처럼 생긴 새로운 xml 페이지. 편한걸로 할것!!!)
 //뒤로가기 버튼을 통해 ShowDayActivity로 돌아감
+//ChatGPT 더하기
 public class CreateTaskActivity extends AppCompatActivity {
 
     private String todayDate;
     private EditText summaryText, descriptionText;
     private Switch repeatSchedule;
     private TextView deadLineDateText, deadLineTimeText;
-    private ImageView deadLineCalendarButton, deadLineTimeButton;
-    private TextView tagTextView, priorityTextView;
+    private ImageView deadLineCalendarButton, deadLineTimeButton, chatGPTBootButtonView;
+    private TextView tagTextView, priorityTextView, chatGPTBootText;
     private String todayTag,todayPriority;
     private String todaySummary, todayDescription;
     private Calendar deadLineCalendar, deadLineTimeCal;
@@ -49,7 +52,10 @@ public class CreateTaskActivity extends AppCompatActivity {
         getSummaryText();
         getDescriptionText();
 
-        finishButton.setOnClickListener((view->finishTaskCreation()));
+        chatGPTBootButtonView.setOnClickListener(v -> {
+            String newTaskInfo = gatherNewTaskInformation();
+            new ChatGPTTask(chatGPTBootText).execute(newTaskInfo);
+        });        finishButton.setOnClickListener((view->finishTaskCreation()));
     }
 
     private void initializeViews() {
@@ -65,6 +71,8 @@ public class CreateTaskActivity extends AppCompatActivity {
         deadLineCalendar = Calendar.getInstance();
         deadLineTimeCal = Calendar.getInstance();
         finishButton = findViewById(R.id.taskFinishButton);
+        chatGPTBootButtonView = findViewById(R.id.chatGPTBootButton);
+        chatGPTBootText = findViewById(R.id.chatGPTBootView);
 
         deadLineCalendar = Calendar.getInstance();
         deadLineTimeCal = Calendar.getInstance();
@@ -103,6 +111,8 @@ public class CreateTaskActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void setupTagDropDown() {
         Button tagShowDropDown = findViewById(R.id.taskTagShowDropDown);
         tagShowDropDown.setOnClickListener(v -> {
@@ -138,6 +148,47 @@ public class CreateTaskActivity extends AppCompatActivity {
     private void getDescriptionText() {
         descriptionText = findViewById(R.id.taskDescriptionView);
         todayDescription = descriptionText.getText().toString();
+    }
+
+    private static class ChatGPTTask extends AsyncTask<String, Void, String> {
+        private TextView textView;
+        // Constructor to pass the TextView
+        public ChatGPTTask(TextView textView) {
+            this.textView = textView;
+        }
+
+        @Override
+        protected String doInBackground(String... prompts) {
+            try {
+                return OpenAIActivity.chatGPT(prompts[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null && textView != null) {
+                textView.setText(result);
+            }
+        }
+    }
+
+    private String gatherNewTaskInformation(){
+        String summary = summaryText.getText().toString();
+        String deadLineDate= deadLineDateText.getText().toString();
+        String deadLineTime = deadLineTimeText.getText().toString();
+        String tag = tagTextView.getText().toString();
+        String priority = priorityTextView.getText().toString();
+        String description = descriptionText.getText().toString();
+
+        return ("제목: "+summary+"\n"+
+                "마감일: "+deadLineDate+"\n"+
+                "마감시간: "+deadLineTime+"\n"+
+                "분류: "+tag+"\n"+
+                "우선순위: "+priority+"\n"+
+                "설명: "+description);
     }
 
     // 일정 생성 완료 처리

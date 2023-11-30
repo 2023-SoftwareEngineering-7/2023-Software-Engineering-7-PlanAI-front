@@ -47,7 +47,6 @@
         </activity>
         <activity android:name="com.example.planai_front.GoogleSignInActivity"></activity>
         <activity android:name=".MaterialCalendarActivity"></activity>
-        <activity android:name=".create.EventActivity"></activity>
         <activity android:name=".create.ShowDayActivity"></activity>
         <activity android:name=".create.CreateScheduleActivity"
                   android:theme="@style/PopupActivity">
