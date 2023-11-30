@@ -3,6 +3,7 @@ package com.example.planai_front.create;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.planai_front.OpenAIActivity;
 import com.example.planai_front.R;
 
 import java.util.ArrayList;
@@ -30,8 +32,8 @@ public class CreateTaskActivity extends AppCompatActivity {
     private EditText summaryText, descriptionText;
     private Switch repeatSchedule;
     private TextView deadLineDateText, deadLineTimeText;
-    private ImageView deadLineCalendarButton, deadLineTimeButton;
-    private TextView tagTextView, priorityTextView;
+    private ImageView deadLineCalendarButton, deadLineTimeButton, chatGPTBootButtonView;
+    private TextView tagTextView, priorityTextView, chatGPTBootText;
     private String todayTag,todayPriority;
     private String todaySummary, todayDescription;
     private Calendar deadLineCalendar, deadLineTimeCal;
@@ -50,6 +52,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         getSummaryText();
         getDescriptionText();
 
+        chatGPTBootButtonView.setOnClickListener(((view->setupChatGPTBooster())));
         finishButton.setOnClickListener((view->finishTaskCreation()));
     }
 
@@ -66,6 +69,8 @@ public class CreateTaskActivity extends AppCompatActivity {
         deadLineCalendar = Calendar.getInstance();
         deadLineTimeCal = Calendar.getInstance();
         finishButton = findViewById(R.id.taskFinishButton);
+        chatGPTBootButtonView = findViewById(R.id.chatGPTBootButton);
+        chatGPTBootText = findViewById(R.id.chatGPTBootView);
 
         deadLineCalendar = Calendar.getInstance();
         deadLineTimeCal = Calendar.getInstance();
@@ -80,6 +85,11 @@ public class CreateTaskActivity extends AppCompatActivity {
         setupTimePicker(deadLineTimeButton, deadLineTimeText, deadLineTimeCal);
 
     }
+
+    private void setupChatGPTBooster(){
+        getChatGTPTaskBoost(chatGPTBootButtonView, chatGPTBootText, gatherNewTaskInformation());
+    }
+
 
     private void setupDatePicker(ImageView button, final TextView textView, final Calendar calendar) {
         button.setOnClickListener(v -> {
@@ -103,6 +113,8 @@ public class CreateTaskActivity extends AppCompatActivity {
             timePickerDialog.show();
         });
     }
+
+
 
     private void setupTagDropDown() {
         Button tagShowDropDown = findViewById(R.id.taskTagShowDropDown);
@@ -139,6 +151,55 @@ public class CreateTaskActivity extends AppCompatActivity {
     private void getDescriptionText() {
         descriptionText = findViewById(R.id.taskDescriptionView);
         todayDescription = descriptionText.getText().toString();
+    }
+
+    private static class ChatGPTTask extends AsyncTask<String, Void, String> {
+        private TextView textView;
+        // Constructor to pass the TextView
+        public ChatGPTTask(TextView textView) {
+            this.textView = textView;
+        }
+
+        @Override
+        protected String doInBackground(String... prompts) {
+            try {
+                return OpenAIActivity.chatGPT(prompts[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null && textView != null) {
+                textView.setText(result);
+            }
+        }
+    }
+
+    //ChatGPT
+    private void getChatGTPTaskBoost(ImageView button, final TextView textView, String newTaskInfo) {
+        button.setOnClickListener(v -> {
+            String info = newTaskInfo;
+            new ChatGPTTask(textView).execute(info);
+        });
+    }
+
+    private String gatherNewTaskInformation(){
+        String summary = summaryText.getText().toString();
+        String deadLineDate= deadLineDateText.getText().toString();
+        String deadLineTime = deadLineTimeText.getText().toString();
+        String tag = tagTextView.getText().toString();
+        String priority = priorityTextView.getText().toString();
+        String description = descriptionText.getText().toString();
+
+        return ("제목: "+summary+"\n"+
+                "마감일: "+deadLineDate+"\n"+
+                "마감시간: "+deadLineTime+"\n"+
+                "분류: "+tag+"\n"+
+                "우선순위: "+priority+"\n"+
+                "설명: "+description);
     }
 
     // 일정 생성 완료 처리
