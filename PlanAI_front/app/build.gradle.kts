@@ -84,5 +84,8 @@ dependencies {
 
     //openai
     implementation ("com.theokanning.openai-gpt3-java:service:0.18.2")
+
+    //Profile page
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }
 
