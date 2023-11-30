@@ -11,7 +11,7 @@ public interface ApiService {
     @POST("user/1/Schedule") // 여기서 "schedule/create"는 서버에서 정의된 엔드포인트를 나타냅니다.
     Call<Server_ScheduleDTO> createSchedule(@Body Server_ScheduleDTO post);
 
-    @POST("post/") // 여기서 "schedule/create"는 서버에서 정의된 엔드포인트를 나타냅니다.
+    @POST("post") // 여기서 "schedule/create"는 서버에서 정의된 엔드포인트를 나타냅니다.
     Call<Server_PostRegisterDTO> createPost(@Body Server_PostRegisterDTO post);
 
     @POST("user/register")
