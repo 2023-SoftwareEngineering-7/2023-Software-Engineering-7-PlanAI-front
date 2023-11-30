@@ -1,7 +1,12 @@
 package com.example.planai_front;
 
+import static com.example.planai_front.Server.RetrofitClient.PlanAI_URL;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,11 +15,137 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.planai_front.Server.ApiService;
+import com.example.planai_front.Server.RetrofitClient;
+import com.example.planai_front.Server.Server_PostRegisterDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.example.planai_front.Server.RetrofitClient.PlanAI_URL;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+import android.animation.ObjectAnimator;
+
+import com.example.planai_front.Server.ApiService;
+import com.example.planai_front.Server.RetrofitClient;
+import com.example.planai_front.Server.Server_PostRegisterDTO;
+import com.example.planai_front.WriteActivity;
+import com.example.planai_front.Server.Server_ScheduleDTO;
+import com.example.planai_front.create.CreateScheduleActivity;
+import com.example.planai_front.create.Schedule;
+import com.example.planai_front.create.ScheduleAdapter;
+import com.example.planai_front.create.ShowDayActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
 public class WriteActivity extends AppCompatActivity {
 
     private EditText Edit_Text_Title, Edit_Text_Content;
 
     private String writeTitle, writeContent;
+
+
+    private String writeid, writeTag;
+    private List<String> Server_tagList = new ArrayList<>();
+
+    //선택 날짜, 유저 id 받아오기
+    private String todayDate;
+    //private
+    private Long userid;
+
+    // ActivityResultLauncher 객체 선언. 다른 액티비티에서 결과 받아오는데 사용.
+    private final ActivityResultLauncher<Intent> createPostLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        // 결과 코드 OK이고, 반환된 데이터 null 아닐 경우에만 처리.
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            // 결과 데이터 Intent 객체로 받아옴.
+                            Intent data = result.getData();
+                            if (data != null) {
+                                //스케줄 id 생성
+                                writeid = userid+data.getStringExtra(("Post"));
+                                // 인텐트에서 스케줄 관련 데이터 추출.
+                                writeTitle = data.getStringExtra("title");
+                                writeContent = data.getStringExtra("content");
+
+
+                                //서버 전송 준비
+                                //TODO: 서버 전송용 Schedule클래스와 저장하는 Schedule클래스 일치시키기
+                                Log.e("Server!!", writeTag);
+                                if (Server_tagList == null) {
+                                    Server_tagList = new ArrayList<>();
+
+                                }
+                                Server_tagList.add(writeTag);
+
+                                if(Server_tagList.isEmpty()){
+                                    Log.e("Server!!", "empty tagList");
+                                }else{
+                                    Log.e("Server!!", Server_tagList.get(0));
+                                }
+
+
+                                Server_PostRegisterDTO serverPostRegisterDTO = new Server_PostRegisterDTO(writeTitle, writeContent, userid,Server_tagList );
+                                Log.d("Server!!", "Response 1");
+                                ApiService apiService = RetrofitClient.getClient(PlanAI_URL).create(ApiService.class);
+                                Log.d("Server!!", "Response 2");
+                                Call<Server_PostRegisterDTO > call = apiService.createPost(serverPostRegisterDTO);
+                                Log.d("Server!!", "Response 3");
+                                call.enqueue(new Callback<Server_PostRegisterDTO>() {
+                                    @Override
+                                    public void onResponse(Call<Server_PostRegisterDTO > call, Response<Server_PostRegisterDTO > response) {
+                                        Log.d("Server!!", "Response 4");
+                                        if (response.isSuccessful()) {
+                                            //성공적인 응답 처리
+                                            Log.d("Server!!", "Response OK");
+
+                                        } else {
+                                            // 서버 에러 처리
+                                            Log.d("Server!!", "Server Error1");
+                                            int statusCode = response.code();
+                                            Log.d("Server!!", "Response Code: " + statusCode);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Server_PostRegisterDTO > call, Throwable t) {
+                                        // 네트워크 에러 처리
+                                        Log.d("Server!!", "Server Error2");
+                                        Log.e("Server!!", "Network Error", t);
+                                    }
+                                });
+                            }
+                        }
+                    }
+            );
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +186,10 @@ public class WriteActivity extends AppCompatActivity {
                 resultIntent.putExtra("content", content); // Intent에 내용 추가
 
                 setResult(RESULT_OK, resultIntent); // 현재 액티비티의 결과로 설정하고 Intent를 전달
+                createPostLauncher.launch(resultIntent); // ActivityResultLauncher 사용
+
+
+
                 finish(); // 현재 액티비티 종료
 
             }
