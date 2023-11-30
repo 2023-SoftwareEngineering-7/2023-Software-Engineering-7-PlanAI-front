@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -52,6 +53,7 @@ import retrofit2.Response;
 
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.Events;
 
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -197,10 +199,12 @@ public class ShowDayActivity extends AppCompatActivity {
                                 GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
                                         this, Arrays.asList(SCOPES)).setBackOff(new ExponentialBackOff());
                                 // Google 캘린더에 이벤트 추가
-                                new AddScheduleToCalendarTask(mCredential, serverScheduleDTO).execute();
+                                //new AddScheduleToCalendarTask(mCredential, serverScheduleDTO).execute();
 
                             }
                         }
+                        // Google Calendar에서 최신 일정 불러오기
+                        new FetchSchedulesFromCalendarTask().execute();
                     }
             );
 
@@ -553,6 +557,160 @@ public class ShowDayActivity extends AppCompatActivity {
             }
         }
     }
+
+    private class FetchSchedulesFromCalendarTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                DateTime now = new DateTime(System.currentTimeMillis());
+                Events events = mService.events().list("primary")
+                        .setMaxResults(30)
+                        .setTimeMin(now)
+                        .setOrderBy("startTime")
+                        .setSingleEvents(true)
+                        .execute();
+
+                List<Event> items = events.getItems();
+
+                for (Event event : items) {
+                    Schedule schedule = convertEventToSchedule(event);
+                    String startDate = schedule.getStartDate();
+
+                    ArrayList<Schedule> schedulesForDate = scheduleMap.getOrDefault(startDate, new ArrayList<>());
+                    if (!schedulesForDate.contains(schedule)) {
+                        schedulesForDate.add(schedule);
+                        Log.d("Server!!","loaded date:" +schedule.toString());
+                    }
+
+                    scheduleMap.put(startDate, schedulesForDate);
+                }
+            } catch (Exception e) {
+                Log.e("Server!!", "Error fetching calendar events: " + e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            // 현재 선택된 날짜를 가져옵니다.
+            String selectedDate = getIntent().getStringExtra("date");
+            ArrayList<Schedule> schedulesForSelectedDate = scheduleMap.get(selectedDate);
+
+            // 현재 RecyclerView에 표시된 스케줄 리스트를 업데이트합니다.
+            if (schedulesForSelectedDate != null) {
+                todayScheduleList.clear();
+                todayScheduleList.addAll(schedulesForSelectedDate);
+            } else {
+                // 선택된 날짜에 대한 스케줄이 없는 경우, 목록을 비웁니다.
+                todayScheduleList.clear();
+            }
+
+            // RecyclerView 어댑터를 통해 UI를 갱신합니다.
+            scheduleAdapter.notifyDataSetChanged();
+            Log.d("Server!!", "RecyclerView가 갱신되었습니다.");
+        }
+    }
+
+//    private String getEvent() throws IOException {
+//
+//
+//        DateTime now = new DateTime(System.currentTimeMillis());
+//
+//        String calendarID = getCalendarID("CalendarTitle");
+//        if ( calendarID == null ){
+//
+//            return "캘린더를 먼저 생성하세요.";
+//        }
+//
+//
+//        Events events = mService.events().list(calendarID)//"primary")
+//                .setMaxResults(10)
+//                //.setTimeMin(now)
+//                .setOrderBy("startTime")
+//                .setSingleEvents(true)
+//                .execute();
+//        List<Event> items = events.getItems();
+//
+//
+//        for (Event event : items) {
+//            DateTime start = event.getStart().getDateTime();
+//            if (start == null) {
+//
+//                // 모든 이벤트가 시작 시간을 갖고 있지는 않다. 그런 경우 시작 날짜만 사용
+//                start = event.getStart().getDate();
+//            }
+//            eventStrings.add(String.format("%s \n (%s)", event.getSummary(), start));
+//        }
+//
+//        return eventStrings.size() + "개의 데이터를 가져왔습니다.";
+//    }
+
+
+    /**
+     * Google Calendar의 Event 객체를 앱의 Schedule 객체로 변환합니다.
+     *
+     * @param event Google Calendar의 Event 객체.
+     * @return 변환된 Schedule 객체.
+     */
+    private Schedule convertEventToSchedule(Event event) {
+        Log.d("Server!!","convertEventToSchedule started");
+        // 이벤트의 요약(제목)을 가져옵니다.
+        String summary = event.getSummary();
+
+        // 이벤트의 시작 및 종료 시간을 가져옵니다.
+        DateTime startDateTime = event.getStart().getDateTime();
+        DateTime endDateTime = event.getEnd().getDateTime();
+
+        // 전일 이벤트의 경우 DateTime이 아닌 Date만 사용되므로, 이를 확인하고 처리합니다.
+        if (startDateTime == null) {
+            startDateTime = event.getStart().getDate();
+        }
+        if (endDateTime == null) {
+            endDateTime = event.getEnd().getDate();
+        }
+
+        // 시작 및 종료 날짜와 시간을 문자열로 변환합니다.
+        // RFC3339 형식의 문자열에서 날짜와 시간을 분리합니다.
+        String startDate = startDateTime.toStringRfc3339().split("T")[0];
+        String startTime = startDateTime.toStringRfc3339().split("T").length > 1 ? startDateTime.toStringRfc3339().split("T")[1].split("Z")[0] : "";
+        String endDate = endDateTime.toStringRfc3339().split("T")[0];
+        String endTime = endDateTime.toStringRfc3339().split("T").length > 1 ? endDateTime.toStringRfc3339().split("T")[1].split("Z")[0] : "";
+
+        // 이벤트의 설명(Description)을 가져옵니다.
+        String description = event.getDescription();
+        // 설명에서 태그를 추출합니다.
+        String tags = extractTagsFromDescription(description);
+
+        // Schedule 객체를 생성하여 반환합니다.
+        //TODO: ID 변경
+        return new Schedule("1", summary, startDate, startTime, endDate, endTime, tags, description);
+    }
+
+    /**
+     * 이벤트의 설명에서 #으로 시작하는 태그를 추출하여 하나의 문자열로 반환합니다.
+     *
+     * @param description 이벤트의 설명 문자열.
+     * @return 추출된 태그들을 포함하는 문자열.
+     */
+    private String extractTagsFromDescription(String description) {
+        StringBuilder tagsBuilder = new StringBuilder();
+        if (description != null) {
+            // 설명을 공백 기준으로 분리하여 각 부분을 검사합니다.
+            String[] parts = description.split(" ");
+            for (String part : parts) {
+                // 각 부분이 #으로 시작한다면 태그로 간주합니다.
+                if (part.startsWith("#")) {
+                    // '#'을 제외하고 태그를 추가합니다.
+                    tagsBuilder.append(part.substring(1)).append(" ");
+                }
+            }
+        }
+        // 생성된 태그 문자열에서 앞뒤 공백을 제거하여 반환합니다.
+        return tagsBuilder.toString().trim();
+    }
+
     private void setupDateBanner() {
         Intent dateIntent = getIntent();
         todayDate = dateIntent.getStringExtra("date");
@@ -673,8 +831,18 @@ public class ShowDayActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_up, R.anim.stay); // 아래에서 올라오는 애니메이션 적용
         });
 
+        etcButton.setOnClickListener(view ->{
+            if (mCredential.getSelectedAccountName() != null) {
+                // 사용자 계정이 이미 선택되었으면, Google Calendar에서 일정을 가져옵니다.
+                new FetchSchedulesFromCalendarTask().execute();
+            } else {
+                // 사용자 계정이 선택되지 않았으면, 계정 선택을 요청합니다.
+                chooseGoogleAccount();
+            }
+            Toast.makeText(getApplicationContext(), "갱신완료!", Toast.LENGTH_SHORT).show();
+        });
 
-        // 추가 FAB 리스너 설정
+
     }
 
     private void showFABMenu() {
