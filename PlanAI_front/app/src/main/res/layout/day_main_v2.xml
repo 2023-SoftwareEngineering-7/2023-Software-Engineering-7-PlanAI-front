@@ -85,10 +85,10 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="20dp"
-            android:background="#D1D1D1"
+            android:background="#F8CFFF"
             android:contextClickable="false"
             android:foreground="@drawable/plus_icon"
-            app:backgroundTint="#FFD1D1D1"
+            app:backgroundTint="#EADDFF"
             android:layout_marginBottom="10dp"
             android:layout_alignBottom="@+id/taskRecyclerView" />
 
@@ -101,7 +101,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="90dp"
             android:background="@android:color/transparent"
-            android:foreground="@drawable/etcbutton"
+            android:foreground="@drawable/renew"
             android:scrollbarThumbHorizontal="@android:color/transparent"
             android:visibility="invisible"
             app:backgroundTint="@android:color/transparent" />

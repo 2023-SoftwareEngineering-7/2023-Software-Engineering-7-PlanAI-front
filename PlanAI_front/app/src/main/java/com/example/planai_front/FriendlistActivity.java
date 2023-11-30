@@ -13,8 +13,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.example.planai_front.Profile.SettingActivity;
+import com.example.planai_front.create.ShowDayActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 
@@ -42,31 +45,31 @@ public class FriendlistActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnavigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.navigation_calendar) {
+                //캘린더 화면으로 돌아옴
                 startActivity(new Intent(FriendlistActivity.this, MaterialCalendarActivity.class));
 
             }else if (item.getItemId() == R.id.navigation_friend) {
+                //친구목록 화면
                 startActivity(new Intent(FriendlistActivity.this, FriendlistActivity.class));
-                // 추가 버튼에 대한 처리를 여기에 작성합니다.
-                // 예: case R.id.navigation_new_button:
-                // 버튼에 대한 액션 구현
+
 
             } else if (item.getItemId() == R.id.navigation_home){
-                startActivity(new Intent(FriendlistActivity.this, MaterialCalendarActivity.class));
-                // 추가 버튼에 대한 처리를 여기에 작성합니다.
-                // 예: case R.id.navigation_new_button:
-                // 버튼에 대한 액션 구현
+                //오늘 일정으로 이동
+                LocalDate today = LocalDate.now();
+                Intent homeIntent = new Intent(FriendlistActivity.this, ShowDayActivity.class);
+                homeIntent.putExtra("date", today.toString());
+                homeIntent.putExtra("fullDateInfo", today.getDayOfWeek().toString());
+                startActivity(homeIntent);
 
             }else if (item.getItemId() == R.id.navigation_post){
+                //게시판으로 이동
                 startActivity(new Intent(FriendlistActivity.this, BoardActivity.class));
-                // 추가 버튼에 대한 처리를 여기에 작성합니다.
-                // 예: case R.id.navigation_new_button:
-                // 버튼에 대한 액션 구현
+
 
             }else if (item.getItemId() == R.id.navigation_setting) {
-                startActivity(new Intent(FriendlistActivity.this, MaterialCalendarActivity.class));
-                // 추가 버튼에 대한 처리를 여기에 작성합니다.
-                // 예: case R.id.navigation_new_button:
-                // 버튼에 대한 액션 구현
+                //프로필 세팅으로 이동
+                startActivity(new Intent(FriendlistActivity.this, SettingActivity.class));
+
             }
             return true;
         });

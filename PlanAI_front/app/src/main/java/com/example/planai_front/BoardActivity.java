@@ -16,12 +16,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
 import android.animation.ObjectAnimator;
 
+import com.example.planai_front.Profile.SettingActivity;
 import com.example.planai_front.Server.ApiService;
 import com.example.planai_front.Server.RetrofitClient;
 import com.example.planai_front.Server.Server_PostRegisterDTO;
@@ -29,6 +31,8 @@ import com.example.planai_front.WriteActivity;
 import com.example.planai_front.Server.Server_ScheduleDTO;
 import com.example.planai_front.create.Schedule;
 import com.example.planai_front.create.ScheduleAdapter;
+import com.example.planai_front.create.ShowDayActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import retrofit2.Call;
@@ -130,7 +134,7 @@ public class BoardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
-
+        setupBottomNavigationBar();
         mRecyclerView = (RecyclerView) findViewById(R.id.taskRecyclerView);
 
         /* initiate adapter */
@@ -223,6 +227,42 @@ public class BoardActivity extends AppCompatActivity {
         }
         // 플로팅 버튼 상태 변경
         fabMain_status = !fabMain_status;
+    }
+
+
+    //하단 메뉴바(공통)
+    private void setupBottomNavigationBar() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnavigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.navigation_calendar) {
+                //캘린더 화면으로 돌아옴
+                startActivity(new Intent(BoardActivity.this, MaterialCalendarActivity.class));
+
+            }else if (item.getItemId() == R.id.navigation_friend) {
+                //친구목록 화면
+                startActivity(new Intent(BoardActivity.this, FriendlistActivity.class));
+
+
+            } else if (item.getItemId() == R.id.navigation_home){
+                //오늘 일정으로 이동
+                LocalDate today = LocalDate.now();
+                Intent homeIntent = new Intent(BoardActivity.this, ShowDayActivity.class);
+                homeIntent.putExtra("date", today.toString());
+                homeIntent.putExtra("fullDateInfo", today.getDayOfWeek().toString());
+                startActivity(homeIntent);
+
+            }else if (item.getItemId() == R.id.navigation_post){
+                //게시판으로 이동
+                startActivity(new Intent(BoardActivity.this, BoardActivity.class));
+
+
+            }else if (item.getItemId() == R.id.navigation_setting) {
+                //프로필 세팅으로 이동
+                startActivity(new Intent(BoardActivity.this, SettingActivity.class));
+
+            }
+            return true;
+        });
     }
 }
 

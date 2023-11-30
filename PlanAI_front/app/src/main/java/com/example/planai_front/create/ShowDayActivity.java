@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.planai_front.BoardActivity;
 import com.example.planai_front.FriendlistActivity;
 import com.example.planai_front.MaterialCalendarActivity;
+import com.example.planai_front.Profile.SettingActivity;
 import com.example.planai_front.R;
 import com.example.planai_front.Server.ApiService;
 import com.example.planai_front.Server.RetrofitClient;
@@ -42,6 +43,7 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -113,7 +115,7 @@ public class ShowDayActivity extends AppCompatActivity {
                             Intent data = result.getData();
                             if (data != null) {
                                 //스케줄 id 생성
-                                scheduleId = userId + data.getStringExtra(("startDate"));
+                                scheduleId = userId + data.getStringExtra(("startDate")); //TODO:LoggedInUser.getInstance().getId();
                                 // 인텐트에서 스케줄 관련 데이터 추출.
                                 scheduleSummary = data.getStringExtra("summary");
                                 scheduleStartDate = data.getStringExtra("startDate");
@@ -219,7 +221,7 @@ public class ShowDayActivity extends AppCompatActivity {
                             Intent data = result.getData();
                             if (data != null) {
                                 //스케줄 id 생성
-                                taskId = userId + data.getStringExtra(("startDate"));
+                                taskId = userId + data.getStringExtra(("startDate"));//TODO:LoggedInUser.getInstance().getId();
                                 // 인텐트에서 스케줄 관련 데이터 추출.
                                 taskSummary = data.getStringExtra("summary");
                                 taskDescription = data.getStringExtra("description");
@@ -245,7 +247,6 @@ public class ShowDayActivity extends AppCompatActivity {
                                 Log.d("Calendar", "Calendar updated");
 
                                 //서버 전송 준비
-                                //TODO: 서버 전송용 Schedule클래스와 저장하는 Schedule클래스 일치시키기
                                 Log.e("Server!!", taskTag);
 
                                 //null 여부에 관계없이 tagList 초기화
@@ -904,31 +905,31 @@ public class ShowDayActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnavigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.navigation_calendar) {
+                //캘린더 화면으로 돌아옴
                 startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
 
-            } else if (item.getItemId() == R.id.navigation_friend) {
+            }else if (item.getItemId() == R.id.navigation_friend) {
+                //친구목록 화면
                 startActivity(new Intent(ShowDayActivity.this, FriendlistActivity.class));
-                // 추가 버튼에 대한 처리를 여기에 작성합니다.
-                // 예: case R.id.navigation_new_button:
-                // 버튼에 대한 액션 구현
 
-            } else if (item.getItemId() == R.id.navigation_home) {
-                startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
-                // 추가 버튼에 대한 처리를 여기에 작성합니다.
-                // 예: case R.id.navigation_new_button:
-                // 버튼에 대한 액션 구현
 
-            } else if (item.getItemId() == R.id.navigation_post) {
+            } else if (item.getItemId() == R.id.navigation_home){
+                //오늘 일정으로 이동
+                LocalDate today = LocalDate.now();
+                Intent homeIntent = new Intent(ShowDayActivity.this, ShowDayActivity.class);
+                homeIntent.putExtra("date", today.toString());
+                homeIntent.putExtra("fullDateInfo", today.getDayOfWeek().toString());
+                startActivity(homeIntent);
+
+            }else if (item.getItemId() == R.id.navigation_post){
+                //게시판으로 이동
                 startActivity(new Intent(ShowDayActivity.this, BoardActivity.class));
-                // 추가 버튼에 대한 처리를 여기에 작성합니다.
-                // 예: case R.id.navigation_new_button:
-                // 버튼에 대한 액션 구현
 
-            } else if (item.getItemId() == R.id.navigation_setting) {
-                startActivity(new Intent(ShowDayActivity.this, MaterialCalendarActivity.class));
-                // 추가 버튼에 대한 처리를 여기에 작성합니다.
-                // 예: case R.id.navigation_new_button:
-                // 버튼에 대한 액션 구현
+
+            }else if (item.getItemId() == R.id.navigation_setting) {
+                //프로필 세팅으로 이동
+                startActivity(new Intent(ShowDayActivity.this, SettingActivity.class));
+
             }
             return true;
         });
