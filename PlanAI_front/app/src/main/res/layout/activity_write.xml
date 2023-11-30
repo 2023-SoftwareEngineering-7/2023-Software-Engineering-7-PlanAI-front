@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="right"
-    tools:context=".WriteActivity">
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        tools:context=".WriteActivity">
 
-
-        <androidx.appcompat.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="414dp"
             android:layout_height="104dp"
@@ -25,90 +16,175 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme">
 
-            <TextView
-                android:layout_width="173dp"
-                android:layout_height="51dp"
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_margin="20dp"
-                android:text="자유게시판"
+                android:text="글쓰기"
                 android:textColor="#000"
                 android:textSize="36sp"
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="20dp"
                 tools:layout_editor_absoluteY="124dp" />
-        </androidx.appcompat.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-        <TextView
+
+    <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="글쓰기"
+            android:text="제목"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="32dp"
+            app:layout_constraintVertical_bias="0.212" />
 
-        <TextView
+    <View
+            android:layout_width="7dp"
+            android:layout_height="35dp"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="28dp"
+            android:background="#050404"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.044"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintVertical_bias="0.078"
+            tools:ignore="MissingConstraints"
+            android:id="@+id/view2" />
+
+    <View
+            android:layout_width="370dp"
+            android:layout_height="4dp"
+            android:layout_centerInParent="true"
+            android:background="#000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.365"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintVertical_bias="0.226"
+            tools:ignore="MissingConstraints"
+            android:id="@+id/view" />
+
+    <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="상세내용"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomNavigationView"
+            app:layout_constraintHorizontal_bias="0.041"
+            app:layout_constraintVertical_bias="0.423" />
 
-        <EditText
-            android:id="@+id/editTextText"
-            android:layout_width="match_parent"
-            android:layout_height="388dp"
-            android:layout_marginTop="68dp"
+    <EditText
+            android:id="@+id/edit_text_content"
+            android:layout_width="369dp"
+            android:layout_height="264dp"
             android:ems="10"
             android:gravity="top"
             android:inputType="text"
-            android:text="내용 입력" />
+            android:text="내용 입력"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomNavigationView"
+            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintVertical_bias="0.719"
+            android:soundEffectsEnabled="false"
+            android:shadowColor="#E4EAF1"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            app:layout_constraintHorizontal_bias="0.38" />
 
-    </LinearLayout>
-
+    <EditText
+            android:id="@+id/edit_text_title"
+            android:layout_width="369dp"
+            android:layout_height="39dp"
+            android:ems="10"
+            android:gravity="top"
+            android:inputType="text"
+            android:text="내용 입력"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomNavigationView"
+            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintVertical_bias="0.284"
+            android:soundEffectsEnabled="false"
+            android:shadowColor="#E4EAF1"
+            android:background="@android:drawable/editbox_dropdown_light_frame" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
-        android:backgroundTint="#C4C4C4"
-        android:gravity="left"
-        android:text="등록"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintStart_toStartOf="parent" />
+            android:id="@+id/button_write_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="76dp"
+            android:backgroundTint="#E4EAF1"
+            android:gravity="left"
+            android:text="등록"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+            app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
-        android:layout_marginBottom="1dp"
-        android:backgroundTint="#C4C4C4"
-        android:gravity="right"
-        android:text="취소"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent" />
+            android:id="@+id/button_wc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="76dp"
+            android:layout_marginBottom="1dp"
+            android:backgroundTint="#E4EAF1"
+            android:gravity="right"
+            android:text="취소"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="411dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom"
-        android:background="@color/white"
-        android:backgroundTintMode="src_in"
-        android:foregroundTint="@color/white"
-        android:foregroundTintMode="src_in"
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="411dp"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:backgroundTintMode="src_in"
+            android:foregroundTint="@color/white"
+            android:foregroundTintMode="src_in"
 
-        android:visibility="visible"
-        app:backgroundTint="#C6C8C9"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp" />
+            android:visibility="visible"
+            app:backgroundTint="#C6C8C9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+            android:text="내용"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.045" />
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/texttest"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.464"
+            app:layout_constraintVertical_bias="0.179" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
