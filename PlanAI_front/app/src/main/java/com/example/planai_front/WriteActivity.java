@@ -54,11 +54,20 @@ public class WriteActivity extends AppCompatActivity {
                 resultIntent.putExtra("title", title); // Intent에 제목 추가
                 resultIntent.putExtra("content", content); // Intent에 내용 추가
 
+                Intent intent = new Intent(WriteActivity.this, BoardActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("content", content);
+                startActivity(intent);
+
+
+
                 setResult(RESULT_OK, resultIntent); // 현재 액티비티의 결과로 설정하고 Intent를 전달
                 finish(); // 현재 액티비티 종료
 
+
             }
         });
+
 
     }
 

@@ -37,6 +37,28 @@ public class FriendlistActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), AddfriendActivity.class);
             startActivity(intent);
         });
+        Button Button1 = (Button) findViewById(R.id.buttonftf);
+        Button.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), GetfriendActivity.class);
+            startActivity(intent);
+        });
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView12);
+
+        /* initiate adapter */
+        mRecyclerAdapter = new MyRecyclerAdapter();
+
+        /* initiate recyclerview */
+        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL,false));
+
+
+        /* adapt data */
+        mfriendItems = new ArrayList<>();
+        mfriendItems.add(new FriendItem(R.drawable.nav_item_background,"",""));
+        mRecyclerAdapter.setFriendList(mfriendItems);
+
 
         setupBottomNavigationBar();
     }

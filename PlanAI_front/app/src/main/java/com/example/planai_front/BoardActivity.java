@@ -145,16 +145,20 @@ public class BoardActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL,false));
 
+        Intent intent1 = getIntent();
+        String data = intent1.getStringExtra("title");
+        String data2 = intent1.getStringExtra("content");
+
+        Intent intent2 = new Intent(BoardActivity.this, MywriteActivity.class);
+        intent2.putExtra("title", data);
+        intent2.putExtra("content", data2);
+
         /* adapt data */
         mfriendItems = new ArrayList<>();
-        for(int i=1;i<=10;i++){
-            if(i%2==0)
-                mfriendItems.add(new FriendItem(R.drawable.jhanoo,i+"번째 사람",i+"번째 상태메시지"));
-            else
-                mfriendItems.add(new FriendItem(R.drawable.jhanoo,i+"번째 사람",i+"번째 상태메시지"));
-
-        }
+        mfriendItems.add(new FriendItem(R.drawable.jhanoo, data, "    " + data2));
         mRecyclerAdapter.setFriendList(mfriendItems);
+
+
 
 
         fabMain = findViewById(R.id.fabMain);
@@ -265,6 +269,8 @@ public class BoardActivity extends AppCompatActivity {
         });
     }
 }
+
+
 
 
 

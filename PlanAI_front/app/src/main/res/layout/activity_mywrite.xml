@@ -43,6 +43,7 @@
         app:layout_constraintVertical_bias="0.131" />
 
     <View
+        android:id="@+id/view4"
         android:layout_width="7dp"
         android:layout_height="35dp"
         android:layout_centerInParent="true"
@@ -58,6 +59,7 @@
 
 
     <View
+        android:id="@+id/view3"
         android:layout_width="350dp"
         android:layout_height="4dp"
         android:layout_centerInParent="true"
@@ -70,6 +72,28 @@
         app:layout_constraintVertical_bias="0.212"
         tools:ignore="MissingConstraints" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewmw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.499">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.091"
+        app:srcCompat="@drawable/mcv_action_previous" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

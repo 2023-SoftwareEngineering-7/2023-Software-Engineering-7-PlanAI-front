@@ -20,7 +20,11 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
     public MyRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview, parent, false);
         return new ViewHolder(view);
+
+
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull MyRecyclerAdapter.ViewHolder holder, int position) {
@@ -40,21 +44,20 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView profile;
         TextView name;
-        //TextView message;
+        TextView message;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             profile = (ImageView) itemView.findViewById(R.id.profile);
             name = (TextView) itemView.findViewById(R.id.name);
-           // message = (TextView) itemView.findViewById(R.id.message);
+            message = (TextView) itemView.findViewById(R.id.message);
         }
 
         void onBind(FriendItem item){
             profile.setImageResource(item.getResourceId());
             name.setText(item.getName());
-            //message.setText(item.getMessage());
+            message.setText(item.getMessage());
         }
     }
 }
-
