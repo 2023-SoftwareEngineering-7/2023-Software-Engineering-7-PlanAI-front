@@ -152,18 +152,8 @@ public class BoardActivity extends AppCompatActivity {
 
         /* adapt data */
         mfriendItems = new ArrayList<>();
-
-        if(mfriendItems == null){
-            mfriendItems.add(new FriendItem(R.drawable.nav_item_background,"",""));
-            mRecyclerAdapter.setFriendList(mfriendItems);}
-        else
-        {
-            mfriendItems.add(new FriendItem(R.drawable.jhanoo, data,  "    " + data2));
-            mRecyclerAdapter.setFriendList(mfriendItems);
-        }
-
-
-
+        mfriendItems.add(new FriendItem(R.drawable.jhanoo, data, "    " + data2));
+        mRecyclerAdapter.setFriendList(mfriendItems);
 
 
 

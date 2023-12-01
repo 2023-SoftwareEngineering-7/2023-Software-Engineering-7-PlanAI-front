@@ -34,6 +34,11 @@ public class FriendlistActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), AddfriendActivity.class);
             startActivity(intent);
         });
+        Button Button1 = (Button) findViewById(R.id.buttonftf);
+        Button.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), GetfriendActivity.class);
+            startActivity(intent);
+        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView12);
 

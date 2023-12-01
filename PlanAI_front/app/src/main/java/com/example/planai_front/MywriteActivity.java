@@ -19,7 +19,7 @@ public class MywriteActivity extends AppCompatActivity {
     private MyRecyclerAdapter mRecyclerAdapter;
     private ArrayList<FriendItem> mfriendItems;
 
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +48,7 @@ public class MywriteActivity extends AppCompatActivity {
         }
         else
         {
-            mfriendItems.add(new FriendItem(R.drawable.jhanoo, title, "    " + content));
+            mfriendItems.add(new FriendItem(R.drawable.jhanoo, "software engineering", "    plani"));
         }
 
 
