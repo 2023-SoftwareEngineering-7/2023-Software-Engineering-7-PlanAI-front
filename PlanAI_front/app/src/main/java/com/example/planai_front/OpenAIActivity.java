@@ -22,7 +22,7 @@ public class OpenAIActivity {
     public static String chatGPT(String prompt) {
         APIKEY openAI = new APIKEY();
         String url = "https://api.openai.com/v1/chat/completions";
-        String apiKey = openAI.OPENAPIKEY; // 여기에 고유 API 키 삽입, 만약 크레딧이 없다면 작동X
+        String apiKey = openAI.APIKey; // 여기에 고유 API 키 삽입, 만약 크레딧이 없다면 작동X
         String model = "gpt-3.5-turbo";
         try {
             URL obj = new URL(url);

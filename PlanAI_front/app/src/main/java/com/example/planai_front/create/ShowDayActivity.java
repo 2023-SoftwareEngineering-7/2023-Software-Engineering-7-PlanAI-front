@@ -201,11 +201,10 @@ public class ShowDayActivity extends AppCompatActivity {
                                 GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
                                         this, Arrays.asList(SCOPES)).setBackOff(new ExponentialBackOff());
                                 // Google 캘린더에 이벤트 추가
-
+                                new AddScheduleToCalendarTask(mCredential, serverScheduleDTO).execute();
                             }
                         }
-                        // Google Calendar에서 최신 일정 불러오기
-                       // new FetchSchedulesFromCalendarTask().execute();
+
                     }
             );
 
@@ -561,112 +560,112 @@ public class ShowDayActivity extends AppCompatActivity {
     // Google Calendar에서 이벤트를 비동기적으로 가져오는 AsyncTask
     private class FetchSchedulesFromCalendarTask extends AsyncTask<Void, Void, Void> {
 
-    @Override
-    protected Void doInBackground(Void... voids) {
-        try {
-            //clear
-            scheduleMap.clear();
-            TaskMap.clear();
-            DateTime now = new DateTime(System.currentTimeMillis());
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                //clear
+                scheduleMap.clear();
+                TaskMap.clear();
+                DateTime now = new DateTime(System.currentTimeMillis());
 
-            // 오늘 이후의 일정을 가져옵니다 (미래의 이벤트)
-            Events futureEvents = mService.events().list("primary")
-                    .setMaxResults(30)
-                    .setTimeMin(now)
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
+                // 오늘 이후의 일정을 가져옵니다 (미래의 이벤트)
+                Events futureEvents = mService.events().list("primary")
+                        .setMaxResults(30)
+                        .setTimeMin(now)
+                        .setOrderBy("startTime")
+                        .setSingleEvents(true)
+                        .execute();
 
-            // 오늘 이전의 일정을 가져옵니다 (과거의 이벤트)
-            Events pastEvents = mService.events().list("primary")
-                    .setMaxResults(30)
-                    .setTimeMax(now)
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
+                // 오늘 이전의 일정을 가져옵니다 (과거의 이벤트)
+                Events pastEvents = mService.events().list("primary")
+                        .setMaxResults(30)
+                        .setTimeMax(now)
+                        .setOrderBy("startTime")
+                        .setSingleEvents(true)
+                        .execute();
 
-            // 과거와 미래 이벤트를 하나의 리스트로 결합합니다.
-            List<Event> combinedItems = new ArrayList<>(pastEvents.getItems());
-            combinedItems.addAll(futureEvents.getItems());
+                // 과거와 미래 이벤트를 하나의 리스트로 결합합니다.
+                List<Event> combinedItems = new ArrayList<>(pastEvents.getItems());
+                combinedItems.addAll(futureEvents.getItems());
 
-            // 결합된 이벤트 목록을 처리합니다.
-            processEvents(combinedItems);
+                // 결합된 이벤트 목록을 처리합니다.
+                processEvents(combinedItems);
 
-        } catch (Exception e) {
-            // 예외 처리: 에러 로깅
-            Log.e("Server!!", "Error fetching calendar events: " + e.getMessage());
+            } catch (Exception e) {
+                // 예외 처리: 에러 로깅
+                Log.e("Server!!", "Error fetching calendar events: " + e.getMessage());
+            }
+            return null;
         }
-        return null;
-    }
 
-    // 결합된 이벤트 목록을 처리하는 메소드
-    private void processEvents(List<Event> items) {
-        for (Event event : items) {
-            // 이벤트의 시작 및 종료 날짜와 시간을 가져옵니다.
-            DateTime startDateTime = event.getStart().getDateTime();
-            DateTime endDateTime = event.getEnd().getDateTime();
+        // 결합된 이벤트 목록을 처리하는 메소드
+        private void processEvents(List<Event> items) {
+            for (Event event : items) {
+                // 이벤트의 시작 및 종료 날짜와 시간을 가져옵니다.
+                DateTime startDateTime = event.getStart().getDateTime();
+                DateTime endDateTime = event.getEnd().getDateTime();
 
-            // 전일 이벤트의 경우 DateTime이 아닌 Date만 사용되므로, 이를 확인하고 처리합니다.
-            if (startDateTime == null) {
-                startDateTime = event.getStart().getDate();
-            }
-            if (endDateTime == null) {
-                endDateTime = event.getEnd().getDate();
-            }
-
-            // 날짜와 시간을 문자열로 변환합니다.
-            String startDate = startDateTime.toStringRfc3339().split("T")[0];
-            String endDate = endDateTime.toStringRfc3339().split("T")[0];
-            String startTime = startDateTime.toStringRfc3339().split("T").length > 1 ? startDateTime.toStringRfc3339().split("T")[1].split("Z")[0] : "";
-            String endTime = endDateTime.toStringRfc3339().split("T").length > 1 ? endDateTime.toStringRfc3339().split("T")[1].split("Z")[0] : "";
-
-            if (startDate.equals(endDate) && startTime.equals(endTime)) {
-                // 시작 및 종료 날짜와 시간이 동일한 경우, Task로 처리합니다.
-                Task task = convertEventToTask(event);
-                ArrayList<Task> tasksForDate = TaskMap.getOrDefault(startDate, new ArrayList<>());
-                if (!tasksForDate.contains(task)) {
-                    tasksForDate.add(task);
+                // 전일 이벤트의 경우 DateTime이 아닌 Date만 사용되므로, 이를 확인하고 처리합니다.
+                if (startDateTime == null) {
+                    startDateTime = event.getStart().getDate();
                 }
-                TaskMap.put(startDate, tasksForDate);
-            } else {
-                // 그렇지 않으면 Schedule로 처리합니다.
-                Schedule schedule = convertEventToSchedule(event);
-                ArrayList<Schedule> schedulesForDate = scheduleMap.getOrDefault(startDate, new ArrayList<>());
-                if (!schedulesForDate.contains(schedule)) {
-                    schedulesForDate.add(schedule);
+                if (endDateTime == null) {
+                    endDateTime = event.getEnd().getDate();
                 }
-                scheduleMap.put(startDate, schedulesForDate);
+
+                // 날짜와 시간을 문자열로 변환합니다.
+                String startDate = startDateTime.toStringRfc3339().split("T")[0];
+                String endDate = endDateTime.toStringRfc3339().split("T")[0];
+                String startTime = startDateTime.toStringRfc3339().split("T").length > 1 ? startDateTime.toStringRfc3339().split("T")[1].split("Z")[0] : "";
+                String endTime = endDateTime.toStringRfc3339().split("T").length > 1 ? endDateTime.toStringRfc3339().split("T")[1].split("Z")[0] : "";
+
+                if (startDate.equals(endDate) && startTime.equals(endTime)) {
+                    // 시작 및 종료 날짜와 시간이 동일한 경우, Task로 처리합니다.
+                    Task task = convertEventToTask(event);
+                    ArrayList<Task> tasksForDate = TaskMap.getOrDefault(startDate, new ArrayList<>());
+                    if (!tasksForDate.contains(task)) {
+                        tasksForDate.add(task);
+                    }
+                    TaskMap.put(startDate, tasksForDate);
+                } else {
+                    // 그렇지 않으면 Schedule로 처리합니다.
+                    Schedule schedule = convertEventToSchedule(event);
+                    ArrayList<Schedule> schedulesForDate = scheduleMap.getOrDefault(startDate, new ArrayList<>());
+                    if (!schedulesForDate.contains(schedule)) {
+                        schedulesForDate.add(schedule);
+                    }
+                    scheduleMap.put(startDate, schedulesForDate);
+                }
             }
         }
-    }
 
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
 
-        // 현재 선택된 날짜에 해당하는 스케줄 리스트를 가져옵니다.
-        String selectedDate = getIntent().getStringExtra("date");
-        ArrayList<Schedule> schedulesForSelectedDate = scheduleMap.get(selectedDate);
-        ArrayList<Task> tasksForSelectedDate = TaskMap.get(selectedDate);
+            // 현재 선택된 날짜에 해당하는 스케줄 리스트를 가져옵니다.
+            String selectedDate = getIntent().getStringExtra("date");
+            ArrayList<Schedule> schedulesForSelectedDate = scheduleMap.get(selectedDate);
+            ArrayList<Task> tasksForSelectedDate = TaskMap.get(selectedDate);
 
-        // 현재 RecyclerView에 표시된 스케줄 리스트를 업데이트합니다.
-        todayScheduleList.clear();
-        todayTaskList.clear();
+            // 현재 RecyclerView에 표시된 스케줄 리스트를 업데이트합니다.
+            todayScheduleList.clear();
+            todayTaskList.clear();
 
-        if (schedulesForSelectedDate != null) {
-            todayScheduleList.addAll(schedulesForSelectedDate);
+            if (schedulesForSelectedDate != null) {
+                todayScheduleList.addAll(schedulesForSelectedDate);
+            }
+            // 해당 날짜에 태스크가 있으면 추가합니다.
+            if (tasksForSelectedDate != null) {
+                todayTaskList.addAll(tasksForSelectedDate);
+            }
+
+            // RecyclerView 어댑터를 통해 UI를 갱신합니다.
+            scheduleAdapter.notifyDataSetChanged();
+            taskAdapter.notifyDataSetChanged(); // 태스크 RecyclerView 어댑터
+            Log.d("Server!!", "RecyclerView updated.");
         }
-        // 해당 날짜에 태스크가 있으면 추가합니다.
-        if (tasksForSelectedDate != null) {
-            todayTaskList.addAll(tasksForSelectedDate);
-        }
-
-        // RecyclerView 어댑터를 통해 UI를 갱신합니다.
-        scheduleAdapter.notifyDataSetChanged();
-        taskAdapter.notifyDataSetChanged(); // 태스크 RecyclerView 어댑터
-        Log.d("Server!!", "RecyclerView updated.");
     }
-}
 
     private Schedule convertEventToSchedule(Event event) {
         Log.d("Server!!","convertEventToSchedule started");
