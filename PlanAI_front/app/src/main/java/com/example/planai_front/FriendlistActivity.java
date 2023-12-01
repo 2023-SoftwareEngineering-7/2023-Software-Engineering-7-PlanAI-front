@@ -35,6 +35,23 @@ public class FriendlistActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView12);
+
+        /* initiate adapter */
+        mRecyclerAdapter = new MyRecyclerAdapter();
+
+        /* initiate recyclerview */
+        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL,false));
+
+
+        /* adapt data */
+        mfriendItems = new ArrayList<>();
+        mfriendItems.add(new FriendItem(R.drawable.nav_item_background,"",""));
+        mRecyclerAdapter.setFriendList(mfriendItems);
+
+
         setupBottomNavigationBar();
     }
 

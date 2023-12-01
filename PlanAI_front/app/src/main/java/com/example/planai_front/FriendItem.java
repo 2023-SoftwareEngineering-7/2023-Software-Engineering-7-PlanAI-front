@@ -11,6 +11,10 @@ public class FriendItem {
         this.resourceId = resourceId;
     }
 
+    public FriendItem(String s) {
+    }
+
+
     public int getResourceId() {
         return resourceId;
     }
