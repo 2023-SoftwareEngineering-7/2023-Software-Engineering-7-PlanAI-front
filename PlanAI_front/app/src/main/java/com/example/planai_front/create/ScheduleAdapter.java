@@ -3,6 +3,8 @@ package com.example.planai_front.create;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,6 +55,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     public static class ScheduleViewHolder extends RecyclerView.ViewHolder {
         public TextView scheduleRecySummary, scheduleRecyStartDate, scheduleRecyStartTime, scheduleRecyEndDate, scheduleRedyEndTime, scheduleRecyTag, scheduleRecyDescription;
+        public LinearLayout editDeleteBtn;
+        public Button btnEdit, btnDelete;
 
         public ScheduleViewHolder(View view, final OnItemClickListener listener) {
             super(view);
@@ -64,17 +68,26 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             scheduleRecyTag = view.findViewById(R.id.scheduleTagItemView);
             scheduleRecyDescription = view.findViewById(R.id.scheduleDescriptionItemView);
 
+            editDeleteBtn = view.findViewById(R.id.editDeleteBtn);
+            btnEdit = view.findViewById(R.id.btnEdit);
+            btnDelete = view.findViewById(R.id.btnDelete);
+            btnEdit.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.GONE);
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
-                        }
+                    boolean isVisible = editDeleteBtn.getVisibility() == View.VISIBLE;
+                    editDeleteBtn.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+                    btnEdit.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+                    btnDelete.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
+                    if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(getAdapterPosition());
                     }
                 }
             });
+
         }
     }
 }
