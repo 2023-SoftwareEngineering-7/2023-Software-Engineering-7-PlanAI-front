@@ -65,6 +65,7 @@ public class ShowDayActivity extends AppCompatActivity {
 
     //    private RecyclerView recyclerView;
     private ScheduleAdapter scheduleAdapter;
+    private Context thisContext;
     private RecyclerView scheduleRecyclerShowDay;
     private TaskAdapter taskAdapter;
     private RecyclerView taskRecyclerShowDay;
