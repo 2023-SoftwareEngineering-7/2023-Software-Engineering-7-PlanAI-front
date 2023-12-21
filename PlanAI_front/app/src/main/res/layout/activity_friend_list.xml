@@ -38,7 +38,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/taskRecyclerView"
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
@@ -81,8 +81,5 @@
         android:textColor="#090707"
         app:layout_constraintBottom_toTopOf="@+id/toolbar2"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <!--하단 메뉴 바-->
-    <include layout="@layout/navigationbar_bottom" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
