@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.planai_front.R;
 import java.util.List;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
-    private static List<Schedule> scheduleList;
+    private List<Schedule> scheduleList;
     private OnItemClickListener listener;
 
     public ScheduleAdapter(List<Schedule> scheduleList) {
@@ -40,6 +40,13 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         Schedule schedule = scheduleList.get(position);
 
         holder.scheduleRecySummary.setText(schedule.getSummary());
+        holder.scheduleRecyDescription.setText(schedule.getDescription());
+        holder.scheduleRecyStartDate.setText(schedule.getStartDate());
+        holder.scheduleRecyStartTime.setText(schedule.getStartTime());
+        holder.scheduleRecyEndDate.setText(schedule.getEndDate());
+        holder.scheduleRedyEndTime.setText(schedule.getEndTime());
+        holder.scheduleRecyTag.setText(schedule.getTag());
+
         // 나머지 텍스트뷰 설정 코드...
 
         // 버튼 초기 상태를 숨김으로 설정
@@ -48,32 +55,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
         // 아이템 클릭 리스너 설정
         holder.itemView.setOnClickListener(v -> {
-            // 버튼의 가시성 토글
             boolean isVisible = holder.editDeleteBtn.getVisibility() == View.VISIBLE;
             holder.editDeleteBtn.setVisibility(isVisible ? View.GONE : View.VISIBLE);
             holder.btnEdit.setVisibility(isVisible ? View.GONE : View.VISIBLE);
             holder.btnDelete.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-
-            // 로그 출력
-            Log.d("Server!!", "Item Clicked: " + schedule.getId());
         });
 
-        // 수정 버튼 클릭 리스너
-        holder.btnEdit.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onEditClick(schedule);
-                Log.d("Server!!", "Edit Clicked: " + schedule.getId());
-            }
-        });
-
-        // 삭제 버튼 클릭 리스너
-        holder.btnDelete.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDeleteClick(schedule);
-                Log.d("Server!!", "Delete Clicked: " + schedule.getId());
-                //deleteSchedule(schedule.getId());
-            }
-        });
+        // 수정 및 삭제 버튼 클릭 리스너 설정
+        holder.btnEdit.setOnClickListener(v -> listener.onEditClick(schedule));
+        holder.btnDelete.setOnClickListener(v -> listener.onDeleteClick(schedule));
     }
 
 
