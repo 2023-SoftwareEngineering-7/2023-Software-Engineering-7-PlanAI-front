@@ -47,18 +47,18 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         holder.scheduleRecyTag.setText(schedule.getTag());
         holder.scheduleRecyDescription.setText(schedule.getDescription());
 
-        Log.d("Server!!","holder okay");
+        Log.d("Server!!","holderokay");
+        Log.d("Server!!","ID: "+schedule.getId());
 
+            Log.d("Server!!","ID: "+schedule.getId());
         holder.itemView.setOnClickListener(v -> {
-            Log.d("Server!!","holder clicklistener okay");
             boolean isVisible = holder.btnEdit.getVisibility() == View.VISIBLE;
             holder.btnEdit.setVisibility(isVisible ? View.GONE : View.VISIBLE);
             holder.btnDelete.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-            Log.d("Server!!",schedule.getId());
-        });
 
         holder.btnEdit.setOnClickListener(v -> listener.onEditClick(schedule)); // 수정 버튼 클릭 이벤트 처리
         holder.btnDelete.setOnClickListener(v -> listener.onDeleteClick(schedule)); // 삭제 버튼 클릭 이벤트 처리
+        });
     }
 
     @Override

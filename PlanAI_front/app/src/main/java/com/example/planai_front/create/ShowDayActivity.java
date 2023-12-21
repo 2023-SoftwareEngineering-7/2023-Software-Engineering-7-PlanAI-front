@@ -407,16 +407,18 @@ public class ShowDayActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
+                int idx = googleSendScheduleDTO.getStartDate().indexOf("T");
+                String tempId = googleSendScheduleDTO.getTitle()+googleSendScheduleDTO.getStartDate().substring(0, idx);
                 // 구글 캘린더에 추가할 이벤트 생성
                 Event event = new Event()
                         .setSummary(googleSendScheduleDTO.getTitle())
                         .setDescription(googleSendScheduleDTO.getDescription() + "\n#" + String.join("#", googleSendScheduleDTO.getTagList()))
-                        .setICalUID(scheduleId);
+                        .setICalUID(tempId);
 
                 // 시작 및 종료 시간 설정
                 String startDateStr = googleSendScheduleDTO.getStartDate();
                 String endDateStr = googleSendScheduleDTO.getEndDate();
-
+                Log.d("Server!!","google Id:"+tempId);
                 // 날짜 형식 변환 (예: "2023-11-27T11:11" -> "2023-11-27T11:11:00.000Z")
                 startDateStr = convertToRFC3339Format(startDateStr);
                 endDateStr = convertToRFC3339Format(endDateStr);
@@ -833,6 +835,12 @@ public class ShowDayActivity extends AppCompatActivity {
         // 스케줄과 태스크 데이터 로드
         List<Schedule> schedulesForToday = mainCalendarApplication.getScheduleMap().getOrDefault(date, new ArrayList<>());
         List<Task> tasksForToday = mainCalendarApplication.getTaskMap().getOrDefault(date, new ArrayList<>());
+
+        for(int i = 0; i<schedulesForToday.size(); i++){
+            Schedule tempSchedule = schedulesForToday.get(i);
+            String newId = tempSchedule.getSummary()+tempSchedule.getStartDate();
+            schedulesForToday.get(i).setId(newId);
+        }
 
         // 어댑터 데이터 갱신
         todayScheduleList.clear();
