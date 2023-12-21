@@ -4,6 +4,7 @@ import static com.example.planai_front.Server.RetrofitClient.PlanAI_URL;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -354,6 +355,18 @@ public class ShowDayActivity extends AppCompatActivity {
 
     }
 
+    // Google Calendar API 호출을 시작합니다.
+    private void getGoogleCalendarResults() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
+            chooseGoogleAccount();
+        } else {
+            // GET_ACCOUNTS 권한 요청
+            EasyPermissions.requestPermissions(
+                    this, "구글 캘린더 접근 권한이 필요합니다.",
+                    REQUEST_PERMISSION_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
+        }
+    }
+
     /**
      * 사용자에게 Google 계정을 선택하도록 요청합니다.
      * 이미 로그인된 계정이 있으면 해당 계정을 사용합니다.
@@ -409,6 +422,7 @@ public class ShowDayActivity extends AppCompatActivity {
             try {
                 int idx = googleSendScheduleDTO.getStartDate().indexOf("T");
                 String tempId = googleSendScheduleDTO.getTitle()+googleSendScheduleDTO.getStartDate().substring(0, idx);
+
                 // 구글 캘린더에 추가할 이벤트 생성
                 Event event = new Event()
                         .setSummary(googleSendScheduleDTO.getTitle())
@@ -418,13 +432,15 @@ public class ShowDayActivity extends AppCompatActivity {
                 // 시작 및 종료 시간 설정
                 String startDateStr = googleSendScheduleDTO.getStartDate();
                 String endDateStr = googleSendScheduleDTO.getEndDate();
-                Log.d("Server!!","google Id:"+tempId);
+
                 // 날짜 형식 변환 (예: "2023-11-27T11:11" -> "2023-11-27T11:11:00.000Z")
                 startDateStr = convertToRFC3339Format(startDateStr);
                 endDateStr = convertToRFC3339Format(endDateStr);
 
                 DateTime startDateTime = new DateTime(startDateStr);
                 DateTime endDateTime = new DateTime(endDateStr);
+
+                Log.d("Server!!","google Id:"+tempId);
 
                 EventDateTime start = new EventDateTime()
                         .setDateTime(startDateTime)
@@ -802,6 +818,7 @@ public class ShowDayActivity extends AppCompatActivity {
         scheduleRecyclerShowDay.setHasFixedSize(true);
         scheduleRecyclerShowDay.setLayoutManager(new LinearLayoutManager(this));
         scheduleAdapter = new ScheduleAdapter(todayScheduleList);
+
         scheduleAdapter.setOnItemClickListener(new ScheduleAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(Schedule schedule) {
@@ -810,7 +827,7 @@ public class ShowDayActivity extends AppCompatActivity {
 
             @Override
             public void onDeleteClick(Schedule schedule) {
-                deleteSchedule(schedule.getId());
+     //           deleteScheduleWithId(schedule.getId());
             }
         });
 
@@ -848,34 +865,6 @@ public class ShowDayActivity extends AppCompatActivity {
         taskAdapter.notifyDataSetChanged();
     }
 
-    private void deleteSchedule(String sId){
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    // 캘린더에서 이벤트 목록 가져오기
-                    Events events = mService.events().list("primary").execute();
-                    List<Event> items = events.getItems();
-
-                    // 삭제하려는 이벤트 찾기
-                    for (Event event : items) {
-                        Log.d("Server!!","id: "+event.getId());
-                        if (event.getId().equals(sId)) {
-                            // 이벤트 삭제
-                            Log.d("Server!!","THIS is id: "+event.getId());
-                            mService.events().delete("primary", event.getId()).execute();
-                            Log.d("Event Deletion", "Event deleted successfully.");
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("Event Deletion", "Error deleting event: " + e.getMessage());
-                }
-                return null;
-            }
-        }.execute();
-    }
 
     private void setupFloatingActionButtons() {
         addEventFabButton = findViewById(R.id.fabMain);
@@ -918,8 +907,49 @@ public class ShowDayActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "갱신완료!", Toast.LENGTH_SHORT).show();
         });
 
-
     }
+
+//    private void deleteScheduleWithId(String eventIdToDelete) {
+//        new AsyncTask<Void, Void, Void>() {
+//            @SuppressLint("StaticFieldLeak")
+//            @Override
+//            protected Void doInBackground(Void... params) {
+//                try {
+//                    // 캘린더에서 이벤트 목록 가져오기
+//                    Events events = mService.events().list("primary").execute();
+//                    List<Event> items = events.getItems();
+//                    String EventId;
+//                    String deleteId;
+//                    // 삭제하려는 이벤트 찾기
+//                    for (Event event : items) {
+//                        deleteId = eventIdToDelete.substring(0,4);
+//                        EventId = event.getSummary();
+//                        Log.d("Server!!","MyId: "+EventId);
+//                        Log.d("Server!!","Id to delete: "+deleteId);
+//                        if (EventId.equals(deleteId)) {
+//                            // 이벤트 삭제
+//                            int i = 0;
+//                            mService.events().delete("primary", event.getId()).execute();
+//                            for(Schedule registeredSchedule:todayScheduleList){
+//                                if(registeredSchedule.getId().equals(eventIdToDelete)){
+//                                    todayScheduleList.remove(i);
+//                                    i++;
+//                                }
+//
+//                            }
+//                            Log.d("Server!!", "Event deleted successfully.");
+//                            break;
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Log.e("Server!!", "Error deleting event: " + e.getMessage());
+//                }
+//                return null;
+//            }
+//        }.execute();
+//    }
+
 
     private void showFABMenu() {
         isFABOpen = true;
