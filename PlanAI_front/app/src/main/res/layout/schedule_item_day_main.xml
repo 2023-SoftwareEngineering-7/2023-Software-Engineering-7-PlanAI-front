@@ -6,7 +6,9 @@
     android:elevation="4dp"
     android:radius="8dp"
     android:clickable="true"
-    >
+    android:focusable="true"
+    android:orientation="vertical">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -75,22 +77,6 @@
         android:orientation="horizontal"
         android:visibility="gone"> <!-- 기본적으로 숨김 -->
 
-        <Button
-            android:id="@+id/btnEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#EFC8C8"
-            android:text="수정"
-            android:textColor="@color/black" />
-
-        <Button
-            android:id="@+id/btnDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#EFC8C8"
-            android:text="삭제"
-            android:textColor="@color/black" />
-    </LinearLayout>
 
 
 </androidx.cardview.widget.CardView>
