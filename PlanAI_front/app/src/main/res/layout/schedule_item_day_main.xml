@@ -74,25 +74,29 @@
         android:id="@+id/editDeleteBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="190sp"
+        android:layout_marginLeft="210sp"
         android:layout_marginTop="130sp"
         android:orientation="horizontal"
-        android:visibility="visible"> <!-- 기본적으로 숨김 -->
+        android:visibility="gone"> <!-- 기본적으로 숨김 -->
 
         <Button
             android:id="@+id/btnEdit"
-            android:layout_width="wrap_content"
+            android:layout_width="65sp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15sp"
-            android:backgroundTint="#9C9C9C"
+            android:layout_marginRight="10sp"
+            android:backgroundTint="#C6C8C9"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
             android:text="수정"
             android:textColor="@color/black" />
 
         <Button
             android:id="@+id/btnDelete"
-            android:layout_width="wrap_content"
+            android:layout_width="65sp"
             android:layout_height="wrap_content"
-            android:backgroundTint="#9C9C9C"
+            android:backgroundTint="#C6C8C9"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
             android:text="삭제"
             android:textColor="@color/black" />
     </LinearLayout>

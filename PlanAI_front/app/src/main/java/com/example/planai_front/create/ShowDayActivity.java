@@ -805,16 +805,12 @@ public class ShowDayActivity extends AppCompatActivity {
         scheduleAdapter.setOnItemClickListener(new ScheduleAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(Schedule schedule) {
-                // 수정 버튼 클릭 시의 액션
-                String modifyScheduleID = schedule.getId();
-                // 여기서 modifyScheduleID를 사용하여 스케줄 수정 로직 구현
+                // 스케줄 수정 로직
             }
 
             @Override
             public void onDeleteClick(Schedule schedule) {
-                // 삭제 버튼 클릭 시의 액션
-                String deleteScheduleID = schedule.getId();
-                // 여기서 deleteScheduleID를 사용하여 스케줄 삭제 로직 구현
+                deleteSchedule(schedule.getId());
             }
         });
 
@@ -852,8 +848,33 @@ public class ShowDayActivity extends AppCompatActivity {
         taskAdapter.notifyDataSetChanged();
     }
 
-    private void deleteSchedule(String sceduleid){
+    private void deleteSchedule(String sId){
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    // 캘린더에서 이벤트 목록 가져오기
+                    Events events = mService.events().list("primary").execute();
+                    List<Event> items = events.getItems();
 
+                    // 삭제하려는 이벤트 찾기
+                    for (Event event : items) {
+                        Log.d("Server!!","id: "+event.getId());
+                        if (event.getId().equals(sId)) {
+                            // 이벤트 삭제
+                            Log.d("Server!!","THIS is id: "+event.getId());
+                            mService.events().delete("primary", event.getId()).execute();
+                            Log.d("Event Deletion", "Event deleted successfully.");
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("Event Deletion", "Error deleting event: " + e.getMessage());
+                }
+                return null;
+            }
+        }.execute();
     }
 
     private void setupFloatingActionButtons() {

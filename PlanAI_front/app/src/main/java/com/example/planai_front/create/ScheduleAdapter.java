@@ -71,6 +71,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             if (listener != null) {
                 listener.onDeleteClick(schedule);
                 Log.d("Server!!", "Delete Clicked: " + schedule.getId());
+                //deleteSchedule(schedule.getId());
             }
         });
     }

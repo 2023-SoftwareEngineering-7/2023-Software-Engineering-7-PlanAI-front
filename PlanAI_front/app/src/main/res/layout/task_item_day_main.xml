@@ -56,6 +56,36 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:id="@+id/taskEditDeleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="210sp"
+        android:layout_marginTop="130sp"
+        android:orientation="horizontal"
+        android:visibility="gone"> <!-- 기본적으로 숨김 -->
+
+    <Button
+        android:id="@+id/taskBtnEdit"
+        android:layout_width="65sp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10sp"
+        android:backgroundTint="#C6C8C9"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:text="수정"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/taskBtnDelete"
+        android:layout_width="65sp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#C6C8C9"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:text="삭제"
+        android:textColor="@color/black" />
+</LinearLayout>
 
 </androidx.cardview.widget.CardView>
 
