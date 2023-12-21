@@ -354,18 +354,6 @@ public class ShowDayActivity extends AppCompatActivity {
 
     }
 
-    // Google Calendar API 호출을 시작합니다.
-    private void getGoogleCalendarResults() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
-            chooseGoogleAccount();
-        } else {
-            // GET_ACCOUNTS 권한 요청
-            EasyPermissions.requestPermissions(
-                    this, "구글 캘린더 접근 권한이 필요합니다.",
-                    REQUEST_PERMISSION_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
-        }
-    }
-
     /**
      * 사용자에게 Google 계정을 선택하도록 요청합니다.
      * 이미 로그인된 계정이 있으면 해당 계정을 사용합니다.
@@ -422,7 +410,8 @@ public class ShowDayActivity extends AppCompatActivity {
                 // 구글 캘린더에 추가할 이벤트 생성
                 Event event = new Event()
                         .setSummary(googleSendScheduleDTO.getTitle())
-                        .setDescription(googleSendScheduleDTO.getDescription() + "\n#" + String.join("#", googleSendScheduleDTO.getTagList()));
+                        .setDescription(googleSendScheduleDTO.getDescription() + "\n#" + String.join("#", googleSendScheduleDTO.getTagList()))
+                        .setICalUID(scheduleId);
 
                 // 시작 및 종료 시간 설정
                 String startDateStr = googleSendScheduleDTO.getStartDate();
@@ -811,6 +800,22 @@ public class ShowDayActivity extends AppCompatActivity {
         scheduleRecyclerShowDay.setHasFixedSize(true);
         scheduleRecyclerShowDay.setLayoutManager(new LinearLayoutManager(this));
         scheduleAdapter = new ScheduleAdapter(todayScheduleList);
+        scheduleAdapter.setOnItemClickListener(new ScheduleAdapter.OnItemClickListener() {
+            @Override
+            public void onEditClick(Schedule schedule) {
+                // 수정 버튼 클릭 시의 액션
+                String modifyScheduleID = schedule.getId();
+                // 여기서 modifyScheduleID를 사용하여 스케줄 수정 로직 구현
+            }
+
+            @Override
+            public void onDeleteClick(Schedule schedule) {
+                // 삭제 버튼 클릭 시의 액션
+                String deleteScheduleID = schedule.getId();
+                // 여기서 deleteScheduleID를 사용하여 스케줄 삭제 로직 구현
+            }
+        });
+
         scheduleRecyclerShowDay.setAdapter(scheduleAdapter);
 
         // 태스크 RecyclerView 설정
@@ -839,6 +844,9 @@ public class ShowDayActivity extends AppCompatActivity {
         taskAdapter.notifyDataSetChanged();
     }
 
+    private void deleteSchedule(String sceduleid){
+
+    }
 
     private void setupFloatingActionButtons() {
         addEventFabButton = findViewById(R.id.fabMain);
