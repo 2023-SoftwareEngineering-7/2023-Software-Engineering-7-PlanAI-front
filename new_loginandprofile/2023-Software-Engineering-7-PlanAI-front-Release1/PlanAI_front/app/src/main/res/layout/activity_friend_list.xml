@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FriendlistActivity">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="104dp"
+            android:background="#E4EAF1"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme">
+
+            <TextView
+                android:layout_width="173dp"
+                android:layout_height="51dp"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:text="친구목록"
+                android:textColor="#000"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="20dp"
+                tools:layout_editor_absoluteY="124dp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/taskRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.988"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <Button
+        android:id="@+id/buttonaddf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#E4EAF1"
+        android:text="친구신청"
+        android:textColor="#090707"
+        app:layout_constraintBottom_toTopOf="@+id/toolbar2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonftf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#E4EAF1"
+        android:text="받은친구신청"
+        android:textColor="#090707"
+        app:layout_constraintBottom_toTopOf="@+id/toolbar2"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--하단 메뉴 바-->
+    <include layout="@layout/navigationbar_bottom" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
