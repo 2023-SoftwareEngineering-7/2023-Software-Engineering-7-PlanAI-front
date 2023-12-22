@@ -18,6 +18,8 @@ public class FriendlistRecyclerAdapter extends RecyclerView.Adapter<FriendlistRe
     private Context context;
     private List<FriendlistItem> itemList;
 
+    Button namebutton;
+
     public FriendlistRecyclerAdapter(Context context, List<FriendlistItem> itemList) {
         this.context = context;
         this.itemList = itemList;
@@ -30,13 +32,6 @@ public class FriendlistRecyclerAdapter extends RecyclerView.Adapter<FriendlistRe
         return new MyViewHolder(view);
     }
 
-   @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        FriendlistItem currentItem = itemList.get(position);
-
-    }
-    // 버튼에 대한 클릭 리스너 설정 등 추가적인 설정 가능
-    // holder.button.setOnClickListener(v -> { /* 버튼 클릭 시 동작 */ });
     @Override
     public int getItemCount() {
         return itemList.size();
@@ -53,5 +48,27 @@ public class FriendlistRecyclerAdapter extends RecyclerView.Adapter<FriendlistRe
             textView = itemView.findViewById(R.id.name_item);
             button = itemView.findViewById(R.id.namebutton);
         }
+
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        FriendlistItem currentItem = itemList.get(position);
+        holder.button.setOnClickListener(v -> {
+            // 해당 위치의 아이템 제거
+            itemList.remove(position);
+            // 어댑터에게 아이템이 변경되었음을 알림
+            notifyDataSetChanged();
+        });
+
+    }
+
+    // 버튼에 대한 클릭 리스너 설정 등 추가적인 설정 가능
+    // holder.button.setOnClickListener(v -> { /* 버튼 클릭 시 동작 */ });
+
+    public void addItem(FriendlistItem newItem) {
+        itemList.add(newItem);
+        notifyDataSetChanged(); // 어댑터 갱신
     }
 }
