@@ -88,11 +88,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 public void onClick(View v) {
                     // 토스트 메시지 표시
                     Toast.makeText(view.getContext(), "Delete 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
-                    for (Schedule tempSchedule:scheduleList){
-                        if(tempSchedule.getSummary().equals(thisSchedule.getSummary())){
-                            scheduleList.remove(tempSchedule);
-                        }
-                    }
+//                    for (Schedule tempSchedule:scheduleList){
+//                        if(tempSchedule.getSummary().equals(thisSchedule.getSummary())){
+//                            scheduleList.remove(tempSchedule);
+//                        }
+//                    }
                 }
             });
         }

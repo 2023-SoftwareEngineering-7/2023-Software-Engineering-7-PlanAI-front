@@ -3,7 +3,10 @@ package com.example.planai_front.create;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,7 +16,8 @@ import com.example.planai_front.R;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private List<Task> taskList;
+    private static List<Task> taskList;
+    private static Task thisTask;
 
     public TaskAdapter(List<Task> taskList) {
         this.taskList = taskList;
@@ -45,7 +49,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         public TextView taskRecySummary, taskRecyDescription, taskRecyDeadLine, taskRecyDeadLineTime, taskRecyTag,taskRecyPriority;
-
+        public LinearLayout TaskeditDeleteBtn;
+        public Button TaskbtnEdit, TaskbtnDelete;
         public TaskViewHolder(View view) {
             super(view);
             taskRecySummary = view.findViewById(R.id.taskSummaryItemView);
@@ -54,6 +59,43 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskRecyDeadLineTime = view.findViewById(R.id.taskDeadLineTimeItemView);
             taskRecyTag = view.findViewById(R.id.taskTagItemView);
             taskRecyPriority = view.findViewById(R.id.taskPriorityItemView);
+
+            TaskeditDeleteBtn  = view.findViewById(R.id.TaskeditDeleteBtn);
+            TaskbtnDelete = view.findViewById(R.id.TaskbtnDelete);
+            TaskbtnEdit = view.findViewById(R.id.TaskbtnEdit);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 버튼의 가시성을 토글합니다.
+                    boolean isVisible = TaskeditDeleteBtn.getVisibility() == View.VISIBLE;
+                    TaskeditDeleteBtn.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            // Edit 버튼 클릭 리스너
+            TaskbtnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 토스트 메시지 표시
+                    Toast.makeText(view.getContext(), "Edit 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // Edit 버튼 클릭 리스너
+            TaskbtnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 토스트 메시지 표시
+                    Toast.makeText(view.getContext(), "Delete 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
+//                    for (Task tempTask:taskList){
+//                        if(tempTask.getSummary().equals(thisTask.getSummary())){
+//                            taskList.remove(tempTask);
+//                        }
+//                    }
+                }
+            });
         }
     }
+
+
 }
