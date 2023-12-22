@@ -4,16 +4,19 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.planai_front.R;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -22,20 +25,22 @@ import java.util.Locale;
 //뒤로가기 버튼을 통해 ShowDayActivity로 돌아감
 public class CreateScheduleActivity extends AppCompatActivity {
 
-    // 필요한 변수 선언
+    private String todayDate, todayTag, todayDescription;
     private EditText summaryText, descriptionText;
-    private TextView startDateText, startTimeText, endDateText, endTimeText, tagTextView;
+    private Switch repeatSchedule;
+    private TextView startDateText, startTimeText, endDateText, endTimeText;
     private ImageView startCalendarButton, startTimeButton, endCalendarButton, endTimeButton;
-    private Button finishButton;
+    private TextView tagTextView;
+    private String todaySummary;
     private Calendar startCalendar, startTimeCal, endCalendar, endTimeCal;
-    private String todayDate, todayTag, todayDescription, todaySummary;
+    private Button finishButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.createschedule_popuplayout);
 
-        // UI 컴포넌트 초기화 및 설정
+        // UI 컴포넌트 초기화
         initializeViews();
         setupDateAndTimePickers();
         setupTagDropDown();
@@ -43,44 +48,40 @@ public class CreateScheduleActivity extends AppCompatActivity {
         // 데이터 수집
         getSummaryText();
         getDescriptionText();
-        finishButton = findViewById(R.id.scheduleFinishButton);
 
-        //완료 버튼 리스너 설정
-        finishButton.setOnClickListener(view->finishScheduleCreation());
+        // 완료 버튼 리스너 설정
+        finishButton.setOnClickListener(view -> finishScheduleCreation());
+
     }
 
-    // UI 컴포넌트 초기화 및 설정
     private void initializeViews() {
-        // 인텐트에서 날짜 데이터 받아오기
         Intent dateIntent = getIntent();
         todayDate = dateIntent.getStringExtra("date");
 
-        // UI 컴포넌트 연결
-        startDateText = findViewById(R.id.scheduleStartDateView);
-        startCalendarButton = findViewById(R.id.scheduleStartCalendarButton);
-        startTimeText = findViewById(R.id.scheduleStartTimeView);
-        startTimeButton = findViewById(R.id.scheduleStartTimeButton);
-        endDateText = findViewById(R.id.scheduleEndDateView);
-        endCalendarButton = findViewById(R.id.scheduleEndCalendarButton);
-        endTimeText = findViewById(R.id.scheduleEndTimeView);
-        endTimeButton = findViewById(R.id.scheduleEndTimeButton);
-        tagTextView = findViewById(R.id.scheduleTagView);
-        finishButton = findViewById(R.id.scheduleFinishButton);
-
-        // 캘린더 객체 초기화
+        startDateText = findViewById(R.id.deadLineDate);
+        startCalendarButton = findViewById(R.id.deadLineCalendarButton);
+        startTimeText = findViewById(R.id.deadLineTime);
+        startTimeButton = findViewById(R.id.deadLineTimeButton);
+        endDateText = findViewById(R.id.endDate);
+        endCalendarButton = findViewById(R.id.endCalendarButton);
+        endTimeText = findViewById(R.id.endTime);
+        endTimeButton = findViewById(R.id.endTimeButton);
+        tagTextView = findViewById(R.id.tagTextView);
         startCalendar = Calendar.getInstance();
         startTimeCal = Calendar.getInstance();
         endCalendar = Calendar.getInstance();
         endTimeCal = Calendar.getInstance();
+        finishButton = findViewById(R.id.finishButton);
+
+        // 완료 버튼에 대한 리스너 설정
+        finishButton.setOnClickListener(view -> finishScheduleCreation());
     }
 
-    // 요약 텍스트 가져오기
     private void getSummaryText() {
-        summaryText = findViewById(R.id.scheduleSummaryView);
+        summaryText = findViewById(R.id.scheduleSummary);
         todaySummary = summaryText.getText().toString();
-    }
 
-    // 날짜 및 시간 선택기 설정
+    }
     private void setupDateAndTimePickers() {
         setupDatePicker(startCalendarButton, startDateText, startCalendar);
         setupTimePicker(startTimeButton, startTimeText, startTimeCal);
@@ -88,7 +89,6 @@ public class CreateScheduleActivity extends AppCompatActivity {
         setupTimePicker(endTimeButton, endTimeText, endTimeCal);
     }
 
-    // 날짜 선택기 설정
     private void setupDatePicker(ImageView button, final TextView textView, final Calendar calendar) {
         button.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(CreateScheduleActivity.this,
@@ -101,7 +101,6 @@ public class CreateScheduleActivity extends AppCompatActivity {
         });
     }
 
-    // 시간 선택기 설정
     private void setupTimePicker(ImageView button, final TextView textView, final Calendar calendar) {
         button.setOnClickListener(v -> {
             TimePickerDialog timePickerDialog = new TimePickerDialog(CreateScheduleActivity.this,
@@ -113,13 +112,12 @@ public class CreateScheduleActivity extends AppCompatActivity {
         });
     }
 
-    // 태그 드롭다운 설정
     private void setupTagDropDown() {
-        Button tagShowDropDown = findViewById(R.id.scheduleTagShowDropDown);
+        Button tagShowDropDown = findViewById(R.id.tagShowDropDown);
         tagShowDropDown.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(CreateScheduleActivity.this, v);
-            popupMenu.getMenu().add("Study");
-            popupMenu.getMenu().add("Work");
+            popupMenu.getMenu().add("text1");
+            popupMenu.getMenu().add("text2");
             popupMenu.getMenu().add("text3");
             popupMenu.setOnMenuItemClickListener(item -> {
                 todayTag = item.getTitle().toString();
@@ -130,13 +128,22 @@ public class CreateScheduleActivity extends AppCompatActivity {
         });
     }
 
-    // 설명 텍스트 가져오기
     private void getDescriptionText() {
-        descriptionText = findViewById(R.id.scheduleDescriptionView);
+        descriptionText = findViewById(R.id.descriptionTextView);
         todayDescription = descriptionText.getText().toString();
-    }
 
-    // 일정 생성 완료 처리
+    }
+    //    private void setFinishButton() {
+//        Button finishButton = findViewById(R.id.finishButton);
+//        finishButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+////                ArrayList<String> scheduleData = collectScheduleData();
+////                sendDataToServer(scheduleData);
+//                finish();
+//            }
+//        });
+//    }
+
     private void finishScheduleCreation() {
         // 사용자 입력 데이터 수집
         String summary = summaryText.getText().toString();
@@ -147,7 +154,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
         String tag = tagTextView.getText().toString();
         String description = descriptionText.getText().toString();
 
-        // 결과를 Intent에 담아 반환
+        // 결과를 Intent에 담기
         Intent resultIntent = new Intent();
         resultIntent.putExtra("summary", summary);
         resultIntent.putExtra("startDate", startDate);
@@ -161,4 +168,10 @@ public class CreateScheduleActivity extends AppCompatActivity {
         finish();
     }
 
+
+    // 서버에 데이터 전송하는 메서드 (더미 예시)
+    private void sendDataToServer(ArrayList<String> data) {
+
+
+    }
 }

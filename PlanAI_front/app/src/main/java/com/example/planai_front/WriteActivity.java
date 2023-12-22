@@ -2,67 +2,138 @@ package com.example.planai_front;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.planai_front.R;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+
+
 public class WriteActivity extends AppCompatActivity {
 
-    private EditText Edit_Text_Title, Edit_Text_Content;
+    // 필요한 변수 선언
+    private EditText editTitle, editContent;
+    private Button finishButton;
+    private TextView textViewTitle;
 
-    private String writeTitle, writeContent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write);
 
+        // UI 컴포넌트 초기화 및 설정
+        initializeViews();
 
+        // 완료 버튼 리스너 설정
+        finishButton.setOnClickListener(view -> finishWrite());
 
-        Button Button = (Button) findViewById(R.id.button_wc);
+        textViewTitle = findViewById(R.id.texttest);
+
+        Button Button = findViewById(R.id.button_wc);
         Button.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), BoardActivity.class);
             startActivity(intent);
         });
 
-        Button writeButton = findViewById(R.id.button_write_finish);
-        writeButton.setOnClickListener(new View.OnClickListener() {
+        // Intent에서 값 가져오기
+        Intent intent = getIntent();
+        if (intent != null) {
+            String title = intent.getStringExtra("title");
+            String detail = intent.getStringExtra("detail");
+
+            // TextView에 값 설정
+            textViewTitle.setText("Title: " + title);
+        }
+    }
+
+    // UI 컴포넌트 초기화 및 설정
+    private void initializeViews() {
+        editTitle = findViewById(R.id.edit_text_title);
+        editContent = findViewById(R.id.edit_text_content);
+        finishButton = findViewById(R.id.button_finish);
+    }
+
+    private void finishWrite() {
+        // 사용자 입력 데이터 수집
+        String title = editTitle.getEditableText().toString();
+        String detail = editContent.getEditableText().toString();
+
+        // 서버로 데이터 전송
+        sendDataToServer(title, detail);
+
+        // 결과를 Intent에 담아 반환
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("title", title);
+        resultIntent.putExtra("detail", detail);
+
+        setResult(RESULT_OK, resultIntent);
+        finish();
+    }
+
+    // 서버에 데이터 전송하는 메서드
+    private void sendDataToServer(String title, String detail) {
+        // 여기에 서버 전송 로직을 구현
+    }
+
+
+        private ArrayList<String> collectTaskData(){
+        ArrayList<String> TaskData=new ArrayList<>();
+        TaskData.add(editTitle.getEditableText().toString());
+        TaskData.add(editContent.getEditableText().toString());
+        return TaskData;
+        }
+
+}
+
+
+    Button btn;
+    EditText editText;
+    TextView textView;
+
+    protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_write);
+
+        btn = findViewById(R.id.button_on);
+        textView = findViewById(R.id.text_view);
+
+
+        editText = findViewById(R.id.edit_text);
+        super.onCreate(savedInstanceState);
+    @Override
+    String text;
+
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
+                text = editText.getText().toString();
+
+                if (text != null)
+                editText.setText("");
+                    textView.setText(text);
+
             public void onClick(View v) {
-                // getEdit_text_title 메서드 실행
-                getEdit_text_title();
+/*
 
-                // getEdit_Text_Content 메서드 실행
-                getEdit_Text_Content();
-
-                // 로그에 값을 출력하여 디버깅할 수 있습니다.
-                Log.d("WriteActivity", "Title: " + writeTitle);
-                Log.d("WriteActivity", "Content: " + writeContent);
-
-                // 또는 다른 출력 방법을 선택하여 값을 확인할 수 있습니다.
-                // 예: AlertDialog, TextView에 출력, Toast 등
-
-                // 사용자 입력 데이터 수집
-                String title = Edit_Text_Title.getText().toString(); // 제목 입력란에서 텍스트 가져오기
-                String content = Edit_Text_Content.getText().toString(); // 내용 입력란에서 텍스트 가져오기
-
-                // 결과를 Intent에 담아 반환
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("title", title); // Intent에 제목 추가
-                resultIntent.putExtra("content", content); // Intent에 내용 추가
-
-                Intent intent = new Intent(WriteActivity.this, BoardActivity.class);
-                intent.putExtra("title", title);
-                intent.putExtra("content", content);
-                startActivity(intent);
-
-
-
-                setResult(RESULT_OK, resultIntent); // 현재 액티비티의 결과로 설정하고 Intent를 전달
-                finish(); // 현재 액티비티 종료
 
 
             }
@@ -71,21 +142,46 @@ public class WriteActivity extends AppCompatActivity {
 
     }
 
-
-    private void getEdit_text_title() {
-        // XML 레이아웃에서 edit_text_title이라는 아이디를 가진 뷰를 찾아와서 Edit_Text_Title 변수에 할당합니다.
-        Edit_Text_Title = findViewById(R.id.edit_text_title);
-        // Edit_Text_Title에 입력된 텍스트를 문자열로 가져와서 writeTitle 변수에 저장합니다.
-        writeTitle = Edit_Text_Title.getText().toString();
+    @Override
+    protected void onPause() { // Activity가 보이지 않을때 값을 저장한다.
+        super.onPause();
+        saveState();
     }
 
-    private void getEdit_Text_Content() {
-        // XML 레이아웃에서 edit_text_content라는 아이디를 가진 뷰를 찾아와서 Edit_Text_Content 변수에 할당합니다.
-        Edit_Text_Content = findViewById(R.id.edit_text_content);
-        // Edit_Text_Content에 입력된 텍스트를 문자열로 가져와서 writeContent 변수에 저장합니다.
-        writeContent = Edit_Text_Content.getText().toString();
+    @Override
+    protected void onStart() {  // Activity가 보이기 시작할때 값을 저장한다.
+        super.onStart();
+        restoreState();
+        if (text != null)
+            textView.setText(text);
+
+    }
+
+    protected void saveState() { // 데이터를 저장한다.
+        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("text", text);
+
+        editor.commit();
+
+
+    }
+
+    protected void restoreState() {  // 데이터를 복구한다.
+        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        if ((pref != null) && (pref.contains("text"))) {
+            text = pref.getString("text", "");
+        }
+
+    }
+
+    protected void clearPref() {  // sharedpreference에 쓰여진 데이터 지우기
+        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.clear();
+        text = null;
+        editor.commit();
     }
 
 
-
-}
+}*/

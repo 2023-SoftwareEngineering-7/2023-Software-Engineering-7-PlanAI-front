@@ -121,7 +121,7 @@
             android:background="@android:drawable/editbox_dropdown_light_frame" />
 
     <Button
-            android:id="@+id/button_write_finish"
+            android:id="@+id/button_finish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="76dp"

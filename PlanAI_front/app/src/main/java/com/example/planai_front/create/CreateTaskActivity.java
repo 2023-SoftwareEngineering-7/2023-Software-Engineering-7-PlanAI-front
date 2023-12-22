@@ -3,7 +3,6 @@ package com.example.planai_front.create;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.planai_front.OpenAIActivity;
 import com.example.planai_front.R;
 
 import java.util.ArrayList;
@@ -25,18 +23,17 @@ import java.util.Locale;
 //전달받은 todayDate(2023-11-22 형식을 가짐)을 id로 해서 서버에 Task 등록
 //popup_layout을 띄움(아래에서 올라오는 pop-up 또는 popup 처럼 생긴 새로운 xml 페이지. 편한걸로 할것!!!)
 //뒤로가기 버튼을 통해 ShowDayActivity로 돌아감
-//ChatGPT 더하기
 public class CreateTaskActivity extends AppCompatActivity {
 
     private String todayDate;
-    private EditText summaryText, descriptionText;
+    private EditText summaryText;
     private Switch repeatSchedule;
-    private TextView deadLineDateText, deadLineTimeText;
-    private ImageView deadLineCalendarButton, deadLineTimeButton, chatGPTBootButtonView;
-    private TextView tagTextView, priorityTextView, chatGPTBootText;
-    private String todayTag,todayPriority;
-    private String todaySummary, todayDescription;
-    private Calendar deadLineCalendar, deadLineTimeCal;
+    private TextView deadLineDate, deadLineTime;
+    private ImageView deadLineCalendarButton, deadLineTimeButton;
+    private TextView tagTextView;
+    private String todayTag;
+    private String todaySummary;
+    private Calendar deaLineCalendar, deadLineTimeCal;
     private Button finishButton;
 
     @Override
@@ -45,46 +42,33 @@ public class CreateTaskActivity extends AppCompatActivity {
         setContentView(R.layout.createtask_popuplayout);
 
         initializeViews();
+        getSummaryText();
         setupDateAndTimePickers();
         setupTagDropDown();
-        setUpPriorityDropDown();
-
-        getSummaryText();
-        getDescriptionText();
-
-        chatGPTBootButtonView.setOnClickListener(v -> {
-            String newTaskInfo = gatherNewTaskInformation();
-            new ChatGPTTask(chatGPTBootText).execute(newTaskInfo);
-        });        finishButton.setOnClickListener((view->finishTaskCreation()));
+        setFinishButton();
     }
 
     private void initializeViews() {
         Intent dateIntent = getIntent();
         todayDate = dateIntent.getStringExtra("date");
 
-        deadLineDateText = findViewById(R.id.taskDeadLineDateView);
-        deadLineCalendarButton = findViewById(R.id.taskDeadLineCalendarButtonView);
-        deadLineTimeText = findViewById(R.id.taskDeadLineTimeView);
-        deadLineTimeButton = findViewById(R.id.taskDeadLineTimeButton);
-        tagTextView = findViewById(R.id.taskTagView);
-        priorityTextView = findViewById(R.id.taskPriorityView);
-        deadLineCalendar = Calendar.getInstance();
+        deadLineDate = findViewById(R.id.deadLineDate);
+        deadLineCalendarButton = findViewById(R.id.deadLineCalendarButton);
+        deadLineTime = findViewById(R.id.deadLineTime);
+        deadLineTimeButton = findViewById(R.id.deadLineTimeButton);
+        tagTextView = findViewById(R.id.tagTextView);
+        deaLineCalendar = Calendar.getInstance();
         deadLineTimeCal = Calendar.getInstance();
-        finishButton = findViewById(R.id.taskFinishButton);
-        chatGPTBootButtonView = findViewById(R.id.chatGPTBootButton);
-        chatGPTBootText = findViewById(R.id.chatGPTBootView);
-
-        deadLineCalendar = Calendar.getInstance();
-        deadLineTimeCal = Calendar.getInstance();
+        finishButton = findViewById(R.id.finishButton);
     }
     private void getSummaryText() {
-        summaryText = findViewById(R.id.taskSummaryView);
+        summaryText = findViewById(R.id.scheduleSummary);
         todaySummary = summaryText.getText().toString();
-    }
 
+    }
     private void setupDateAndTimePickers() {
-        setupDatePicker(deadLineCalendarButton, deadLineDateText, deadLineCalendar);
-        setupTimePicker(deadLineTimeButton, deadLineTimeText, deadLineTimeCal);
+        setupDatePicker(deadLineCalendarButton, deadLineDate, deaLineCalendar);
+        setupTimePicker(deadLineTimeButton, deadLineTime, deadLineTimeCal);
 
     }
 
@@ -111,14 +95,12 @@ public class CreateTaskActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void setupTagDropDown() {
-        Button tagShowDropDown = findViewById(R.id.taskTagShowDropDown);
+        Button tagShowDropDown = findViewById(R.id.tagShowDropDown);
         tagShowDropDown.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(CreateTaskActivity.this, v);
-            popupMenu.getMenu().add("Study");
-            popupMenu.getMenu().add("Work");
+            popupMenu.getMenu().add("text1");
+            popupMenu.getMenu().add("text2");
             popupMenu.getMenu().add("text3");
             popupMenu.setOnMenuItemClickListener(item -> {
                 todayTag = item.getTitle().toString();
@@ -129,90 +111,31 @@ public class CreateTaskActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpPriorityDropDown() {
-        Button priorityShowDropDown = findViewById(R.id.taskPriorityShowDropDown);
-        priorityShowDropDown.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(CreateTaskActivity.this, v);
-            popupMenu.getMenu().add("HIGH");
-            popupMenu.getMenu().add("MEDIUM");
-            popupMenu.getMenu().add("LOW");
-            popupMenu.setOnMenuItemClickListener(item -> {
-                todayPriority = item.getTitle().toString();
-                priorityTextView.setText(todayPriority);  // 여기서 수정되어야 합니다.
-                return true;
-            });
-            popupMenu.show();
+    private void setFinishButton() {
+        Button finishButton = findViewById(R.id.finishButton);
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+//                ArrayList<String> taskData = collectTaskData();
+//                sendDataToServer(taskData);
+                finish();
+            }
         });
     }
 
-    private void getDescriptionText() {
-        descriptionText = findViewById(R.id.taskDescriptionView);
-        todayDescription = descriptionText.getText().toString();
+    private ArrayList<String> collectTaskData() {
+        ArrayList<String> TaskData = new ArrayList<>();
+        TaskData.add(todayDate);
+        TaskData.add(todaySummary);
+        TaskData.add(deadLineDate.getText().toString());
+        TaskData.add(deadLineTime.getText().toString());
+
+        TaskData.add(tagTextView.getText().toString());
+        return TaskData;
     }
 
-    private static class ChatGPTTask extends AsyncTask<String, Void, String> {
-        private TextView textView;
-        // Constructor to pass the TextView
-        public ChatGPTTask(TextView textView) {
-            this.textView = textView;
-        }
+    // 서버에 데이터 전송하는 메서드 (더미 예시)
+    private void sendDataToServer(ArrayList<String> data) {
 
-        @Override
-        protected String doInBackground(String... prompts) {
-            try {
-                return OpenAIActivity.chatGPT(prompts[0]);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
 
-        @Override
-        protected void onPostExecute(String result) {
-            if (result != null && textView != null) {
-                textView.setText(result);
-            }
-        }
     }
-
-    private String gatherNewTaskInformation(){
-        String summary = summaryText.getText().toString();
-        String deadLineDate= deadLineDateText.getText().toString();
-        String deadLineTime = deadLineTimeText.getText().toString();
-        String tag = tagTextView.getText().toString();
-        String priority = priorityTextView.getText().toString();
-        String description = descriptionText.getText().toString();
-
-        return ("제목: "+summary+"\n"+
-                "마감일: "+deadLineDate+"\n"+
-                "마감시간: "+deadLineTime+"\n"+
-                "분류: "+tag+"\n"+
-                "우선순위: "+priority+"\n"+
-                "설명: "+description);
-    }
-
-    // 일정 생성 완료 처리
-    private void finishTaskCreation() {
-        // 사용자 입력 데이터 수집
-        String summary = summaryText.getText().toString();
-        String deadLineDate= deadLineDateText.getText().toString();
-        String deadLineTime = deadLineTimeText.getText().toString();
-        String tag = tagTextView.getText().toString();
-        String priority = priorityTextView.getText().toString();
-        String description = descriptionText.getText().toString();
-
-        // 결과를 Intent에 담아 반환
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("summary", summary);
-        resultIntent.putExtra("deadLineDate", deadLineDate);
-        resultIntent.putExtra("deadLineTime", deadLineTime);
-        resultIntent.putExtra("tag", tag);
-        resultIntent.putExtra("priority",priority);
-        resultIntent.putExtra("description", description);
-
-        setResult(RESULT_OK, resultIntent);
-        finish();
-    }
-
-
 }

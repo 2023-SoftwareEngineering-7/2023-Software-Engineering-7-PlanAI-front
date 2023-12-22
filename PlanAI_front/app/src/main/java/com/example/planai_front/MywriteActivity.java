@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -25,48 +24,10 @@ public class MywriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mywrite);
 
-        ImageView myImageView = findViewById(R.id.imageView2);
-
-        mRecyclerView = findViewById(R.id.recyclerViewmw);
-
-        /* initiate adapter */
-        mRecyclerAdapter = new MyRecyclerAdapter();
-
-        /* initiate recyclerview */
-        mRecyclerView.setAdapter(mRecyclerAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-
-        Intent intent = getIntent();
-        String title = intent.getStringExtra("title");
-        String content = intent.getStringExtra("content");
-
-        // 이미 생성된 리스트를 사용하여 데이터를 추가
-        mfriendItems = new ArrayList<>();
-
-        if(mfriendItems == null) {
-            mfriendItems.add(new FriendItem(R.drawable.nav_item_background, "", ""));
-        }
-        else
-        {
-            mfriendItems.add(new FriendItem(R.drawable.jhanoo, "software engineering", "    plani"));
-        }
-
-
-
-        // RecyclerView 어댑터에 데이터 변경 알리기
-        mRecyclerAdapter.setFriendList(mfriendItems);
-
-        myImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 클릭 시 수행할 작업
-
-                // 다른 화면으로 이동하는 Intent 생성
-                Intent intent = new Intent(MywriteActivity.this, BoardActivity.class);
-
-                // Intent 실행
-                startActivity(intent);
-            }
+        Button Button = (Button) findViewById(R.id.button44);
+        Button.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), BoardActivity.class);
+            startActivity(intent);
         });
     }
 

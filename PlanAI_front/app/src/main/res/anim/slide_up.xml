@@ -1,3 +1,4 @@
+ feature/mergetest1
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <translate
         android:duration="500"
@@ -5,3 +6,12 @@
         android:toYDelta="0%" />
 </set>
 
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate
+        android:duration="500"
+        android:fromYDelta="100%"
+        android:toYDelta="0%" />
+</set>
+
+ main

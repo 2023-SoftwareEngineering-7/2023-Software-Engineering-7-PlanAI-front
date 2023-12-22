@@ -57,7 +57,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
         void onBind(FriendItem item){
             profile.setImageResource(item.getResourceId());
             name.setText(item.getName());
-            message.setText(item.getMessage());
+           //message.setText(item.getMessage());
         }
     }
 }

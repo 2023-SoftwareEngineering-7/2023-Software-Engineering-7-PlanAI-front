@@ -8,57 +8,47 @@
     android:radius="4dp">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/summaryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="schedule"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/startTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:background="#EEE7FB">
+            android:text="start"
+            android:textSize="16sp" />
 
         <TextView
-                android:id="@+id/scheduleSummaryItemView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="schedule"
-                android:textSize="16sp" />
+            android:id="@+id/endTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="end"
+            android:textSize="16sp" />
 
         <TextView
-                android:id="@+id/scheduleStartDateItemView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="start date"
-                android:textSize="16sp" />
-        <TextView
-                android:id="@+id/scheduleStartTimeItemView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="start time"
-                android:textSize="16sp" />
+            android:id="@+id/descriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="description"
+            android:textSize="16sp" />
 
         <TextView
-                android:id="@+id/scheduleEndDateItemView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="end date"
-                android:textSize="16sp" />
-        <TextView
-                android:id="@+id/scheduleEndTimeItemView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="end time"
-                android:textSize="16sp" />
-        <TextView
-                android:id="@+id/scheduleDescriptionItemView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="description"
-                android:textSize="16sp" />
+            android:id="@+id/collaboratorsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="collaborators"
+            android:textSize="16sp" />
 
-        <TextView
-                android:id="@+id/scheduleTagItemView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="tag"
-                android:textSize="16sp" />
+
 
     </LinearLayout>
 

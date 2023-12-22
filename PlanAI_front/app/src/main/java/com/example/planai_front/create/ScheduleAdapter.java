@@ -45,14 +45,13 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     @Override
     public void onBindViewHolder(@NonNull ScheduleViewHolder holder, int position) {
-        thisSchedule = scheduleList.get(position);
-        holder.scheduleRecySummary.setText(thisSchedule.getSummary());
-        holder.scheduleRecyStartDate.setText(thisSchedule.getStartDate());
-        holder.scheduleRecyStartTime.setText(thisSchedule.getStartTime());
-        holder.scheduleRecyEndDate.setText(thisSchedule.getEndDate());
-        holder.scheduleRecyEndTime.setText(thisSchedule.getEndTime());
-        holder.scheduleRecyTag.setText(thisSchedule.getTag());
-        holder.scheduleRecyDescription.setText(thisSchedule.getDescription());
+        Schedule schedule = scheduleList.get(position);
+        //holder.idTextView.setText(schedule.getId());
+        holder.summaryTextView.setText(schedule.getSummary());
+        holder.descriptionTextView.setText(schedule.getDescription());
+        holder.collaboratorsTextView.setText(schedule.getCollaborators());
+        holder.startTextView.setText(schedule.getStart());
+        holder.endTextView.setText(schedule.getEnd());
     }
 
     @Override
@@ -61,72 +60,18 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     }
 
     public static class ScheduleViewHolder extends RecyclerView.ViewHolder {
-        public TextView scheduleRecySummary, scheduleRecyStartDate, scheduleRecyStartTime, scheduleRecyEndDate, scheduleRecyEndTime, scheduleRecyTag, scheduleRecyDescription;
-        public LinearLayout editDeleteBtn;
-        public Button btnEdit, btnDelete;
-        private Context context;
+        public TextView summaryTextView,descriptionTextView,
+                        collaboratorsTextView,startTextView,endTextView;
 
         public ScheduleViewHolder(View view) {
             super(view);
-            scheduleRecySummary = view.findViewById(R.id.scheduleSummaryItemView);
-            scheduleRecyStartDate = view.findViewById(R.id.scheduleStartDateItemView);
-            scheduleRecyStartTime = view.findViewById(R.id.scheduleStartTimeItemView);
-            scheduleRecyEndDate = view.findViewById(R.id.scheduleEndDateItemView);
-            scheduleRecyEndTime = view.findViewById(R.id.scheduleEndTimeItemView);
-            scheduleRecyTag = view.findViewById(R.id.scheduleTagItemView);
-            scheduleRecyDescription = view.findViewById(R.id.scheduleDescriptionItemView);
-
-            editDeleteBtn = view.findViewById(R.id.editDeleteBtn);
-            btnEdit = view.findViewById(R.id.btnEdit);
-            btnDelete = view.findViewById(R.id.btnDelete);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 버튼의 가시성을 토글합니다.
-                    boolean isVisible = editDeleteBtn.getVisibility() == View.VISIBLE;
-                    editDeleteBtn.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-                }
-            });
+            summaryTextView = view.findViewById(R.id.summaryTextView);
+            startTextView = view.findViewById(R.id.startTextView);
+            endTextView = view.findViewById(R.id.endTextView);
+            descriptionTextView = view.findViewById(R.id.descriptionTextView);
+            collaboratorsTextView = view.findViewById(R.id.collaboratorsTextView);
 
 
-            // Edit 버튼 클릭 리스너
-            btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 토스트 메시지 표시
-                    Toast.makeText(view.getContext(), "Edit 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
-//                    try {
-//                        Intent intent = new Intent(Intent.ACTION_VIEW);
-//
-//                        intent.setData(Uri.parse("content://com.android.calendar/time"));
-//
-//                        // 인텐트가 실행 가능한지 확인
-//                        if (intent.resolveActivity(context.getPackageManager()) != null) {
-//                            context.startActivity(intent);
-//                        } else {
-//                            // 구글 캘린더 앱이 설치되어 있지 않은 경우
-//                            Toast.makeText(context, "구글 캘린더 앱이 설치되어 있지 않습니다.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }catch (Exception e){
-//                        Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show();
-//                    }
-                }
-            });
-
-            // Edit 버튼 클릭 리스너
-            btnDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 토스트 메시지 표시
-                    Toast.makeText(view.getContext(), "Delete 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
-                    for (Schedule tempSchedule:scheduleList){
-                        if(tempSchedule.getSummary().equals(thisSchedule.getSummary())){
-                            scheduleList.remove(tempSchedule);
-                        }
-                    }
-                }
-            });
         }
 
 
