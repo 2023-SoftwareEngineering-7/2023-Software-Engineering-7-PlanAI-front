@@ -21,13 +21,30 @@ import java.util.ArrayList;
 public class FriendlistActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private MyRecyclerAdapter mRecyclerAdapter;
-    private ArrayList<FriendItem> mfriendItems;
+    private FriendlistRecyclerAdapter mRecyclerAdapter;
+    private ArrayList<FriendlistItem> mfriendItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.friendlsit_recycle);
+
+        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL,false));
+
+
+        mfriendItems = new ArrayList<>();
+        mfriendItems.add(new FriendlistItem(R.drawable.jhanoo, "name_item", "namebutton"));
+        mfriendItems.add(new FriendlistItem(R.drawable.jhanoo, "name_item", "namebutton"));
+        // ... add more items
+
+        FriendlistRecyclerAdapter adapter = new FriendlistRecyclerAdapter(this, mfriendItems);
+        mRecyclerView.setAdapter(adapter);
+
+
 
         Button Button = (Button) findViewById(R.id.buttonaddf);
         Button.setOnClickListener(view -> {
@@ -35,7 +52,11 @@ public class FriendlistActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        setupBottomNavigationBar();
+        Button Button1 = (Button) findViewById(R.id.buttonftf);
+        Button1.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), GetfriendActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setupBottomNavigationBar() {
