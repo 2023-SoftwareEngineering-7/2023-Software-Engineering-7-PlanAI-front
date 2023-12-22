@@ -87,11 +87,11 @@ public class ShowDayActivity extends AppCompatActivity {
     private Long userId;
 
     // 전역 변수로 scheduleMap 선언
-    private HashMap<String, ArrayList<Schedule>> scheduleMap = new HashMap<>();
+    public HashMap<String, ArrayList<Schedule>> scheduleMap = new HashMap<>();
     private String Server_scheduleStartDate;
     private String Server_scheduleEndDate;
 
-    private HashMap<String, ArrayList<Task>> TaskMap = new HashMap<>();
+    public HashMap<String, ArrayList<Task>> TaskMap = new HashMap<>();
     private String Server_taskDeadLineDate;
 
 
@@ -571,7 +571,7 @@ public class ShowDayActivity extends AppCompatActivity {
 
                 // 오늘 이후의 일정을 가져옵니다 (미래의 이벤트)
                 Events futureEvents = mService.events().list("primary")
-                        .setMaxResults(30)
+                        .setMaxResults(300)
                         .setTimeMin(now)
                         .setOrderBy("startTime")
                         .setSingleEvents(true)
@@ -579,7 +579,7 @@ public class ShowDayActivity extends AppCompatActivity {
 
                 // 오늘 이전의 일정을 가져옵니다 (과거의 이벤트)
                 Events pastEvents = mService.events().list("primary")
-                        .setMaxResults(30)
+                        .setMaxResults(300)
                         .setTimeMax(now)
                         .setOrderBy("startTime")
                         .setSingleEvents(true)
