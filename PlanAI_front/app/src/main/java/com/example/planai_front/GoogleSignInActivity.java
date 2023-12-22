@@ -39,7 +39,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements
 
         // GoogleSignInOptions 설정
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("400496893792-6o7htfak2iihkr230ncecn10msjchq6n.apps.googleusercontent.com")
+                //.requestIdToken("400496893792-6o7htfak2iihkr230ncecn10msjchq6n.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -92,7 +92,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements
             Toast.makeText(this, "로그인 성공: "+ "token : " + idToken + " / " + displayName + " (" + email + ")", Toast.LENGTH_SHORT).show();
 
             registerUser();
-            Intent intent = new Intent(GoogleSignInActivity.this, MainActivity.class);
+            Intent intent = new Intent(GoogleSignInActivity.this, MaterialCalendarActivity.class);
             startActivity(intent);
         } else {
             // 로그인 실패 시 사용자에게 알림
