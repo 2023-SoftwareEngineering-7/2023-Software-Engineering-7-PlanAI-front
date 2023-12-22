@@ -13,6 +13,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button Button1 = (Button) findViewById(R.id.button311);
+        Button1.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), FriendlistActivity.class);
+            startActivity(intent);
+        });
+
+
+
         Button calendarButton = findViewById(R.id.testCalendar);
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override

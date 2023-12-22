@@ -22,7 +22,7 @@
             android:name=".GetfriendActivity"
             android:exported="false" />
         <activity
-            android:name=".FriendListActivity"
+            android:name=".FriendlistActivity"
             android:exported="false" />
         <activity
             android:name=".AddfriendActivity"
