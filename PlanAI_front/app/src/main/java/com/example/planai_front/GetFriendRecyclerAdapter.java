@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetFriendRecyclerAdapter extends RecyclerView.Adapter<GetFriendRecyclerAdapter.MyViewHolder> {
@@ -30,13 +31,6 @@ public class GetFriendRecyclerAdapter extends RecyclerView.Adapter<GetFriendRecy
         return new MyViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        GetFriendItem currentItem = itemList.get(position);
-
-    }
-    // 버튼에 대한 클릭 리스너 설정 등 추가적인 설정 가능
-    // holder.button.setOnClickListener(v -> { /* 버튼 클릭 시 동작 */ });
     @Override
     public int getItemCount() {
         return itemList.size();
@@ -58,11 +52,19 @@ public class GetFriendRecyclerAdapter extends RecyclerView.Adapter<GetFriendRecy
         }
     }
 
-    public void onBindViewHolder(@NonNull FriendlistRecyclerAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull GetFriendRecyclerAdapter.MyViewHolder holder, int position) {
         GetFriendItem currentItem = itemList.get(position);
-        holder.button.setOnClickListener(v -> {
+        holder.nobutton.setOnClickListener(v -> {
             // 해당 위치의 아이템 제거
             itemList.remove(position);
+            // 어댑터에게 아이템이 변경되었음을 알림
+            notifyDataSetChanged();
+        });
+
+        holder.yesbutton.setOnClickListener(v -> {
+            // 해당 위치의 아이템 제거
+            mfriendItems = new ArrayList<>();
+            mfriendItems.add(new GetFriendItem(R.drawable.jhanoo, "name_item", "namebutton"));
             // 어댑터에게 아이템이 변경되었음을 알림
             notifyDataSetChanged();
         });
