@@ -812,6 +812,19 @@ public class ShowDayActivity extends AppCompatActivity {
         scheduleRecyclerShowDay.setHasFixedSize(true);
         scheduleRecyclerShowDay.setLayoutManager(new LinearLayoutManager(this));
         scheduleAdapter = new ScheduleAdapter(todayScheduleList);
+        scheduleAdapter.setOnItemClickListener(new ScheduleAdapter.OnItemClickListener() {
+            @Override
+            public void onEditClick(Schedule schedule) {
+                // Handle the edit click event here
+
+            }
+
+            @Override
+            public void onDeleteClick(Schedule schedule) {
+                // Handle the delete click event here
+            }
+        });
+
         scheduleRecyclerShowDay.setAdapter(scheduleAdapter);
 
         // 태스크 RecyclerView 설정

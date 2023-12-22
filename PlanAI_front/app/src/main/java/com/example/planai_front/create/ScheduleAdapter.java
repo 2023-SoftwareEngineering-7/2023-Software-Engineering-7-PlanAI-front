@@ -1,5 +1,10 @@
 package com.example.planai_front.create;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +24,16 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     public ScheduleAdapter(List<Schedule> scheduleList) {
         this.scheduleList = scheduleList;
+    }
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onEditClick(Schedule schedule);
+        void onDeleteClick(Schedule schedule);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -49,6 +64,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         public TextView scheduleRecySummary, scheduleRecyStartDate, scheduleRecyStartTime, scheduleRecyEndDate, scheduleRecyEndTime, scheduleRecyTag, scheduleRecyDescription;
         public LinearLayout editDeleteBtn;
         public Button btnEdit, btnDelete;
+        private Context context;
 
         public ScheduleViewHolder(View view) {
             super(view);
@@ -73,12 +89,28 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 }
             });
 
+
             // Edit 버튼 클릭 리스너
             btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // 토스트 메시지 표시
                     Toast.makeText(view.getContext(), "Edit 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
+//                    try {
+//                        Intent intent = new Intent(Intent.ACTION_VIEW);
+//
+//                        intent.setData(Uri.parse("content://com.android.calendar/time"));
+//
+//                        // 인텐트가 실행 가능한지 확인
+//                        if (intent.resolveActivity(context.getPackageManager()) != null) {
+//                            context.startActivity(intent);
+//                        } else {
+//                            // 구글 캘린더 앱이 설치되어 있지 않은 경우
+//                            Toast.makeText(context, "구글 캘린더 앱이 설치되어 있지 않습니다.", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }catch (Exception e){
+//                        Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show();
+//                    }
                 }
             });
 
@@ -88,14 +120,16 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 public void onClick(View v) {
                     // 토스트 메시지 표시
                     Toast.makeText(view.getContext(), "Delete 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
-//                    for (Schedule tempSchedule:scheduleList){
-//                        if(tempSchedule.getSummary().equals(thisSchedule.getSummary())){
-//                            scheduleList.remove(tempSchedule);
-//                        }
-//                    }
+                    for (Schedule tempSchedule:scheduleList){
+                        if(tempSchedule.getSummary().equals(thisSchedule.getSummary())){
+                            scheduleList.remove(tempSchedule);
+                        }
+                    }
                 }
             });
         }
+
+
     }
 
 
