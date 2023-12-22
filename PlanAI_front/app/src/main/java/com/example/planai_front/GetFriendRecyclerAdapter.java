@@ -19,6 +19,10 @@ public class GetFriendRecyclerAdapter extends RecyclerView.Adapter<GetFriendRecy
     private Context context;
     private List<GetFriendItem> itemList;
 
+    private RecyclerView mRecyclerView;
+    private FriendlistRecyclerAdapter mRecyclerAdapter;
+    private ArrayList<FriendlistItem> mfriendItems;
+
     public GetFriendRecyclerAdapter(Context context, List<GetFriendItem> itemList) {
         this.context = context;
         this.itemList = itemList;
@@ -64,7 +68,7 @@ public class GetFriendRecyclerAdapter extends RecyclerView.Adapter<GetFriendRecy
         holder.yesbutton.setOnClickListener(v -> {
             // 해당 위치의 아이템 제거
             mfriendItems = new ArrayList<>();
-            mfriendItems.add(new GetFriendItem(R.drawable.jhanoo, "name_item", "namebutton"));
+            mfriendItems.add(new FriendlistItem(R.drawable.jhanoo, "name_item", "namebutton"));
             // 어댑터에게 아이템이 변경되었음을 알림
             notifyDataSetChanged();
         });
